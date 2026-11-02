@@ -1,0 +1,37 @@
+# ==============================================================================
+# ENTERPRISE IAM SECURITY HARDENING - APACHE .HTACCESS
+# Enforces HTTPS TLS 1.3, Custom Domain Routing, and System File Protection
+# ==============================================================================
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Enforce HTTPS redirect across all endpoints
+    RewriteCond %{HTTPS} off
+    RewriteCond %{HTTP_HOST} ^iam\.secure-defense\.internal [NC,OR]
+    RewriteCond %{HTTP_HOST} ^auth\.enterprise-soc\.local [NC]
+    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# Block direct access to hidden files, environment configs, and database artifacts
+<FilesMatch "^\.env|^\.git|.*\.sql$|.*\.frm$|.*\.ibd$|.*\.md$|.*\.key$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Disable Directory Browsing
+Options -Indexes
+
+# Enterprise Security Headers & HSTS (Strict-Transport-Security)
+<IfModule mod_headers.c>
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set X-XSS-Protection "1; mode=block"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>

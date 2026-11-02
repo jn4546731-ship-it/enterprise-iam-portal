@@ -1,0 +1,15 @@
+# Environment configuration (protect credentials)
+.env
+
+# Temporary IDE / Editor / Search files
+.vscode/
+.idea/
+*.code-search
+
+# Operating System files
+Thumbs.db
+Desktop.ini
+.DS_Store
+
+# Log files
+*.log
