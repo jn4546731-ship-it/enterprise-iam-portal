@@ -54,66 +54,134 @@ $otpauth_uri = "otpauth://totp/" . rawurlencode($issuer) . ":" . rawurlencode($a
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MFA Enrollment - Enterprise SOC Portal</title>
+    <title>MFA Zero-Trust Enrollment - Enterprise SOC</title>
     <script src="assets/js/tailwind.js"></script>
     <link href="assets/css/all.min.css" rel="stylesheet">
+    <link href="assets/css/cyber-theme.css" rel="stylesheet">
     <script src="assets/js/qrcode.min.js"></script>
+    <script src="assets/js/cyber-effects.js" defer></script>
 </head>
-<body class="bg-slate-900 text-slate-300 flex items-center justify-center min-h-screen px-4 py-8">
+<body class="cyber-bg cyber-grid-overlay min-h-screen flex items-center justify-center px-4 py-12 relative overflow-x-hidden text-slate-300">
 
-    <div class="bg-slate-800 p-8 rounded-xl shadow-2xl w-full max-w-md border border-slate-700">
-        <div class="text-center mb-6">
-            <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-blue-500/10 border border-blue-500/20 mb-3">
-                <i class="fa-solid fa-mobile-screen-button text-3xl text-blue-500"></i>
-            </div>
-            <h2 class="text-2xl font-bold text-white tracking-wide">MFA Configuration</h2>
-            <p class="text-slate-400 text-xs mt-1">Google Authenticator TOTP Zero-Trust Enrollment (100% Offline)</p>
+    <!-- Top Telemetry Status Ticker -->
+    <div class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 py-2.5 bg-slate-950/80 border-b border-cyan-500/20 backdrop-blur-md text-[11px] font-tech text-cyan-400/90">
+        <div class="flex items-center space-x-3">
+            <span class="inline-flex h-2 w-2 rounded-full bg-cyan-400 cyber-beacon"></span>
+            <span class="tracking-widest uppercase font-bold text-white">IDENTITY ENCLAVE // TOTP REGISTRATION</span>
         </div>
-        
-        <?php echo $message; ?>
-
-        <div class="text-center mb-6 bg-slate-900/60 p-5 rounded-xl border border-slate-700/60">
-            <p class="text-xs text-slate-300 mb-3 font-medium">1. Scan this QR code using Google Authenticator:</p>
-            <div class="inline-block bg-white p-2.5 rounded-lg shadow-md">
-                <div id="qrcode" class="w-44 h-44 mx-auto flex items-center justify-center"></div>
-            </div>
-            <p class="text-[11px] text-slate-400 mt-3">Manual Key: <span class="font-mono text-emerald-400 font-bold bg-slate-800 px-2 py-0.5 rounded border border-slate-700 select-all"><?php echo $current_secret; ?></span></p>
+        <div class="hidden sm:flex items-center space-x-6 text-slate-400">
+            <span>ALGORITHM: <strong class="text-cyan-300">HMAC-SHA1 / RFC 6238</strong></span>
+            <span>STORAGE: <strong class="text-emerald-400">ENCRYPTED BASE32</strong></span>
+            <span>AIR-GAP: <strong class="text-purple-400">100% OFFLINE</strong></span>
         </div>
+    </div>
 
-        <script>
-            // 100% Air-Gapped Local QR Code Generation
-            window.addEventListener('DOMContentLoaded', function() {
-                var qrContainer = document.getElementById("qrcode");
-                if (qrContainer && typeof QRCode !== 'undefined') {
-                    new QRCode(qrContainer, {
-                        text: <?php echo json_encode($otpauth_uri); ?>,
-                        width: 176,
-                        height: 176,
-                        colorDark: "#0f172a",
-                        colorLight: "#ffffff",
-                        correctLevel: QRCode.CorrectLevel.M
+    <!-- Main High-Tech MFA Enrollment Card -->
+    <div class="relative z-10 w-full max-w-lg my-8">
+        <div class="cyber-card cyber-brackets rounded-2xl p-7 sm:p-9 shadow-2xl relative overflow-hidden border border-cyan-500/30">
+            
+            <!-- Laser Scan Line -->
+            <div class="cyber-laser-beam"></div>
+
+            <div class="text-center mb-6 relative">
+                <div class="relative inline-flex items-center justify-center w-20 h-20 mb-3">
+                    <div class="absolute inset-0 rounded-full border border-dashed border-cyan-500/40 cyber-radar-spin"></div>
+                    <div class="absolute inset-1.5 rounded-full border border-emerald-500/40 cyber-radar-reverse"></div>
+                    <div class="w-14 h-14 rounded-full bg-cyan-950/70 border border-cyan-400/60 flex items-center justify-center text-cyan-400 glow-cyan-sm shadow-inner">
+                        <i class="fa-solid fa-mobile-screen-button text-2xl text-cyan-300"></i>
+                    </div>
+                </div>
+
+                <h1 class="font-orbitron text-xl sm:text-2xl font-extrabold text-white tracking-wider glow-text-cyan mb-1">
+                    MFA <span class="text-cyan-400">ENROLLMENT</span>
+                </h1>
+                <p class="font-tech text-xs text-slate-400 uppercase tracking-wider">
+                    Google Authenticator Zero-Trust Provisioning
+                </p>
+            </div>
+            
+            <?php echo $message; ?>
+
+            <!-- Step 1: Holographic QR Code Box -->
+            <div class="text-center mb-6 bg-slate-950/70 p-5 rounded-2xl border border-cyan-500/20 relative">
+                <div class="flex items-center justify-between mb-3 text-xs font-tech">
+                    <span class="text-cyan-300 font-bold flex items-center">
+                        <span class="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center mr-2 text-[10px]">1</span>
+                        SCAN QR MATRIX
+                    </span>
+                    <span class="text-emerald-400 text-[10px] font-mono"><i class="fa-solid fa-microchip mr-1"></i> CLIENT-SIDE SVG</span>
+                </div>
+
+                <!-- QR Code Mount with Glowing Corner Brackets -->
+                <div class="inline-block p-3.5 bg-white rounded-xl shadow-2xl relative cyber-brackets border border-cyan-400/60 glow-cyan-sm">
+                    <div id="qrcode" class="w-44 h-44 mx-auto flex items-center justify-center"></div>
+                </div>
+
+                <!-- Secret Key Display with Copy Trigger -->
+                <div class="mt-4 pt-3 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-2 font-tech text-xs">
+                    <span class="text-slate-400">Manual Key:</span>
+                    <div class="flex items-center space-x-2">
+                        <span id="secretKeyText" class="text-emerald-400 font-bold bg-slate-900 px-3 py-1 rounded-lg border border-slate-700 select-all tracking-widest text-xs font-mono">
+                            <?php echo $current_secret; ?>
+                        </span>
+                        <button type="button" onclick="copySecretKey()" class="text-xs bg-slate-800 hover:bg-slate-700 text-cyan-300 px-2.5 py-1 rounded-lg border border-slate-700 hover:border-cyan-400 transition" title="Copy to Clipboard">
+                            <i class="fa-solid fa-copy"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                // 100% Air-Gapped Local QR Code Generation
+                window.addEventListener('DOMContentLoaded', function() {
+                    var qrContainer = document.getElementById("qrcode");
+                    if (qrContainer && typeof QRCode !== 'undefined') {
+                        new QRCode(qrContainer, {
+                            text: <?php echo json_encode($otpauth_uri); ?>,
+                            width: 176,
+                            height: 176,
+                            colorDark: "#050811",
+                            colorLight: "#ffffff",
+                            correctLevel: QRCode.CorrectLevel.M
+                        });
+                    }
+                });
+
+                function copySecretKey() {
+                    const key = document.getElementById('secretKeyText').innerText.trim();
+                    navigator.clipboard.writeText(key).then(() => {
+                        if (typeof CyberAudio !== 'undefined') CyberAudio.click();
+                        alert('Base32 Secret Key copied to clipboard!');
                     });
                 }
-            });
-        </script>
+            </script>
 
-        <form method="POST" action="">
-            <input type="hidden" name="mfa_secret_hidden" value="<?php echo $current_secret; ?>">
-            <div class="mb-5">
-                <label class="block text-xs font-medium text-slate-300 mb-1.5">2. Enter 6-digit confirmation code</label>
-                <input type="text" name="mfa_code" maxlength="6" 
-                       class="w-full px-4 py-2.5 bg-slate-900 border border-slate-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none text-center tracking-[0.3em] font-mono text-xl text-white placeholder:text-slate-600" 
-                       placeholder="000000" required autocomplete="off">
+            <!-- Step 2: Verification Form -->
+            <form method="POST" action="" class="space-y-5">
+                <input type="hidden" name="mfa_secret_hidden" value="<?php echo $current_secret; ?>">
+                
+                <div>
+                    <label class="block font-tech text-xs text-cyan-300 uppercase tracking-widest mb-2 flex items-center">
+                        <span class="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center mr-2 text-[10px]">2</span>
+                        CONFIRM 6-DIGIT CODE
+                    </label>
+                    <input type="text" name="mfa_code" maxlength="6" 
+                           class="cyber-input w-full px-4 py-3 rounded-xl text-center tracking-[0.45em] font-orbitron font-bold text-xl text-cyan-300 placeholder:text-slate-700 focus:ring-0 focus:border-cyan-400" 
+                           placeholder="000000" required autocomplete="off" inputmode="numeric">
+                </div>
+
+                <button type="submit" class="cyber-btn w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-bold text-xs tracking-widest rounded-xl transition shadow-lg glow-emerald flex items-center justify-center space-x-2 group">
+                    <i class="fa-solid fa-shield-check text-sm group-hover:scale-110 transition"></i>
+                    <span>VERIFY & ENFORCE ZERO-TRUST MFA</span>
+                </button>
+            </form>
+
+            <div class="mt-6 pt-4 border-t border-slate-800/80 text-center font-tech text-xs">
+                <a href="dashboard.php" class="text-slate-400 hover:text-cyan-400 transition flex items-center justify-center space-x-1.5">
+                    <i class="fa-solid fa-arrow-left text-[11px]"></i>
+                    <span>Return to SOC Command Center</span>
+                </a>
             </div>
-            <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 rounded-lg transition duration-200 shadow-lg shadow-blue-900/40 flex justify-center items-center">
-                <i class="fa-solid fa-shield-check mr-2"></i> Verify & Enable MFA
-            </button>
-        </form>
-
-        <div class="mt-5 text-center border-t border-slate-700/60 pt-4">
-            <a href="dashboard.php" class="text-xs text-slate-400 hover:text-white transition flex items-center justify-center">
-                <i class="fa-solid fa-arrow-left mr-1.5"></i> Return to Command Center
-            </a>
         </div>
     </div>
 

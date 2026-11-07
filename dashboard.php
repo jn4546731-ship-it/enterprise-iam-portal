@@ -411,90 +411,69 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enterprise Zero-Trust SOC Dashboard - IAM Sentinel</title>
+    <title>Enterprise Zero-Trust SOC Command Center - IAM Sentinel</title>
     <script src="assets/js/tailwind.js"></script>
     <link href="assets/css/all.min.css" rel="stylesheet">
-    <style>
-        .custom-scrollbar::-webkit-scrollbar { width: 5px; height: 5px; }
-        .custom-scrollbar::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.6); }
-        .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
-
-        @keyframes laserSweep {
-            0% { top: 0%; opacity: 0.8; }
-            50% { top: 100%; opacity: 1; }
-            100% { top: 0%; opacity: 0.8; }
-        }
-        .laser-line {
-            animation: laserSweep 2s ease-in-out infinite;
-        }
-
-        @keyframes radarSpin {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-        .radar-rotate {
-            animation: radarSpin 8s linear infinite;
-        }
-
-        @keyframes hudPulse {
-            0%, 100% { box-shadow: 0 0 25px rgba(6, 182, 212, 0.25), inset 0 0 15px rgba(6, 182, 212, 0.15); }
-            50% { box-shadow: 0 0 40px rgba(6, 182, 212, 0.45), inset 0 0 25px rgba(6, 182, 212, 0.3); }
-        }
-        .hud-glow {
-            animation: hudPulse 3s ease-in-out infinite;
-        }
-    </style>
+    <link href="assets/css/cyber-theme.css" rel="stylesheet">
+    <script src="assets/js/cyber-effects.js" defer></script>
 </head>
-<body class="bg-slate-950 text-slate-300 font-sans min-h-screen flex flex-col antialiased">
+<body class="cyber-bg cyber-grid-overlay text-slate-300 font-sans min-h-screen flex flex-col antialiased relative selection:bg-cyan-500 selection:text-black">
 
-    <!-- Top Navigation Bar -->
-    <nav class="bg-slate-900/90 backdrop-blur border-b border-slate-800 py-3.5 px-6 flex justify-between items-center shadow-lg sticky top-0 z-30">
+    <!-- Top High-Tech Cyber Navigation Bar -->
+    <nav class="bg-slate-950/85 backdrop-blur-md border-b border-cyan-500/25 py-3 px-4 sm:px-6 flex justify-between items-center shadow-2xl sticky top-0 z-30 relative overflow-hidden">
+        <!-- Sub-laser accent -->
+        <div class="cyber-laser-beam opacity-40"></div>
+
         <div class="flex items-center space-x-3">
-            <button id="mobileSidebarToggle" onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800 transition">
+            <button id="mobileSidebarToggle" onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-400 hover:text-cyan-400 rounded-lg hover:bg-slate-900 border border-transparent hover:border-cyan-500/30 transition">
                 <i class="fa-solid fa-bars text-lg"></i>
             </button>
-            <div class="h-9 w-9 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 shadow-md">
+            <div class="relative w-9 h-9 rounded-xl bg-cyan-950/60 border border-cyan-400/50 flex items-center justify-center text-cyan-400 glow-cyan-sm">
                 <i class="fa-solid fa-shield-halved text-lg"></i>
             </div>
             <div>
-                <h1 class="text-base sm:text-lg font-bold text-white tracking-wider flex items-center space-x-2">
+                <h1 class="font-orbitron text-sm sm:text-base font-extrabold text-white tracking-wider flex items-center space-x-2">
                     <span>ENTERPRISE SOC</span>
-                    <span class="text-blue-500">IAM COMMAND CENTER</span>
+                    <span class="text-cyan-400 glow-text-cyan">COMMAND CENTER</span>
                 </h1>
-                <p class="text-[10px] font-mono text-slate-400 tracking-wider">ZERO-TRUST IDENTITY ARCHITECTURE &bull; BEHAVIORAL SENTINEL</p>
+                <p class="font-tech text-[10px] text-slate-400 tracking-wider">ZERO-TRUST IDENTITY ARCHITECTURE &bull; AI SENTINEL HEURISTICS</p>
             </div>
         </div>
 
-        <div class="flex items-center space-x-3 text-xs">
+        <div class="flex items-center space-x-3 text-xs font-tech">
             <!-- HTTPS Domain Indicator Badge -->
-            <div class="hidden xl:flex items-center space-x-1.5 px-2.5 py-1 rounded-lg bg-emerald-950/40 border border-emerald-500/30 text-[11px] font-mono text-emerald-400 shadow-sm" title="Active Enterprise Encrypted Domain">
+            <div class="hidden xl:flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-[11px] text-emerald-400 shadow-sm" title="Active Enterprise Encrypted Domain">
                 <i class="fa-solid fa-lock text-[10px] text-emerald-400"></i>
-                <span class="font-semibold">iam.secure-defense.internal</span>
+                <span class="font-bold">iam.secure-defense.internal</span>
             </div>
 
+            <!-- Audio SFX Mute/Unmute Toggle -->
+            <button onclick="toggleGlobalAudio()" id="navMuteBtn" class="p-2 rounded-lg bg-slate-900/80 border border-slate-700 text-slate-400 hover:text-cyan-400 hover:border-cyan-400/50 transition" title="Toggle Cyber Audio Synthesizer">
+                <i id="navMuteIcon" class="fa-solid fa-volume-high text-xs"></i>
+            </button>
+
             <!-- Identity Clearance HUD Replay Trigger -->
-            <button onclick="triggerCyberWelcomeHUD(true)" class="text-xs font-semibold text-cyan-400 hover:text-cyan-300 transition flex items-center bg-cyan-950/40 border border-cyan-500/30 px-2.5 py-1.5 rounded-lg shadow-sm group hover:border-cyan-400" title="Replay Biometric Identity Clearance HUD">
+            <button onclick="triggerCyberWelcomeHUD(true)" class="font-orbitron text-[11px] font-bold text-cyan-300 hover:text-white transition flex items-center bg-cyan-950/40 border border-cyan-500/40 px-3 py-1.5 rounded-lg shadow-sm group hover:border-cyan-400 glow-cyan-sm" title="Replay Biometric Identity Clearance HUD">
                 <i class="fa-solid fa-id-card-clip mr-1.5 text-cyan-400 group-hover:scale-110 transition"></i>
-                <span>Identity HUD</span>
+                <span>IDENTITY HUD</span>
             </button>
 
             <!-- Clearance Pill -->
-            <div class="hidden sm:flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-700 font-mono">
-                <span class="text-slate-400">Clearance:</span>
-                <span class="text-purple-400 font-bold flex items-center"><i class="fa-solid fa-gem mr-1 text-[11px]"></i> <?php echo htmlspecialchars($current_clearance); ?></span>
+            <div class="hidden sm:flex items-center space-x-2 bg-slate-900/90 px-3 py-1.5 rounded-lg border border-purple-500/30">
+                <span class="text-slate-500">Tier:</span>
+                <span class="text-purple-300 font-bold flex items-center"><i class="fa-solid fa-gem mr-1 text-[10px] text-purple-400"></i> <?php echo htmlspecialchars($current_clearance); ?></span>
             </div>
 
             <!-- Active User Identity Badge -->
-            <div class="hidden md:flex items-center space-x-2 bg-slate-900/60 px-3 py-1.5 rounded-lg border border-slate-700 font-mono text-slate-400">
-                <i class="fa-solid fa-user-shield text-blue-400"></i>
+            <div class="hidden md:flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-700 text-slate-400">
+                <i class="fa-solid fa-user-shield text-cyan-400"></i>
                 <span class="text-white font-medium"><?php echo htmlspecialchars($user_display_name); ?></span>
                 <span class="text-slate-600">|</span>
-                <span class="text-emerald-400 font-semibold">UID-<?php echo str_pad($current_user_id, 4, '0', STR_PAD_LEFT); ?></span>
+                <span class="text-cyan-400 font-bold">UID-<?php echo str_pad($current_user_id, 4, '0', STR_PAD_LEFT); ?></span>
             </div>
 
-            <a href="logout.php" class="font-semibold text-red-400 hover:text-red-300 transition flex items-center bg-red-950/30 hover:bg-red-950/50 border border-red-500/30 px-2.5 py-1.5 rounded-lg">
-                <i class="fa-solid fa-arrow-right-from-bracket mr-1.5"></i> Logout
+            <a href="logout.php" class="font-orbitron text-[11px] font-bold text-red-400 hover:text-red-300 transition flex items-center bg-red-950/30 hover:bg-red-950/60 border border-red-500/40 px-3 py-1.5 rounded-lg glow-red shadow-sm">
+                <i class="fa-solid fa-arrow-right-from-bracket mr-1.5"></i> LOGOUT
             </a>
         </div>
     </nav>
@@ -503,27 +482,27 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
     <div class="flex-1 flex overflow-hidden">
 
         <!-- Sidebar Navigation Drawer -->
-        <aside id="appSidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-slate-900/95 backdrop-blur-md border-r border-slate-800 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:z-auto">
+        <aside id="appSidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-slate-950/95 backdrop-blur-md border-r border-cyan-500/20 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:z-auto">
             
             <!-- Sidebar Header / Current Profile Card -->
             <div class="p-4 border-b border-slate-800">
-                <div class="bg-slate-950/80 p-3 rounded-xl border border-slate-800">
+                <div class="cyber-card cyber-brackets p-3.5 rounded-xl border border-cyan-500/25">
                     <div class="flex items-center space-x-3 mb-2">
-                        <div class="h-10 w-10 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400 font-bold text-sm">
+                        <div class="relative w-10 h-10 rounded-lg bg-cyan-950/60 border border-cyan-400/50 flex items-center justify-center text-cyan-300 font-orbitron font-bold text-sm glow-cyan-sm">
                             <?php echo strtoupper(substr($current_user['email'] ?? 'A', 0, 1)); ?>
                         </div>
                         <div class="overflow-hidden">
-                            <h4 class="text-xs font-bold text-white truncate"><?php echo htmlspecialchars($user_display_name); ?></h4>
-                            <p class="text-[11px] font-mono text-slate-400 truncate"><?php echo htmlspecialchars($current_job_title); ?></p>
+                            <h4 class="font-orbitron text-xs font-bold text-white truncate"><?php echo htmlspecialchars($user_display_name); ?></h4>
+                            <p class="font-tech text-[11px] text-slate-400 truncate"><?php echo htmlspecialchars($current_job_title); ?></p>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between text-[10px] font-mono pt-2 border-t border-slate-800/80">
+                    <div class="flex items-center justify-between text-[10px] font-tech pt-2 border-t border-slate-800/80">
                         <span class="text-slate-500">Dept:</span>
                         <span class="text-slate-300 truncate max-w-[130px]"><?php echo htmlspecialchars($current_dept); ?></span>
                     </div>
-                    <div class="flex items-center justify-between text-[10px] font-mono pt-1">
+                    <div class="flex items-center justify-between text-[10px] font-tech pt-1">
                         <span class="text-slate-500">Role:</span>
-                        <span class="text-blue-400 font-bold"><?php echo htmlspecialchars($current_functional_role); ?></span>
+                        <span class="text-cyan-400 font-bold"><?php echo htmlspecialchars($current_functional_role); ?></span>
                     </div>
                 </div>
             </div>
@@ -534,44 +513,44 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                     Core Operations
                 </div>
 
-                <a href="dashboard.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-lg bg-blue-500/10 text-blue-300 border border-blue-500/30 font-semibold shadow-sm">
-                    <i class="fa-solid fa-gauge-high w-4 text-center text-blue-400"></i>
+                <a href="dashboard.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl bg-cyan-950/40 text-cyan-300 border border-cyan-500/40 font-orbitron text-xs font-bold shadow-md glow-cyan-sm">
+                    <i class="fa-solid fa-gauge-high w-4 text-center text-cyan-400"></i>
                     <span>SOC Command Center</span>
                 </a>
 
-                <a href="vault.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition group">
+                <a href="vault.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-purple-500/30 transition group font-tech">
                     <i class="fa-solid fa-vault w-4 text-center text-slate-500 group-hover:text-purple-400 transition"></i>
                     <span class="font-medium">Secure Vault (Crown Jewels)</span>
-                    <span class="ml-auto text-[9px] font-mono bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded uppercase">RBAC</span>
+                    <span class="ml-auto text-[9px] font-mono bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded border border-purple-500/30 uppercase font-bold">RBAC</span>
                 </a>
 
-                <a href="api_management.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition group">
+                <a href="api_management.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-amber-500/30 transition group font-tech">
                     <i class="fa-solid fa-key w-4 text-center text-slate-500 group-hover:text-amber-400 transition"></i>
                     <span class="font-medium">API Management</span>
                 </a>
 
-                <div class="pt-4 px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-500 font-semibold">
-                    Identity & Security
+                <div class="pt-4 px-3 py-1 text-[10px] font-tech uppercase tracking-widest text-slate-500 font-bold">
+                    // Identity & Security
                 </div>
 
-                <a href="setup_mfa.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition group">
+                <a href="setup_mfa.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-emerald-500/30 transition group font-tech">
                     <i class="fa-solid fa-mobile-screen-button w-4 text-center text-slate-500 group-hover:text-emerald-400 transition"></i>
                     <span class="font-medium">Multi-Factor Auth (MFA)</span>
                 </a>
 
-                <a href="?export=csv" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition group">
+                <a href="?export=csv" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-cyan-500/30 transition group font-tech">
                     <i class="fa-solid fa-file-csv w-4 text-center text-slate-500 group-hover:text-cyan-400 transition"></i>
                     <span class="font-medium">Export Audit Ledger</span>
                 </a>
             </nav>
 
             <!-- Sidebar Footer Security Status -->
-            <div class="p-3 border-t border-slate-800 text-[11px] font-mono text-slate-500">
+            <div class="p-3 border-t border-slate-800 text-[11px] font-tech text-slate-500">
                 <div class="flex items-center space-x-2 text-emerald-400 mb-1">
-                    <span class="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span class="h-2 w-2 rounded-full bg-emerald-500 cyber-beacon"></span>
                     <span class="font-bold">Zero-Trust Active</span>
                 </div>
-                <div class="truncate text-[10px]">TLS 1.3 &bull; SHA256 MAC Enforced</div>
+                <div class="truncate text-[10px] text-slate-500">TLS 1.3 &bull; SHA-256 MAC ENFORCED</div>
             </div>
         </aside>
 
@@ -581,36 +560,45 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
         <!-- Main Workspace Area -->
         <main class="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8">
 
-
         <?php if (!empty($feedback_alert)) echo $feedback_alert; ?>
         
         <!-- Header & Action Toolbar -->
-        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 border-b border-cyan-500/20 pb-6">
             <div>
-                <h2 class="text-3xl font-extrabold text-white tracking-tight mb-1">SOC Telemetry & Access Control</h2>
-                <p class="text-slate-400 text-sm">Real-time Zero-Trust behavioral monitoring, identity lifecycle governance, and threat mitigation.</p>
+                <div class="flex items-center space-x-2 mb-2">
+                    <span class="px-2.5 py-0.5 text-[10px] font-tech font-bold uppercase rounded-md bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">
+                        SURVEILLANCE NODE // ACTIVE
+                    </span>
+                    <span class="text-xs text-slate-500 font-tech">&bull; Real-time Behavioral Telemetry</span>
+                </div>
+                <h2 class="font-orbitron text-2xl sm:text-3xl font-extrabold text-white tracking-tight glow-text-cyan mb-1">
+                    SOC Telemetry & Access Control
+                </h2>
+                <p class="font-tech text-slate-400 text-xs sm:text-sm">Continuous Zero-Trust behavioral assessment, biometric session lifecycle, and automated breach mitigation.</p>
             </div>
-            <div class="flex flex-wrap items-center gap-2.5">
+
+            <div class="flex flex-wrap items-center gap-2.5 font-tech">
                 <!-- Simulation Trigger (University Defense Mode) -->
                 <div class="relative inline-block text-left" id="simulationDropdownContainer">
-                    <button type="button" onclick="toggleSimMenu()" class="bg-purple-900/40 hover:bg-purple-800/50 text-purple-300 border border-purple-500/30 px-3.5 py-2 rounded-lg text-xs font-semibold transition flex items-center shadow-lg">
+                    <button type="button" onclick="toggleSimMenu()" class="cyber-btn bg-purple-950/50 hover:bg-purple-900/60 text-purple-200 border border-purple-500/40 px-3.5 py-2.5 rounded-xl text-xs font-bold transition flex items-center shadow-lg glow-purple">
                         <i class="fa-solid fa-flask-vial mr-2 text-purple-400"></i>
-                        <span>Simulate Attack (Defense Mode)</span>
+                        <span>Simulate Threat (Defense Mode)</span>
                         <i class="fa-solid fa-chevron-down ml-2 text-[10px]"></i>
                     </button>
-                    <div id="simMenu" class="hidden absolute right-0 mt-2 w-64 bg-slate-800 border border-purple-500/40 rounded-xl shadow-2xl py-2 z-40 text-xs">
-                        <div class="px-3 py-1 text-[11px] font-mono text-purple-400 uppercase tracking-wider font-semibold border-b border-slate-700 mb-1">
-                            Attack Vectors (Demonstration)
+                    <div id="simMenu" class="hidden absolute right-0 mt-2 w-72 bg-slate-950 border border-purple-500/50 rounded-2xl shadow-2xl py-2 z-40 text-xs cyber-card cyber-brackets">
+                        <div class="px-4 py-2 text-[10px] font-tech text-purple-300 uppercase tracking-widest font-bold border-b border-slate-800 mb-1 flex items-center justify-between">
+                            <span>ATTACK VECTORS</span>
+                            <span class="text-[9px] bg-purple-950 px-1.5 py-0.5 rounded text-purple-400">DEMO</span>
                         </div>
                         <form method="POST" action="">
                             <input type="hidden" name="action" value="simulate_threat">
                             <input type="hidden" name="scenario" value="brute_force">
                             <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                            <button type="submit" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-700/60 hover:text-white flex items-center">
-                                <i class="fa-solid fa-burst text-red-400 mr-2"></i>
+                            <button type="submit" class="w-full text-left px-4 py-2.5 text-slate-300 hover:bg-purple-950/40 hover:text-white flex items-center transition">
+                                <i class="fa-solid fa-burst text-red-400 mr-2.5 text-base"></i>
                                 <div>
-                                    <p class="font-medium">1. Rapid MFA Brute-Force</p>
-                                    <p class="text-[10px] text-slate-500">5 rapid MFA failures from unknown IP</p>
+                                    <p class="font-bold text-xs">1. Rapid MFA Brute-Force</p>
+                                    <p class="text-[10px] text-slate-400">5 bursts of failed MFA challenges</p>
                                 </div>
                             </button>
                         </form>
@@ -618,32 +606,32 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                             <input type="hidden" name="action" value="simulate_threat">
                             <input type="hidden" name="scenario" value="ip_divergence">
                             <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                            <button type="submit" class="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-700/60 hover:text-white flex items-center">
-                                <i class="fa-solid fa-globe text-amber-400 mr-2"></i>
+                            <button type="submit" class="w-full text-left px-4 py-2.5 text-slate-300 hover:bg-purple-950/40 hover:text-white flex items-center transition">
+                                <i class="fa-solid fa-globe text-amber-400 mr-2.5 text-base"></i>
                                 <div>
-                                    <p class="font-medium">2. Identity IP Divergence</p>
-                                    <p class="text-[10px] text-slate-500">Impossible travel across 2 distinct IPs</p>
+                                    <p class="font-bold text-xs">2. Identity IP Divergence</p>
+                                    <p class="text-[10px] text-slate-400">Impossible travel across 2 distinct IPs</p>
                                 </div>
                             </button>
                         </form>
-                        <div class="border-t border-slate-700 my-1"></div>
+                        <div class="border-t border-slate-800 my-1"></div>
                         <form method="POST" action="">
                             <input type="hidden" name="action" value="reset_simulation">
                             <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                            <button type="submit" class="w-full text-left px-3 py-1.5 text-slate-400 hover:text-emerald-400 hover:bg-slate-700/60 flex items-center">
-                                <i class="fa-solid fa-rotate-left mr-2"></i> Reset Baseline Telemetry
+                            <button type="submit" class="w-full text-left px-4 py-2 text-slate-400 hover:text-emerald-400 hover:bg-slate-900 flex items-center transition">
+                                <i class="fa-solid fa-rotate-left mr-2 text-xs"></i> Reset Baseline Telemetry
                             </button>
                         </form>
                     </div>
                 </div>
 
                 <!-- Export CSV -->
-                <a href="?export=csv" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3.5 py-2 rounded-lg text-xs font-semibold transition border border-slate-700 shadow-md flex items-center">
-                    <i class="fa-solid fa-download mr-1.5 text-slate-400"></i> Export Audit Logs
+                <a href="?export=csv" class="cyber-btn bg-slate-900/80 hover:bg-slate-800 text-slate-200 px-3.5 py-2.5 rounded-xl text-xs font-bold transition border border-slate-700 hover:border-cyan-400/50 shadow-md flex items-center">
+                    <i class="fa-solid fa-download mr-1.5 text-cyan-400"></i> Export Audit Logs
                 </a>
 
                 <!-- Provision User -->
-                <button onclick="document.getElementById('provisionModal').classList.remove('hidden')" class="bg-blue-600 hover:bg-blue-700 text-white px-3.5 py-2 rounded-lg text-xs font-semibold transition shadow-lg shadow-blue-900/40 flex items-center">
+                <button onclick="document.getElementById('provisionModal').classList.remove('hidden')" class="cyber-btn bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-lg glow-cyan flex items-center">
                     <i class="fa-solid fa-user-plus mr-1.5"></i> Provision Identity
                 </button>
             </div>
@@ -652,58 +640,76 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
         <!-- Telemetry Cards Data Grid -->
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
             <!-- Total Identities -->
-            <div class="bg-slate-800/80 backdrop-blur p-5 rounded-xl border border-slate-700/70 shadow-lg relative overflow-hidden group hover:border-slate-500 transition">
-                <div class="absolute top-0 right-0 p-4 opacity-10 text-4xl group-hover:scale-110 transition"><i class="fa-solid fa-users"></i></div>
-                <h3 class="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1">Total Identities</h3>
+            <div class="cyber-card cyber-brackets p-5 rounded-2xl border border-cyan-500/30 relative overflow-hidden group">
+                <div class="cyber-laser-beam opacity-30"></div>
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-xs font-tech uppercase tracking-wider text-cyan-300 font-bold">TOTAL IDENTITIES</span>
+                    <span class="w-8 h-8 rounded-lg bg-cyan-950/80 border border-cyan-500/40 text-cyan-400 flex items-center justify-center text-sm"><i class="fa-solid fa-users"></i></span>
+                </div>
                 <div class="flex items-baseline space-x-2">
-                    <p class="text-3xl font-extrabold text-white font-mono"><?php echo $total_users; ?></p>
+                    <p class="font-orbitron text-3xl font-extrabold text-white" data-cyber-count="<?php echo $total_users; ?>"><?php echo $total_users; ?></p>
                     <?php if ($suspended_count > 0): ?>
-                        <span class="text-xs text-red-400 font-medium">(<?php echo $suspended_count; ?> Suspended)</span>
+                        <span class="text-xs font-tech text-red-400 font-bold">(<?php echo $suspended_count; ?> Suspended)</span>
                     <?php else: ?>
-                        <span class="text-xs text-emerald-400 font-medium">(100% Active)</span>
+                        <span class="text-xs font-tech text-emerald-400 font-bold">(100% Active)</span>
                     <?php endif; ?>
+                </div>
+                <div class="mt-3 text-[10px] font-tech text-slate-500 flex items-center justify-between border-t border-slate-800/80 pt-2">
+                    <span>Directory Sync</span>
+                    <span class="text-cyan-400 font-mono font-bold">RBAC ONLINE</span>
                 </div>
             </div>
             
             <!-- MFA Enforcement -->
-            <div class="bg-slate-800/80 backdrop-blur p-5 rounded-xl border border-slate-700/70 shadow-lg relative overflow-hidden group hover:border-emerald-500/50 transition">
-                <div class="absolute top-0 right-0 p-4 opacity-10 text-4xl text-emerald-500 group-hover:scale-110 transition"><i class="fa-solid fa-lock"></i></div>
-                <h3 class="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1">MFA Enforcement</h3>
+            <div class="cyber-card cyber-brackets p-5 rounded-2xl border border-emerald-500/30 relative overflow-hidden group">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-xs font-tech uppercase tracking-wider text-emerald-300 font-bold">MFA ENFORCEMENT</span>
+                    <span class="w-8 h-8 rounded-lg bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-sm"><i class="fa-solid fa-shield-check"></i></span>
+                </div>
                 <div class="flex items-baseline space-x-2">
-                    <p class="text-3xl font-extrabold text-emerald-400 font-mono"><?php echo $mfa_rate; ?>%</p>
-                    <span class="text-xs text-slate-500 font-mono"><?php echo $mfa_enabled; ?>/<?php echo $total_users; ?> enrolled</span>
+                    <p class="font-orbitron text-3xl font-extrabold text-emerald-400" data-cyber-count="<?php echo $mfa_rate; ?>" data-suffix="%"><?php echo $mfa_rate; ?>%</p>
+                    <span class="text-xs font-tech text-slate-400 font-mono"><?php echo $mfa_enabled; ?>/<?php echo $total_users; ?> enrolled</span>
+                </div>
+                <div class="mt-3 text-[10px] font-tech text-slate-500 flex items-center justify-between border-t border-slate-800/80 pt-2">
+                    <span>Protocol</span>
+                    <span class="text-emerald-400 font-mono font-bold">RFC 6238 TOTP</span>
                 </div>
             </div>
 
             <!-- 24h Audit Events -->
-            <div class="bg-slate-800/80 backdrop-blur p-5 rounded-xl border border-slate-700/70 shadow-lg relative overflow-hidden group hover:border-blue-500/50 transition">
-                <div class="absolute top-0 right-0 p-4 opacity-10 text-4xl text-blue-500 group-hover:scale-110 transition"><i class="fa-solid fa-list-check"></i></div>
-                <h3 class="text-slate-400 text-xs font-semibold uppercase tracking-wider mb-1">24h Audit Events</h3>
+            <div class="cyber-card cyber-brackets p-5 rounded-2xl border border-blue-500/30 relative overflow-hidden group">
+                <div class="flex justify-between items-start mb-2">
+                    <span class="text-xs font-tech uppercase tracking-wider text-blue-300 font-bold">24H AUDIT EVENTS</span>
+                    <span class="w-8 h-8 rounded-lg bg-blue-950/80 border border-blue-500/40 text-blue-400 flex items-center justify-center text-sm"><i class="fa-solid fa-list-check"></i></span>
+                </div>
                 <div class="flex items-baseline space-x-2">
-                    <p class="text-3xl font-extrabold text-white font-mono"><?php echo $total_logs_24h; ?></p>
-                    <span class="text-xs text-blue-400 font-mono">live telemetry</span>
+                    <p class="font-orbitron text-3xl font-extrabold text-white" data-cyber-count="<?php echo $total_logs_24h; ?>"><?php echo $total_logs_24h; ?></p>
+                    <span class="text-xs font-tech text-cyan-400 font-mono">Live Telemetry</span>
+                </div>
+                <div class="mt-3 text-[10px] font-tech text-slate-500 flex items-center justify-between border-t border-slate-800/80 pt-2">
+                    <span>Storage Integrity</span>
+                    <span class="text-blue-400 font-mono font-bold">IMMUTABLE LOGS</span>
                 </div>
             </div>
 
             <!-- AI Sentinel Threat Level Card -->
-            <div class="bg-slate-800/80 backdrop-blur p-5 rounded-xl border <?php echo $active_theme['border']; ?> shadow-lg relative overflow-hidden transition">
-                <div class="absolute top-0 right-0 p-4 opacity-15 text-4xl <?php echo $active_theme['text']; ?>"><i class="fa-solid fa-radar"></i></div>
-                <div class="flex justify-between items-center mb-1">
-                    <h3 class="text-slate-400 text-xs font-semibold uppercase tracking-wider">AI Threat Posture</h3>
-                    <span class="text-[10px] font-mono px-1.5 py-0.5 rounded <?php echo $active_theme['bg']; ?> <?php echo $active_theme['text']; ?> font-bold">
+            <div class="cyber-card cyber-brackets p-5 rounded-2xl border <?php echo $active_theme['border']; ?> relative overflow-hidden transition">
+                <div class="flex justify-between items-center mb-2">
+                    <span class="text-xs font-tech uppercase tracking-wider text-slate-400 font-bold">AI THREAT POSTURE</span>
+                    <span class="text-[10px] font-tech px-2 py-0.5 rounded <?php echo $active_theme['bg']; ?> <?php echo $active_theme['text']; ?> font-bold border <?php echo $active_theme['border']; ?>">
                         ATS: <?php echo $threat_score; ?>/100
                     </span>
                 </div>
-                <div class="flex items-center space-x-2.5 mt-1">
+                <div class="flex items-center space-x-2.5">
                     <span class="relative flex h-3 w-3">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full <?php echo $active_theme['ping']; ?> opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-3 w-3 <?php echo $active_theme['dot']; ?>"></span>
                     </span>
-                    <p class="text-lg font-bold <?php echo $active_theme['text']; ?> tracking-tight"><?php echo $threat_level; ?></p>
+                    <p class="font-orbitron text-base sm:text-lg font-bold <?php echo $active_theme['text']; ?> tracking-tight"><?php echo $threat_level; ?></p>
                 </div>
                 <!-- Risk Meter Bar -->
-                <div class="w-full bg-slate-900 rounded-full h-1.5 mt-3 overflow-hidden">
-                    <div class="<?php echo $active_theme['bar']; ?> h-1.5 rounded-full transition-all duration-500" style="width: <?php echo $threat_score; ?>%"></div>
+                <div class="w-full bg-slate-950 rounded-full h-2 mt-3 overflow-hidden border border-slate-800">
+                    <div class="<?php echo $active_theme['bar']; ?> h-2 rounded-full transition-all duration-700 shadow-sm" style="width: <?php echo max(5, $threat_score); ?>%"></div>
                 </div>
             </div>
         </div>
@@ -712,16 +718,16 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
             
             <!-- Left Column: User Directory (RBAC Management) -->
             <div class="lg:col-span-2 space-y-8">
-                <div class="bg-slate-800 rounded-xl border border-slate-700 shadow-lg overflow-hidden">
-                    <div class="border-b border-slate-700 p-5 bg-slate-800/90 flex justify-between items-center">
+                <div class="cyber-card cyber-brackets rounded-2xl border border-cyan-500/30 overflow-hidden shadow-2xl">
+                    <div class="border-b border-slate-800 p-5 bg-slate-950/70 flex justify-between items-center">
                         <div>
-                            <h3 class="text-base font-bold text-white flex items-center">
-                                <i class="fa-solid fa-users-gear text-blue-500 mr-2.5"></i> Identity & Role-Based Access Control (RBAC)
+                            <h3 class="font-orbitron text-sm sm:text-base font-bold text-white flex items-center">
+                                <i class="fa-solid fa-users-gear text-cyan-400 mr-2.5"></i> Identity & Role-Based Access Control (RBAC)
                             </h3>
-                            <p class="text-xs text-slate-400 mt-0.5">Enforce Zero-Trust least privilege and trigger instant identity kill-switch locks.</p>
+                            <p class="font-tech text-xs text-slate-400 mt-0.5">Enforce Zero-Trust least privilege and trigger instant identity kill-switch locks.</p>
                         </div>
-                        <span class="text-xs font-mono text-slate-400 bg-slate-900/60 px-2.5 py-1 rounded border border-slate-700">
-                            <?php echo count($users); ?> Identities Registered
+                        <span class="text-xs font-tech text-cyan-300 bg-cyan-950/60 px-3 py-1 rounded-lg border border-cyan-500/30 font-bold">
+                            <?php echo count($users); ?> IDENTITIES REGISTERED
                         </span>
                     </div>
 
@@ -936,31 +942,32 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
             <div class="space-y-8">
                 
                 <!-- AI Sentinel Terminal (Live Backend Heuristic Output) -->
-                <div class="bg-slate-950 rounded-xl border border-slate-800 shadow-xl overflow-hidden relative">
-                    <div class="border-b border-slate-800 px-4 py-3 flex justify-between items-center bg-slate-900/90 shadow-inner">
+                <div class="cyber-card cyber-brackets rounded-2xl border border-cyan-500/40 shadow-2xl overflow-hidden relative">
+                    <div class="cyber-laser-beam opacity-30"></div>
+                    <div class="border-b border-slate-800 px-4 py-3 flex justify-between items-center bg-slate-950/85">
                         <div class="flex items-center space-x-2">
                             <div class="flex space-x-1.5 mr-2">
-                                <div class="w-2.5 h-2.5 rounded-full bg-red-500/80"></div>
-                                <div class="w-2.5 h-2.5 rounded-full bg-yellow-500/80"></div>
-                                <div class="w-2.5 h-2.5 rounded-full bg-green-500/80"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-red-500/90 shadow-[0_0_6px_#ef4444]"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-amber-500/90 shadow-[0_0_6px_#f59e0b]"></div>
+                                <div class="w-2.5 h-2.5 rounded-full bg-emerald-500/90 shadow-[0_0_6px_#10b981]"></div>
                             </div>
-                            <h3 class="text-xs font-mono font-bold text-white flex items-center">
-                                <i class="fa-solid fa-microchip text-blue-500 mr-2"></i> AI Sentinel Engine
+                            <h3 class="text-xs font-orbitron font-bold text-white flex items-center">
+                                <i class="fa-solid fa-microchip text-cyan-400 mr-2"></i> AI Sentinel Engine
                             </h3>
                         </div>
-                        <span class="text-[10px] <?php echo $active_theme['text']; ?> font-mono tracking-widest border <?php echo $active_theme['border']; ?> px-2 py-0.5 rounded <?php echo $active_theme['bg']; ?> font-bold">
+                        <span class="text-[10px] <?php echo $active_theme['text']; ?> font-tech tracking-widest border <?php echo $active_theme['border']; ?> px-2.5 py-0.5 rounded <?php echo $active_theme['bg']; ?> font-bold">
                             <?php echo $threat_level; ?>
                         </span>
                     </div>
 
                     <!-- Terminal Console Content -->
-                    <div class="p-4 font-mono text-[11px] text-slate-400 space-y-2 h-64 overflow-y-auto custom-scrollbar bg-slate-950">
+                    <div class="p-4 font-tech text-xs text-slate-400 space-y-2 h-72 overflow-y-auto custom-scrollbar bg-slate-950 relative">
                         <?php foreach ($terminal_logs as $tlog): 
                             $badge_color = match($tlog['type']) {
-                                'SYSTEM' => 'text-blue-400',
-                                'CRITICAL' => 'text-red-400 font-bold',
-                                'WARN' => 'text-amber-400',
-                                'OK' => 'text-emerald-400',
+                                'SYSTEM' => 'text-cyan-400 font-bold',
+                                'CRITICAL' => 'text-red-400 font-bold glow-text-red',
+                                'WARN' => 'text-amber-400 font-bold',
+                                'OK' => 'text-emerald-400 font-bold',
                                 'SUMMARY' => 'text-purple-400 font-bold',
                                 default => 'text-slate-400'
                             };
@@ -968,33 +975,34 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                         <div class="flex items-start space-x-2 leading-relaxed">
                             <span class="text-slate-600 select-none">[<?php echo $tlog['time']; ?>]</span>
                             <span class="<?php echo $badge_color; ?> select-none">[<?php echo $tlog['badge']; ?>]</span>
-                            <span class="<?php echo ($tlog['type'] === 'CRITICAL') ? 'text-red-300' : 'text-slate-300'; ?>">
+                            <span class="<?php echo ($tlog['type'] === 'CRITICAL') ? 'text-red-300 font-medium' : 'text-slate-300'; ?>">
                                 <?php echo htmlspecialchars($tlog['msg']); ?>
                             </span>
                         </div>
                         <?php endforeach; ?>
                         
                         <div class="pt-2 flex items-center space-x-2 text-slate-500">
-                            <span class="animate-pulse text-blue-400">&gt;</span>
-                            <span class="text-[10px] text-slate-600">Sentinel engine monitoring audit stream continuously...</span>
+                            <span class="animate-pulse text-cyan-400 font-bold">&gt;</span>
+                            <span class="text-[11px] text-cyan-300/70 font-tech">Sentinel heuristic engine scanning audit streams in real-time...</span>
                         </div>
+
+                        <!-- Scanline overlay -->
+                        <div class="absolute inset-0 scanlines-overlay opacity-30"></div>
                     </div>
-                    <!-- CRT Scanline effect -->
-                    <div class="absolute inset-0 pointer-events-none opacity-10" style="background: repeating-linear-gradient(0deg, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4) 1px, transparent 1px, transparent 2px);"></div>
                 </div>
 
                 <!-- Live Audit Stream -->
-                <div class="bg-slate-800 rounded-xl border border-slate-700 shadow-lg overflow-hidden">
-                    <div class="border-b border-slate-700 p-4 bg-slate-800/90 flex justify-between items-center">
-                        <h3 class="text-xs font-bold text-white uppercase tracking-wider flex items-center">
-                            <i class="fa-solid fa-server text-slate-400 mr-2"></i> Live Audit Stream
+                <div class="cyber-card cyber-brackets rounded-2xl border border-slate-700/80 shadow-2xl overflow-hidden">
+                    <div class="border-b border-slate-800 p-4 bg-slate-950/80 flex justify-between items-center">
+                        <h3 class="text-xs font-orbitron font-bold text-white uppercase tracking-wider flex items-center">
+                            <i class="fa-solid fa-server text-cyan-400 mr-2"></i> Live Audit Stream
                         </h3>
-                        <span class="text-[10px] font-mono text-emerald-400 flex items-center">
-                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 mr-1 animate-ping"></span> Real-time
+                        <span class="text-[10px] font-tech text-emerald-400 flex items-center font-bold">
+                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 mr-1.5 cyber-beacon"></span> LIVE INGEST
                         </span>
                     </div>
-                    <div class="bg-slate-900/20">
-                        <ul class="divide-y divide-slate-700/50 max-h-80 overflow-y-auto custom-scrollbar">
+                    <div class="bg-slate-950/40">
+                        <ul class="divide-y divide-slate-800/60 max-h-80 overflow-y-auto custom-scrollbar font-tech text-xs">
                             <?php if (count($audit_logs) > 0): ?>
                                 <?php foreach ($audit_logs as $log): 
                                     $action_type = strtoupper($log['action_type'] ?? 'EVENT');
@@ -1003,29 +1011,29 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                                     $time = $log['created_at'] ?? '';
                                     
                                     $icon_data = match($action_type) {
-                                        'LOGIN', 'MFA_AUTH' => ['icon' => 'fa-shield-check', 'color' => 'text-emerald-400'],
-                                        'MFA_FAIL', 'LOGIN_FAIL' => ['icon' => 'fa-triangle-exclamation', 'color' => 'text-red-400'],
-                                        'ACCOUNT_SUSPENDED' => ['icon' => 'fa-lock', 'color' => 'text-amber-400'],
-                                        'ACCOUNT_ACTIVATED' => ['icon' => 'fa-lock-open', 'color' => 'text-emerald-400'],
-                                        'ROLE_UPDATED' => ['icon' => 'fa-user-gear', 'color' => 'text-blue-400'],
-                                        'USER_PROVISIONED' => ['icon' => 'fa-user-plus', 'color' => 'text-cyan-400'],
-                                        'LOGOUT' => ['icon' => 'fa-arrow-right-from-bracket', 'color' => 'text-slate-400'],
-                                        'SUSPENDED_LOGIN_ATTEMPT' => ['icon' => 'fa-ban', 'color' => 'text-red-500'],
-                                        default => ['icon' => 'fa-shield', 'color' => 'text-slate-500']
+                                        'LOGIN', 'MFA_AUTH' => ['icon' => 'fa-shield-check', 'color' => 'text-emerald-400', 'glow' => 'glow-emerald'],
+                                        'MFA_FAIL', 'LOGIN_FAIL' => ['icon' => 'fa-triangle-exclamation', 'color' => 'text-red-400', 'glow' => 'glow-red'],
+                                        'ACCOUNT_SUSPENDED' => ['icon' => 'fa-lock', 'color' => 'text-amber-400', 'glow' => ''],
+                                        'ACCOUNT_ACTIVATED' => ['icon' => 'fa-lock-open', 'color' => 'text-emerald-400', 'glow' => ''],
+                                        'ROLE_UPDATED' => ['icon' => 'fa-user-gear', 'color' => 'text-cyan-400', 'glow' => ''],
+                                        'USER_PROVISIONED' => ['icon' => 'fa-user-plus', 'color' => 'text-purple-400', 'glow' => ''],
+                                        'LOGOUT' => ['icon' => 'fa-arrow-right-from-bracket', 'color' => 'text-slate-400', 'glow' => ''],
+                                        'SUSPENDED_LOGIN_ATTEMPT' => ['icon' => 'fa-ban', 'color' => 'text-red-500', 'glow' => 'glow-red'],
+                                        default => ['icon' => 'fa-shield', 'color' => 'text-slate-400', 'glow' => '']
                                     };
                                 ?>
-                                <li class="p-3.5 hover:bg-slate-800/80 transition">
+                                <li class="p-3.5 hover:bg-slate-900/60 transition group">
                                     <div class="flex space-x-3">
                                         <div class="flex-shrink-0 mt-0.5">
-                                            <i class="fa-solid <?php echo $icon_data['icon']; ?> <?php echo $icon_data['color']; ?> text-xs"></i>
+                                            <i class="fa-solid <?php echo $icon_data['icon']; ?> <?php echo $icon_data['color']; ?> text-xs group-hover:scale-125 transition"></i>
                                         </div>
                                         <div class="min-w-0 flex-1">
                                             <p class="text-xs text-slate-300 font-medium break-words leading-snug"><?php echo htmlspecialchars($action_text); ?></p>
-                                            <div class="flex items-center text-[10px] text-slate-500 mt-1 font-mono flex-wrap gap-x-2">
-                                                <span><i class="fa-solid fa-globe mr-0.5"></i> <?php echo htmlspecialchars($ip); ?></span>
-                                                <span class="text-slate-600">|</span>
-                                                <span>UID-<?php echo htmlspecialchars($log['user_id'] ? str_pad($log['user_id'], 4, '0', STR_PAD_LEFT) : 'SYS'); ?></span>
-                                                <span class="text-slate-600">|</span>
+                                            <div class="flex items-center text-[10px] text-slate-500 mt-1 flex-wrap gap-x-2">
+                                                <span><i class="fa-solid fa-network-wired mr-0.5 text-cyan-400/70"></i> <?php echo htmlspecialchars($ip); ?></span>
+                                                <span class="text-slate-700">|</span>
+                                                <span class="text-slate-400">UID-<?php echo htmlspecialchars($log['user_id'] ? str_pad($log['user_id'], 4, '0', STR_PAD_LEFT) : 'SYS'); ?></span>
+                                                <span class="text-slate-700">|</span>
                                                 <span><?php echo htmlspecialchars($time); ?></span>
                                             </div>
                                         </div>
@@ -1033,7 +1041,7 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                                 </li>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <li class="p-8 text-center text-xs text-slate-500">
+                                <li class="p-8 text-center text-xs text-slate-500 font-tech">
                                     <i class="fa-solid fa-ghost text-2xl mb-2 opacity-30 block text-slate-400"></i>
                                     Audit stream is currently empty.
                                 </li>
@@ -1056,14 +1064,15 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
     </div>
 
     <!-- MODAL 1: PROVISION IDENTITY (Phase 4.2: Enterprise RBAC & Clearance) -->
-    <div id="provisionModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-        <div class="bg-slate-900 p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-lg border border-slate-700 max-h-[90vh] overflow-y-auto custom-scrollbar">
+    <div id="provisionModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md flex justify-center items-center z-50 p-4">
+        <div class="cyber-card cyber-brackets p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-lg border border-cyan-500/40 max-h-[90vh] overflow-y-auto custom-scrollbar relative">
+            <div class="cyber-laser-beam opacity-30"></div>
             <div class="flex justify-between items-center mb-5 border-b border-slate-800 pb-3">
                 <div class="flex items-center space-x-2 text-white">
-                    <div class="h-8 w-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
+                    <div class="h-8 w-8 rounded-lg bg-cyan-950/80 border border-cyan-500/40 flex items-center justify-center text-cyan-400 glow-cyan-sm">
                         <i class="fa-solid fa-user-plus text-sm"></i>
                     </div>
-                    <h2 class="text-base font-bold">Provision Enterprise Identity</h2>
+                    <h2 class="font-orbitron text-base font-bold">Provision Enterprise Identity</h2>
                 </div>
                 <button onclick="document.getElementById('provisionModal').classList.add('hidden')" class="text-slate-400 hover:text-white transition">
                     <i class="fa-solid fa-xmark text-lg"></i>
@@ -1076,33 +1085,33 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                 <input type="hidden" name="action" value="provision_user">
                 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
                 
-                <div class="grid grid-cols-2 gap-3 mb-3.5">
+                <div class="grid grid-cols-2 gap-3 mb-3.5 font-tech">
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">First Name</label>
-                        <input type="text" name="first_name" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white outline-none focus:border-blue-500" placeholder="e.g. Jane">
+                        <label class="block text-xs text-cyan-300 uppercase mb-1">First Name</label>
+                        <input type="text" name="first_name" class="cyber-input w-full px-3 py-2 rounded-lg text-xs" placeholder="e.g. Jane">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Last Name</label>
-                        <input type="text" name="last_name" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white outline-none focus:border-blue-500" placeholder="e.g. Doe">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3.5">
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Enterprise Email <span class="text-red-400">*</span></label>
-                        <input type="email" name="new_email" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white outline-none focus:border-blue-500" placeholder="user@organization.com" required>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Temporary Password <span class="text-red-400">*</span></label>
-                        <input type="password" name="new_password" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white outline-none focus:border-blue-500" placeholder="••••••••••••" required>
+                        <label class="block text-xs text-cyan-300 uppercase mb-1">Last Name</label>
+                        <input type="text" name="last_name" class="cyber-input w-full px-3 py-2 rounded-lg text-xs" placeholder="e.g. Doe">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3.5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3.5 font-tech">
+                    <div>
+                        <label class="block text-xs text-cyan-300 uppercase mb-1">Enterprise Email <span class="text-red-400">*</span></label>
+                        <input type="email" name="new_email" class="cyber-input w-full px-3 py-2 rounded-lg text-xs" placeholder="user@organization.com" required>
+                    </div>
+                    <div>
+                        <label class="block text-xs text-cyan-300 uppercase mb-1">Temporary Password <span class="text-red-400">*</span></label>
+                        <input type="password" name="new_password" class="cyber-input w-full px-3 py-2 rounded-lg text-xs" placeholder="••••••••••••" required>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3.5 font-tech">
                     <!-- Department Dropdown -->
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Department</label>
-                        <select name="department" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white outline-none focus:border-blue-500">
+                        <label class="block text-xs text-cyan-300 uppercase mb-1">Department</label>
+                        <select name="department" class="cyber-input w-full px-3 py-2 rounded-lg text-xs">
                             <option value="Security Operations Center (SOC)">Security Operations Center (SOC)</option>
                             <option value="IT & Cloud Infrastructure">IT & Cloud Infrastructure</option>
                             <option value="Finance & Treasury">Finance & Treasury</option>
@@ -1115,16 +1124,16 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
 
                     <!-- Job Title -->
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Job Title</label>
-                        <input type="text" name="job_title" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white outline-none focus:border-blue-500" placeholder="e.g. SOC Security Analyst" value="Staff Analyst">
+                        <label class="block text-xs text-cyan-300 uppercase mb-1">Job Title</label>
+                        <input type="text" name="job_title" class="cyber-input w-full px-3 py-2 rounded-lg text-xs" placeholder="e.g. SOC Security Analyst" value="Staff Analyst">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5 font-tech">
                     <!-- Functional Role Dropdown -->
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Functional Role (RBAC)</label>
-                        <select name="role" id="provRoleSelect" onchange="syncProvisioningDefaults()" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white outline-none focus:border-blue-500">
+                        <label class="block text-xs text-cyan-300 uppercase mb-1">Functional Role (RBAC)</label>
+                        <select name="role" id="provRoleSelect" onchange="syncProvisioningDefaults()" class="cyber-input w-full px-3 py-2 rounded-lg text-xs">
                             <option value="Staff" selected>Staff (Standard Employee)</option>
                             <option value="Auditor">Auditor (Compliance Officer)</option>
                             <option value="Admin">Admin (SOC Administrator)</option>
@@ -1133,8 +1142,8 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
 
                     <!-- Security Clearance Tier Dropdown -->
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Security Clearance</label>
-                        <select name="security_clearance" id="provClearanceSelect" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white outline-none focus:border-blue-500">
+                        <label class="block text-xs text-cyan-300 uppercase mb-1">Security Clearance</label>
+                        <select name="security_clearance" id="provClearanceSelect" class="cyber-input w-full px-3 py-2 rounded-lg text-xs">
                             <option value="Tier 1" selected>Tier 1 // Restricted</option>
                             <option value="Tier 2">Tier 2 // Confidential</option>
                             <option value="Tier 3">Tier 3 // Top Secret</option>
@@ -1145,11 +1154,11 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                 <!-- Internal DB Role Mapping (Hidden / Synced) -->
                 <input type="hidden" name="role_id" id="provRoleIdHidden" value="4">
 
-                <div class="flex space-x-3 pt-2 border-t border-slate-800">
-                    <button type="button" onclick="document.getElementById('provisionModal').classList.add('hidden')" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold py-2.5 rounded-lg transition">
+                <div class="flex space-x-3 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="document.getElementById('provisionModal').classList.add('hidden')" class="w-1/2 bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-tech font-bold py-2.5 rounded-xl border border-slate-700 transition">
                         Cancel
                     </button>
-                    <button type="submit" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-2.5 rounded-lg transition shadow-lg shadow-blue-900/40">
+                    <button type="submit" class="cyber-btn w-1/2 bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white text-xs font-orbitron font-bold py-2.5 rounded-xl transition shadow-lg glow-cyan">
                         Provision Identity
                     </button>
                 </div>
@@ -1158,14 +1167,15 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
     </div>
 
     <!-- MODAL 2: EDIT ROLE & CLEARANCE (RBAC) -->
-    <div id="roleModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-        <div class="bg-slate-900 p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md border border-slate-700">
+    <div id="roleModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md flex justify-center items-center z-50 p-4">
+        <div class="cyber-card cyber-brackets p-6 sm:p-8 rounded-2xl shadow-2xl w-full max-w-md border border-cyan-500/40 relative overflow-hidden">
+            <div class="cyber-laser-beam opacity-30"></div>
             <div class="flex justify-between items-center mb-5 border-b border-slate-800 pb-3">
                 <div class="flex items-center space-x-2 text-white">
-                    <div class="h-8 w-8 rounded-lg bg-blue-600/20 border border-blue-500/30 flex items-center justify-center text-blue-400">
+                    <div class="h-8 w-8 rounded-lg bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 glow-cyan-sm">
                         <i class="fa-solid fa-user-gear text-sm"></i>
                     </div>
-                    <h2 class="text-base font-bold">Modify RBAC Permissions</h2>
+                    <h2 class="font-orbitron text-base font-bold">Modify RBAC Permissions</h2>
                 </div>
                 <button onclick="document.getElementById('roleModal').classList.add('hidden')" class="text-slate-400 hover:text-white transition">
                     <i class="fa-solid fa-xmark text-lg"></i>
@@ -1177,16 +1187,16 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                 <input type="hidden" name="target_user_id" id="roleModalUserId">
                 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
 
-                <div class="mb-4">
-                    <label class="block text-xs font-medium text-slate-400 mb-1">Target Account</label>
-                    <div id="roleModalEmail" class="font-mono text-xs font-semibold text-white bg-slate-950 px-3 py-2 rounded-lg border border-slate-800"></div>
+                <div class="mb-4 font-tech">
+                    <label class="block text-xs text-slate-400 mb-1">Target Account</label>
+                    <div id="roleModalEmail" class="text-xs font-bold text-white bg-slate-950 px-3 py-2 rounded-lg border border-slate-800 font-mono"></div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 mb-4">
+                <div class="grid grid-cols-2 gap-3 mb-4 font-tech">
                     <!-- Functional Role Dropdown -->
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Functional Role</label>
-                        <select name="new_functional_role" id="roleModalFuncRole" onchange="syncRoleModalDefaults()" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white outline-none focus:border-blue-500">
+                        <label class="block text-xs text-cyan-300 uppercase mb-1">Functional Role</label>
+                        <select name="new_functional_role" id="roleModalFuncRole" onchange="syncRoleModalDefaults()" class="cyber-input w-full px-3 py-2 rounded-lg text-xs">
                             <option value="Staff">Staff</option>
                             <option value="Auditor">Auditor</option>
                             <option value="Admin">Admin</option>
@@ -1195,8 +1205,8 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
 
                     <!-- Security Clearance Dropdown -->
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1">Clearance Tier</label>
-                        <select name="new_clearance" id="roleModalClearance" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white outline-none focus:border-blue-500">
+                        <label class="block text-xs text-cyan-300 uppercase mb-1">Clearance Tier</label>
+                        <select name="new_clearance" id="roleModalClearance" class="cyber-input w-full px-3 py-2 rounded-lg text-xs">
                             <option value="Tier 1">Tier 1 (Restricted)</option>
                             <option value="Tier 2">Tier 2 (Confidential)</option>
                             <option value="Tier 3">Tier 3 (Top Secret)</option>
@@ -1204,9 +1214,9 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                     </div>
                 </div>
 
-                <div class="mb-5">
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Database Role Group</label>
-                    <select name="new_role_id" id="roleModalSelect" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-xs text-white outline-none focus:border-blue-500">
+                <div class="mb-5 font-tech">
+                    <label class="block text-xs text-cyan-300 uppercase mb-1">Database Role Group</label>
+                    <select name="new_role_id" id="roleModalSelect" class="cyber-input w-full px-3 py-2 rounded-lg text-xs">
                         <?php foreach ($roles as $r): ?>
                             <option value="<?php echo (int) $r['role_id']; ?>">
                                 <?php echo htmlspecialchars($r['role_name']); ?>
@@ -1215,11 +1225,11 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                     </select>
                 </div>
 
-                <div class="flex space-x-3 pt-2 border-t border-slate-800">
-                    <button type="button" onclick="document.getElementById('roleModal').classList.add('hidden')" class="w-1/2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold py-2.5 rounded-lg transition">
+                <div class="flex space-x-3 pt-3 border-t border-slate-800">
+                    <button type="button" onclick="document.getElementById('roleModal').classList.add('hidden')" class="w-1/2 bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-tech font-bold py-2.5 rounded-xl border border-slate-700 transition">
                         Cancel
                     </button>
-                    <button type="submit" class="w-1/2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold py-2.5 rounded-lg transition shadow-lg shadow-blue-900/40">
+                    <button type="submit" class="cyber-btn w-1/2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white text-xs font-orbitron font-bold py-2.5 rounded-xl transition shadow-lg glow-cyan">
                         Apply Changes
                     </button>
                 </div>
@@ -1452,15 +1462,30 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
             osc.stop(startTime + duration);
         }
 
-        function toggleAudioMute() {
-            audioMuted = !audioMuted;
-            const btn = document.getElementById('hudMuteBtn');
-            if (audioMuted) {
-                btn.innerHTML = '<i class="fa-solid fa-volume-xmark text-red-400"></i>';
+        function toggleGlobalAudio() {
+            let isMuted = false;
+            if (window.CyberAudio) {
+                isMuted = CyberAudio.toggleMute();
             } else {
-                btn.innerHTML = '<i class="fa-solid fa-volume-high text-cyan-400"></i>';
-                playSciFiChime();
+                audioMuted = !audioMuted;
+                isMuted = audioMuted;
             }
+            audioMuted = isMuted;
+            const navIcon = document.getElementById('navMuteIcon');
+            if (navIcon) {
+                navIcon.className = isMuted ? 'fa-solid fa-volume-xmark text-xs text-red-400' : 'fa-solid fa-volume-high text-xs text-cyan-400';
+            }
+            const hudBtn = document.getElementById('hudMuteBtn');
+            if (hudBtn) {
+                hudBtn.innerHTML = isMuted ? '<i class="fa-solid fa-volume-xmark text-red-400"></i>' : '<i class="fa-solid fa-volume-high text-cyan-400"></i>';
+            }
+            if (!isMuted && window.CyberAudio) {
+                CyberAudio.accessGranted();
+            }
+        }
+
+        function toggleAudioMute() {
+            toggleGlobalAudio();
         }
 
         function dismissCyberWelcomeHUD() {
