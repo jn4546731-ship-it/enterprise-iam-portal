@@ -237,6 +237,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
 }
 
 // -------------------------------------------------------------
+// 3B. HANDLE RBAC: PERMANENTLY PURGE IDENTITY (CRUD: Delete)
+// -------------------------------------------------------------
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'delete_user') {
+    if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
+        $feedback_alert = "<div class='cyber-card cyber-brackets bg-red-950/60 border border-red-500/50 text-red-400 p-3 rounded-lg mb-6 text-xs font-tech flex items-center'><i class='fa-solid fa-triangle-exclamation mr-2'></i> CSRF validation failed. Action aborted.</div>";
+    } else {
+        $target_user_id = (int) ($_POST['target_user_id'] ?? 0);
+        $client_ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+
+        // Security Policy: Prevent self-deletion
+        if ($target_user_id === $current_user_id) {
+            $feedback_alert = "<div class='cyber-card cyber-brackets bg-red-950/60 border border-red-500/50 text-red-400 p-3 rounded-lg mb-6 text-xs font-tech flex items-center'><i class='fa-solid fa-shield-halved mr-2 text-red-400'></i> Security Policy Violation: Administrators cannot purge their own active identity.</div>";
+        } else {
+            $t_stmt = $conn->prepare("SELECT email FROM users WHERE user_id = ?");
+            $t_stmt->bind_param("i", $target_user_id);
+            $t_stmt->execute();
+            $target_res = $t_stmt->get_result();
+            $target_user = $target_res->fetch_assoc();
+
+            if ($target_user) {
+                $target_email = $target_user['email'];
+
+                // Disassociate user from historical audit logs (preserve immutable log integrity)
+                $u_log = $conn->prepare("UPDATE audit_logs SET user_id = NULL WHERE user_id = ?");
+                $u_log->bind_param("i", $target_user_id);
+                $u_log->execute();
+
+                // Delete identity record
+                $del_stmt = $conn->prepare("DELETE FROM users WHERE user_id = ?");
+                $del_stmt->bind_param("i", $target_user_id);
+
+                if ($del_stmt->execute()) {
+                    $action_type = "USER_PURGED";
+                    $action_desc = "Identity UID-{$target_user_id} ({$target_email}) was PERMANENTLY PURGED from directory by Admin UID-{$current_user_id}.";
+                    $log_stmt = $conn->prepare("INSERT INTO audit_logs (user_id, action_type, action_description, ip_address) VALUES (?, ?, ?, ?)");
+                    $log_stmt->bind_param("isss", $current_user_id, $action_type, $action_desc, $client_ip);
+                    $log_stmt->execute();
+
+                    $feedback_alert = "<div class='cyber-card cyber-brackets bg-red-950/60 border border-red-500/50 text-red-300 p-3.5 rounded-lg mb-6 text-xs font-tech flex items-center'><i class='fa-solid fa-trash-can mr-2 text-red-400'></i> Identity <strong>{$target_email}</strong> (UID-{$target_user_id}) was permanently purged from the directory.</div>";
+                } else {
+                    $feedback_alert = "<div class='cyber-card cyber-brackets bg-red-950/60 border border-red-500/50 text-red-400 p-3 rounded-lg mb-6 text-xs font-tech'>Database error purging identity.</div>";
+                }
+            } else {
+                $feedback_alert = "<div class='cyber-card cyber-brackets bg-red-950/60 border border-red-500/50 text-red-400 p-3 rounded-lg mb-6 text-xs font-tech'>Target identity not found.</div>";
+            }
+        }
+    }
+}
+
+// -------------------------------------------------------------
 // 4. HANDLE NEW USER PROVISIONING (Phase 4.2: Enterprise RBAC)
 // -------------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'provision_user') {
@@ -537,6 +587,12 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                 <a href="setup_mfa.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-emerald-500/30 transition group font-tech">
                     <i class="fa-solid fa-mobile-screen-button w-4 text-center text-slate-500 group-hover:text-emerald-400 transition"></i>
                     <span class="font-medium">Multi-Factor Auth (MFA)</span>
+                </a>
+
+                <a href="audit_report.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-cyan-500/30 transition group font-tech">
+                    <i class="fa-solid fa-file-invoice text-slate-500 group-hover:text-cyan-400 transition w-4 text-center"></i>
+                    <span class="font-medium">Executive Audit Report</span>
+                    <span class="ml-auto text-[9px] font-mono bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-500/30 uppercase font-bold">PRINT</span>
                 </a>
 
                 <a href="?export=csv" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-cyan-500/30 transition group font-tech">
@@ -874,9 +930,21 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                                             <?php endif; ?>
 
                                             <!-- Edit Role & Clearance Modal Trigger -->
-                                            <button onclick="openRoleModal(<?php echo $uid; ?>, '<?php echo addslashes($user_email); ?>', <?php echo $user_role_id; ?>, '<?php echo addslashes($user_functional_role); ?>', '<?php echo addslashes($user_clearance_val); ?>')" class="p-2 text-slate-400 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition" title="Modify RBAC Role & Clearance">
+                                            <button onclick="openRoleModal(<?php echo $uid; ?>, '<?php echo addslashes($user_email); ?>', <?php echo $user_role_id; ?>, '<?php echo addslashes($user_functional_role); ?>', '<?php echo addslashes($user_clearance_val); ?>')" class="p-2 text-slate-400 hover:text-cyan-400 hover:bg-cyan-500/10 rounded-lg transition" title="Modify RBAC Role & Clearance">
                                                 <i class="fa-solid fa-user-gear"></i>
                                             </button>
+
+                                            <?php if (!$is_self): ?>
+                                                <!-- Purge / Delete Identity Form (CRUD: Delete) -->
+                                                <form method="POST" action="" class="inline" onsubmit="return confirm('PERMANENT ACTION (CRUD DELETE): Are you sure you want to PERMANENTLY PURGE UID-<?php echo $uid; ?> (<?php echo $user_email; ?>) from the enterprise database? This cannot be undone.');">
+                                                    <input type="hidden" name="action" value="delete_user">
+                                                    <input type="hidden" name="target_user_id" value="<?php echo $uid; ?>">
+                                                    <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                                                    <button type="submit" class="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition" title="Purge Identity (CRUD Delete)">
+                                                        <i class="fa-solid fa-trash-can text-xs"></i>
+                                                    </button>
+                                                </form>
+                                            <?php endif; ?>
                                         </div>
                                     </td>
                                 </tr>

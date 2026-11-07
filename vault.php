@@ -277,6 +277,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vault_action'])) {
                     <span class="font-medium">Multi-Factor Auth (MFA)</span>
                 </a>
 
+                <a href="audit_report.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-purple-500/30 transition group font-tech">
+                    <i class="fa-solid fa-file-invoice text-slate-500 group-hover:text-purple-400 transition w-4 text-center"></i>
+                    <span class="font-medium">Executive Audit Report</span>
+                    <span class="ml-auto text-[9px] font-mono bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded border border-purple-500/30 uppercase font-bold">PRINT</span>
+                </a>
+
                 <a href="dashboard.php?export=csv" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-cyan-500/30 transition group font-tech">
                     <i class="fa-solid fa-file-csv w-4 text-center text-slate-500 group-hover:text-cyan-400 transition"></i>
                     <span class="font-medium">Export Audit Ledger</span>
