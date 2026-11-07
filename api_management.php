@@ -171,10 +171,11 @@ if ($res) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
     <title>Enterprise API Key Management - Cryptographic Gatekeeper</title>
     <script src="assets/js/tailwind.js"></script>
     <link href="assets/css/all.min.css" rel="stylesheet">

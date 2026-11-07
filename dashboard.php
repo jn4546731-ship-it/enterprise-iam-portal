@@ -407,10 +407,11 @@ $color_map = [
 $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
     <title>Enterprise Zero-Trust SOC Command Center - IAM Sentinel</title>
     <script src="assets/js/tailwind.js"></script>
     <link href="assets/css/all.min.css" rel="stylesheet">

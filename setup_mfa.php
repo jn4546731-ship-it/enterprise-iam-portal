@@ -50,10 +50,11 @@ $otpauth_uri = "otpauth://totp/" . rawurlencode($issuer) . ":" . rawurlencode($a
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
     <title>MFA Zero-Trust Enrollment - Enterprise SOC</title>
     <script src="assets/js/tailwind.js"></script>
     <link href="assets/css/all.min.css" rel="stylesheet">
