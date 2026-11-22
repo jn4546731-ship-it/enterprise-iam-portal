@@ -184,8 +184,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2 text-center">
                         6-Digit Security Code
                     </label>
-                    <input type="text" name="mfa_code" maxlength="6" autofocus 
-                           class="w-full px-4 py-3 rounded-md text-center tracking-[0.45em] font-mono font-bold text-2xl bg-[#0d1117] border border-[#30363d] text-[#2f81f7] placeholder:text-slate-700 focus:outline-none focus:border-[#2f81f7] transition" 
+                    <input type="text" name="mfa_code" id="mfaCodeInput" maxlength="6" autofocus 
+                           class="totp-code-input w-full px-4 py-3 rounded-md text-center tracking-[0.45em] font-mono font-bold text-2xl bg-[#0d1117] border border-[#30363d] text-white placeholder:text-slate-600 focus:outline-none focus:border-[#2f81f7] transition" 
+                           style="color: #ffffff !important; background-color: #0d1117 !important; caret-color: #2f81f7 !important; font-size: 1.75rem !important; font-family: 'Share Tech Mono', monospace !important; letter-spacing: 0.45em !important; font-weight: 700 !important;"
                            placeholder="000000" required autocomplete="one-time-code" inputmode="numeric">
                     
                     <!-- 30-Second Rolling Code Progress Bar -->

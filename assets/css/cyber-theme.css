@@ -26,6 +26,9 @@
   --color-surface-container-highest: #31353e;
 
   /* Typography Colors */
+  --color-text-primary: #f0f6fc;
+  --color-text-secondary: #8b949e;
+  --color-text-muted: #6e7681;
   --color-on-surface: #dfe2ee;
   --color-on-surface-variant: #bdc8d1;
   --color-outline: #87929a;
@@ -280,14 +283,35 @@ input[type="email"],
 input[type="password"],
 select,
 textarea {
-    background-color: var(--color-canvas) !important;
-    border: 1px solid #1c2233 !important;
-    color: var(--color-text-primary) !important;
-    border-radius: var(--radius-md) !important;
-    font-family: var(--font-sans) !important;
-    font-size: 0.875rem !important;
+    background-color: var(--color-canvas);
+    border: 1px solid #1c2233;
+    color: var(--color-text-primary, #f0f6fc);
+    border-radius: var(--radius-md);
+    font-family: var(--font-sans);
+    font-size: 0.875rem;
     padding: 0.625rem 0.875rem;
     transition: all 0.15s ease;
+}
+
+/* Dedicated MFA / TOTP Security Code Input (High-Contrast Bright Monospace) */
+.totp-code-input,
+input[name="mfa_code"] {
+    color: #ffffff !important;
+    background-color: #0d1117 !important;
+    border: 1px solid #30363d !important;
+    font-family: 'Share Tech Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace !important;
+    font-size: 1.75rem !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.45em !important;
+    text-align: center !important;
+    caret-color: #2f81f7 !important;
+}
+
+.totp-code-input:focus,
+input[name="mfa_code"]:focus {
+    border-color: #2f81f7 !important;
+    box-shadow: 0 0 0 2px rgba(47, 129, 247, 0.25) !important;
+    outline: none !important;
 }
 
 /* Dedicated padding overrides for inputs with left or right icons */
@@ -1064,6 +1088,14 @@ html.light .cyber-input {
     background-color: #ffffff !important;
     border: 1px solid #cbd5e1 !important;
     color: #0f172a !important;
+}
+
+html.light .totp-code-input,
+html.light input[name="mfa_code"] {
+    color: #0f172a !important;
+    background-color: #f8fafc !important;
+    border-color: #cbd5e1 !important;
+    caret-color: #0284c7 !important;
 }
 
 html.light input:focus,

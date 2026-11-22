@@ -421,8 +421,9 @@ $otpauth_uri = "otpauth://totp/" . rawurlencode($issuer) . ":" . rawurlencode($a
                                         Step 2 &mdash; Enter 6-digit verification code from your device
                                     </label>
                                     <div class="flex items-center gap-3">
-                                        <input type="text" name="mfa_code" maxlength="6" 
-                                               class="w-48 px-4 py-2.5 rounded-md text-center tracking-[0.35em] font-mono font-bold text-xl bg-[#0d1117] border border-[#30363d] text-[#2f81f7] placeholder:text-slate-700 focus:outline-none focus:border-[#2f81f7] transition" 
+                                        <input type="text" name="mfa_code" id="setupMfaCodeInput" maxlength="6" 
+                                               class="totp-code-input w-48 px-4 py-2.5 rounded-md text-center tracking-[0.35em] font-mono font-bold text-xl bg-[#0d1117] border border-[#30363d] text-white placeholder:text-slate-600 focus:outline-none focus:border-[#2f81f7] transition" 
+                                               style="color: #ffffff !important; background-color: #0d1117 !important; caret-color: #2f81f7 !important; font-size: 1.5rem !important; font-family: 'Share Tech Mono', monospace !important; letter-spacing: 0.35em !important; font-weight: 700 !important;"
                                                placeholder="000000" required autocomplete="off" inputmode="numeric">
                                         <button type="submit" class="px-6 py-2.5 rounded-md bg-[#2f81f7] hover:bg-blue-600 text-white font-semibold text-xs transition shadow-xs flex items-center gap-2">
                                             <i class="fa-solid fa-shield-check text-xs"></i>
