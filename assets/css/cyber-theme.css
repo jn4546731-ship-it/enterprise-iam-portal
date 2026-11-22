@@ -425,3 +425,187 @@ aside {
 ::-webkit-scrollbar-thumb:hover {
     background: #2d3748;
 }
+
+/* ==========================================================================
+   Light Mode Theme System (Enterprise IAM Clean Standard)
+   ========================================================================== */
+html.light, body.light {
+    --color-canvas: #f8fafc !important;
+    --color-surface: #ffffff !important;
+    --color-surface-nested: #f1f5f9 !important;
+    --color-surface-elevated: #e2e8f0 !important;
+    --color-surface-highest: #cbd5e1 !important;
+
+    --color-text-primary: #0f172a !important;
+    --color-text-secondary: #475569 !important;
+    --color-text-muted: #64748b !important;
+    --color-on-surface: #0f172a !important;
+    --color-on-surface-variant: #475569 !important;
+
+    --border-subtle: 1px solid #e2e8f0 !important;
+    --border-hover: 1px solid #cbd5e1 !important;
+    --border-active: 1px solid #0284c7 !important;
+
+    --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04) !important;
+    --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04) !important;
+    color-scheme: light !important;
+}
+
+html.light body,
+body.light {
+    background-color: #f8fafc !important;
+    color: #0f172a !important;
+}
+
+html.light .cyber-bg,
+html.light .bg-\[\#0a0e16\],
+html.light .bg-\[\#090d16\] {
+    background-color: #f8fafc !important;
+}
+
+html.light .cyber-grid-overlay {
+    background-image: 
+        linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px) !important;
+}
+
+html.light nav,
+html.light header {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+html.light aside {
+    background-color: #ffffff !important;
+    border-right: 1px solid #e2e8f0 !important;
+}
+
+html.light .bg-\[\#0f131c\],
+html.light .bg-\[\#0c101a\],
+html.light .bg-\[\#0e131f\],
+html.light .cyber-card {
+    background-color: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
+}
+
+html.light .bg-\[\#181c24\],
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/80,
+html.light .bg-slate-950\/70,
+html.light .bg-slate-950\/80,
+html.light .bg-slate-950\/85,
+html.light .bg-slate-950\/40,
+html.light .bg-slate-950 {
+    background-color: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.light .border-white\/\[0\.08\],
+html.light .border-white\/\[0\.06\],
+html.light .border-white\/\[0\.12\],
+html.light .border-white\/\[0\.04\],
+html.light .border-\[\#1c2230\],
+html.light .border-\[\#1c2233\],
+html.light .border-slate-800,
+html.light .border-slate-800\/80,
+html.light .border-slate-800\/60,
+html.light .border-slate-700,
+html.light .border-slate-700\/80 {
+    border-color: #e2e8f0 !important;
+}
+
+html.light .text-white {
+    color: #0f172a !important;
+}
+
+html.light .text-slate-200 {
+    color: #1e293b !important;
+}
+
+html.light .text-slate-300 {
+    color: #334155 !important;
+}
+
+html.light .text-slate-400 {
+    color: #64748b !important;
+}
+
+html.light .text-slate-500 {
+    color: #94a3b8 !important;
+}
+
+html.light thead {
+    background-color: #f1f5f9 !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html.light thead th {
+    color: #475569 !important;
+}
+
+html.light tbody tr {
+    background-color: #ffffff !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+html.light tbody tr:hover {
+    background-color: #f8fafc !important;
+}
+
+html.light input[type="text"],
+html.light input[type="email"],
+html.light input[type="password"],
+html.light select,
+html.light textarea,
+html.light .cyber-input {
+    background-color: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #0f172a !important;
+}
+
+html.light input:focus,
+html.light select:focus,
+html.light .cyber-input:focus {
+    background-color: #ffffff !important;
+    border-color: #0284c7 !important;
+    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.15) !important;
+}
+
+html.light select option {
+    background-color: #ffffff !important;
+    color: #0f172a !important;
+}
+
+html.light .nav-item-active {
+    background-color: rgba(2, 132, 199, 0.08) !important;
+    color: #0284c7 !important;
+    border-left: 2px solid #0284c7 !important;
+}
+
+html.light .nav-item-inactive:hover {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+}
+
+html.light .bg-slate-900 {
+    background-color: #ffffff !important;
+}
+
+html.light .custom-scrollbar::-webkit-scrollbar-track {
+    background: #f1f5f9 !important;
+}
+
+html.light .custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #cbd5e1 !important;
+}
+
+/* Reduce and silence distracting animations */
+.animate-spin,
+.radar-rotate,
+.laser-line,
+.scanlines-overlay {
+    animation: none !important;
+}
+
