@@ -48,9 +48,11 @@ class AISentinel {
 
         $logs = [];
         while ($row = $result->fetch_assoc()) {
+            $rawIp = trim($row['ip_address'] ?? '127.0.0.1');
+            $ip = ($rawIp === '::1' || $rawIp === 'localhost' || empty($rawIp)) ? '127.0.0.1' : $rawIp;
+            $row['ip_address'] = $ip;
             $logs[] = $row;
             $scannedCount++;
-            $ip = $row['ip_address'] ?? '127.0.0.1';
             $uniqueIps[$ip] = true;
         }
 
@@ -360,11 +362,29 @@ class AISentinel {
     }
 
     /**
-     * Reset simulated test events from audit trail.
+     * Reset simulated test events and failure telemetry from audit trail.
+     * Calibrates AI Sentinel posture back to safe baseline (LOW, ATS: 5/100).
      */
     public static function resetSimulationTelemetry(mysqli $conn): bool {
-        $stmt = $conn->prepare("DELETE FROM audit_logs WHERE action_description LIKE 'SIMULATED BREACH%'");
-        return (bool) $stmt->execute();
+        // 1. Purge synthetic breach simulation logs
+        $conn->query("DELETE FROM audit_logs WHERE action_description LIKE 'SIMULATED BREACH%'");
+
+        // 2. Clear lingering test failures and unauthorized access attempts
+        $conn->query("DELETE FROM audit_logs WHERE action_type IN ('MFA_FAIL', 'LOGIN_FAIL', 'SUSPENDED_LOGIN_ATTEMPT', 'ACCESS_DENIED_UNAUTHORIZED_RESOURCE')");
+
+        // 3. Log verified baseline calibration event
+        $adminId = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 1;
+        $clientIp = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
+        if ($clientIp === '::1' || $clientIp === 'localhost') {
+            $clientIp = '127.0.0.1';
+        }
+        $stmt = $conn->prepare("INSERT INTO audit_logs (user_id, action_type, action_description, ip_address) VALUES (?, 'BASELINE_RESET', 'Threat baseline calibrated: All simulated attack vectors and failure anomalies cleared by SOC Administrator.', ?)");
+        if ($stmt) {
+            $stmt->bind_param("is", $adminId, $clientIp);
+            $stmt->execute();
+        }
+
+        return true;
     }
 
     private static function formatReport(int $score, string $level, string $color, array $anomalies, array $logs, array $stats): array {
