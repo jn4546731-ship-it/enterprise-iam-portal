@@ -286,8 +286,25 @@ textarea {
     border-radius: var(--radius-md) !important;
     font-family: var(--font-sans) !important;
     font-size: 0.875rem !important;
-    padding: 0.625rem 0.875rem !important;
+    padding: 0.625rem 0.875rem;
     transition: all 0.15s ease;
+}
+
+/* Dedicated padding overrides for inputs with left or right icons */
+.input-icon-left,
+input.pl-10,
+input.pl-11,
+input[class*="pl-10"],
+input[class*="pl-11"] {
+    padding-left: 2.75rem !important;
+}
+
+.input-icon-right,
+input.pr-10,
+input.pr-11,
+input[class*="pr-10"],
+input[class*="pr-11"] {
+    padding-right: 2.75rem !important;
 }
 
 .cyber-input:focus,

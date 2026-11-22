@@ -194,10 +194,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         Email Address
                     </label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                             <i class="fa-regular fa-envelope text-xs"></i>
                         </div>
-                        <input type="email" id="loginEmail" name="email" class="w-full pl-10 pr-3.5 py-2.5 rounded-md text-xs bg-[#0d1117] border border-[#30363d] text-white placeholder:text-slate-500 focus:outline-none focus:border-[#2f81f7] transition" placeholder="admin@organization.com" required autocomplete="username">
+                        <input type="email" id="loginEmail" name="email" style="padding-left: 2.75rem !important; padding-right: 1rem !important;" class="w-full py-2.5 rounded-md text-xs bg-[#0d1117] border border-[#30363d] text-white placeholder:text-slate-500 focus:outline-none focus:border-[#2f81f7] transition" placeholder="admin@organization.com" required autocomplete="username">
                     </div>
                 </div>
                 
@@ -206,10 +206,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         Password
                     </label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-400">
                             <i class="fa-solid fa-lock text-xs"></i>
                         </div>
-                        <input type="password" id="loginPass" name="password" class="w-full pl-10 pr-10 py-2.5 rounded-md text-xs bg-[#0d1117] border border-[#30363d] text-white placeholder:text-slate-500 focus:outline-none focus:border-[#2f81f7] transition" placeholder="Enter your password" required autocomplete="current-password">
+                        <input type="password" id="loginPass" name="password" style="padding-left: 2.75rem !important; padding-right: 2.75rem !important;" class="w-full py-2.5 rounded-md text-xs bg-[#0d1117] border border-[#30363d] text-white placeholder:text-slate-500 focus:outline-none focus:border-[#2f81f7] transition" placeholder="Enter your password" required autocomplete="current-password">
                         <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-white transition" title="Show or hide password">
                             <i id="passwordToggleIcon" class="fa-regular fa-eye text-xs"></i>
                         </button>
