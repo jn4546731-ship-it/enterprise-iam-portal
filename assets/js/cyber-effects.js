@@ -102,7 +102,7 @@ class CyberBackground {
             this.canvas.style.height = '100vh';
             this.canvas.style.pointerEvents = 'none';
             this.canvas.style.zIndex = '0';
-            this.canvas.style.opacity = '0.45';
+            this.canvas.style.opacity = '0.08';
             document.body.prepend(this.canvas);
         }
 

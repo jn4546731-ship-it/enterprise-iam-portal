@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         };
     </script>
     <link href="assets/css/all.min.css" rel="stylesheet">
-    <link href="assets/css/cyber-theme.css" rel="stylesheet">
+    <link href="assets/css/cyber-theme.css?v=<?php echo time(); ?>" rel="stylesheet">
     <script src="assets/js/cyber-effects.js" defer></script>
 </head>
 <body class="cyber-bg cyber-grid-overlay min-h-screen flex items-center justify-center px-4 relative overflow-x-hidden text-slate-300">

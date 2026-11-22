@@ -100,7 +100,7 @@ $otpauth_uri = "otpauth://totp/" . rawurlencode($issuer) . ":" . rawurlencode($a
         };
     </script>
     <link href="assets/css/all.min.css" rel="stylesheet">
-    <link href="assets/css/cyber-theme.css" rel="stylesheet">
+    <link href="assets/css/cyber-theme.css?v=<?php echo time(); ?>" rel="stylesheet">
     <script src="assets/js/qrcode.min.js"></script>
     <script src="assets/js/cyber-effects.js" defer></script>
 </head>

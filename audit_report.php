@@ -154,7 +154,7 @@ $events_24h = (int) (($total_24h_res ? $total_24h_res->fetch_assoc()['cnt'] : 0)
         };
     </script>
     <link href="assets/css/all.min.css" rel="stylesheet">
-    <link href="assets/css/cyber-theme.css" rel="stylesheet">
+    <link href="assets/css/cyber-theme.css?v=<?php echo time(); ?>" rel="stylesheet">
     <style>
         @media print {
             body {

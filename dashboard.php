@@ -507,7 +507,7 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
         };
     </script>
     <link href="assets/css/all.min.css" rel="stylesheet">
-    <link href="assets/css/cyber-theme.css" rel="stylesheet">
+    <link href="assets/css/cyber-theme.css?v=<?php echo time(); ?>" rel="stylesheet">
     <script src="assets/js/cyber-effects.js" defer></script>
 </head>
 <body class="cyber-bg cyber-grid-overlay text-slate-300 font-sans min-h-screen flex flex-col antialiased relative selection:bg-cyan-500 selection:text-black">
