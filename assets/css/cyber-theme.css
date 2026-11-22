@@ -1,7 +1,8 @@
 /**
- * Enterprise Zero-Trust IAM - Bold Cyber Dark Theme CSS
- * High-Contrast Pitch-Black OLED Styling, Piercing Neon Accents, Authentic Sci-Fi Fonts
- * 100% Offline & Air-Gapped
+ * Obsidian Cipher — Enterprise Zero-Trust IAM & SOC Design System
+ * Inspired by Google Stitch UI Specifications
+ * Color Palettes, Typography, Micro-Elevations & Surface Hierarchies
+ * 100% Offline & Air-Gapped Compliant
  */
 
 @font-face {
@@ -19,70 +20,119 @@
 }
 
 :root {
-    color-scheme: dark;
-    --cyber-black: #000000;
-    --cyber-pitch: #030407;
-    --cyber-panel: #070912;
-    --cyber-panel-alt: #0a0d18;
-    --cyber-cyan: #00f0ff;
-    --cyber-blue: #0088ff;
-    --cyber-purple: #bf00ff;
-    --cyber-emerald: #00ff88;
-    --cyber-amber: #ffaa00;
-    --cyber-red: #ff003c;
-    --cyber-border-cyan: rgba(0, 240, 255, 0.4);
-    --cyber-border-purple: rgba(191, 0, 255, 0.4);
-    --cyber-border-amber: rgba(255, 170, 0, 0.4);
-    --cyber-border-emerald: rgba(0, 255, 136, 0.4);
+  /* ==========================================================================
+     Obsidian Cipher — Color Tokens (Dark CyberSOC / Zero-Trust IAM)
+     ========================================================================== */
+  
+  /* Surface Hierarchies */
+  --color-surface: #0f131c;
+  --color-surface-dim: #0f131c;
+  --color-surface-bright: #353942;
+  --color-surface-container-lowest: #0a0e16;
+  --color-surface-container-low: #181c24;
+  --color-surface-container: #1c2029;
+  --color-surface-container-high: #262a34;
+  --color-surface-container-highest: #31353f;
+
+  /* On-Surface / Typography Colors */
+  --color-on-surface: #e0e2ed;
+  --color-on-surface-variant: #c3c6d7;
+  --color-outline: #8d90a0;
+  --color-outline-variant: #434654;
+
+  /* Primary Brand Accent (Sky / Cyan Cyber Security Glow) */
+  --color-primary: #38bdf8;
+  --color-primary-dim: #0284c7;
+  --color-on-primary: #003549;
+  --color-primary-container: #004d69;
+  --color-on-primary-container: #bfe8ff;
+
+  /* Secondary Accents */
+  --color-secondary: #00f0ff;
+  --color-secondary-container: #1b2633;
+  --color-on-secondary: #00363a;
+  --color-on-secondary-container: #a6eeff;
+
+  /* Zero-Trust Telemetry Status & Threat Levels */
+  --color-status-success: #10b981;
+  --color-status-success-bg: rgba(16, 185, 129, 0.12);
+  --color-status-warning: #f59e0b;
+  --color-status-warning-bg: rgba(245, 158, 11, 0.12);
+  --color-status-critical: #ef4444;
+  --color-status-critical-bg: rgba(239, 68, 68, 0.15);
+  --color-status-info: #38bdf8;
+  --color-status-info-bg: rgba(56, 189, 248, 0.12);
+
+  /* Elevation & Borders */
+  --border-subtle: 1px solid rgba(255, 255, 255, 0.07);
+  --border-medium: 1px solid rgba(255, 255, 255, 0.12);
+  --border-accent: 1px solid rgba(56, 189, 248, 0.35);
+
+  /* Typography Stacks */
+  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Share Tech Mono', 'Geist Mono', monospace;
+
+  /* Box Shadows / Glows */
+  --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+  --glow-primary: 0 0 16px -2px rgba(56, 189, 248, 0.35);
+  --glow-critical: 0 0 16px -2px rgba(239, 68, 68, 0.4);
+
+  color-scheme: dark;
 }
 
-/* Enforce Global Bold Dark Background */
+/* ==========================================================================
+   Base Elements & Global Resets
+   ========================================================================== */
 html, body {
-    background-color: #000000 !important;
-    color: #e2e8f0;
+    background-color: var(--color-surface-container-lowest) !important;
+    color: var(--color-on-surface) !important;
+    font-family: var(--font-sans);
     color-scheme: dark;
     -webkit-font-smoothing: antialiased;
 }
 
 /* Typography Classes */
 .font-orbitron {
-    font-family: 'Orbitron', system-ui, -apple-system, sans-serif;
-    letter-spacing: 0.08em;
+    font-family: 'Orbitron', var(--font-sans);
+    letter-spacing: 0.06em;
 }
 
 .font-tech {
-    font-family: 'Share Tech Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-    letter-spacing: 0.05em;
+    font-family: var(--font-mono);
+    letter-spacing: 0.04em;
 }
 
-/* Deep Cyber Pitch-Black Backgrounds */
+/* Background Gradients & Textures */
 .cyber-bg {
-    background: radial-gradient(circle at 50% 0%, #060914 0%, #020306 60%, #000000 100%) !important;
+    background: radial-gradient(circle at 50% 0%, #151b27 0%, #0d111a 50%, #0a0e16 100%) !important;
     background-attachment: fixed !important;
 }
 
 .cyber-grid-overlay {
     background-image: 
-        linear-gradient(rgba(0, 240, 255, 0.04) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 240, 255, 0.04) 1px, transparent 1px) !important;
-    background-size: 30px 30px !important;
+        linear-gradient(rgba(56, 189, 248, 0.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.035) 1px, transparent 1px) !important;
+    background-size: 28px 28px !important;
 }
 
-/* Bold Jet-Black Card & Panel Styling */
+/* ==========================================================================
+   Obsidian Cipher Surface Cards & Containers
+   ========================================================================== */
 .cyber-card {
-    background: #070912 !important;
-    border: 1px solid rgba(0, 240, 255, 0.35) !important;
-    box-shadow: 0 10px 35px 0 rgba(0, 0, 0, 0.8), inset 0 0 20px rgba(0, 240, 255, 0.03) !important;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    background: var(--color-surface-container) !important;
+    border: var(--border-subtle) !important;
+    border-radius: 8px !important;
+    box-shadow: var(--shadow-card) !important;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
 }
 
 .cyber-card:hover {
-    border-color: rgba(0, 240, 255, 0.75) !important;
-    box-shadow: 0 12px 40px 0 rgba(0, 240, 255, 0.18), inset 0 0 25px rgba(0, 240, 255, 0.06) !important;
+    border: 1px solid rgba(56, 189, 248, 0.35) !important;
+    box-shadow: 0 6px 24px -2px rgba(0, 0, 0, 0.65), inset 0 0 12px rgba(56, 189, 248, 0.03) !important;
 }
 
-/* Sci-Fi HUD Corner Brackets - Bold High Contrast */
+/* Tactical Corner Brackets */
 .cyber-brackets {
     position: relative;
 }
@@ -91,91 +141,95 @@ html, body {
 .cyber-brackets::after {
     content: '';
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: 8px;
+    height: 8px;
     pointer-events: none;
-    transition: all 0.25s ease;
+    transition: all 0.2s ease;
     z-index: 2;
 }
 
 .cyber-brackets::before {
     top: -1px;
     left: -1px;
-    border-top: 2.5px solid var(--cyber-cyan);
-    border-left: 2.5px solid var(--cyber-cyan);
+    border-top: 2px solid var(--color-primary);
+    border-left: 2px solid var(--color-primary);
+    border-top-left-radius: 4px;
 }
 
 .cyber-brackets::after {
     bottom: -1px;
     right: -1px;
-    border-bottom: 2.5px solid var(--cyber-cyan);
-    border-right: 2.5px solid var(--cyber-cyan);
+    border-bottom: 2px solid var(--color-primary);
+    border-right: 2px solid var(--color-primary);
+    border-bottom-right-radius: 4px;
 }
 
 .cyber-brackets:hover::before,
 .cyber-brackets:hover::after {
-    width: 16px;
-    height: 16px;
-    border-color: #ffffff;
-    box-shadow: 0 0 10px var(--cyber-cyan);
+    width: 12px;
+    height: 12px;
+    border-color: var(--color-secondary);
 }
 
-/* Bold Neon Glow Utilities */
-.glow-cyan {
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.45) !important;
+/* Glow Tokens */
+.glow-cyan, .glow-primary {
+    box-shadow: var(--glow-primary) !important;
 }
 
 .glow-cyan-sm {
-    box-shadow: 0 0 12px rgba(0, 240, 255, 0.35) !important;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.25) !important;
 }
 
 .glow-purple {
-    box-shadow: 0 0 25px rgba(191, 0, 255, 0.5) !important;
+    box-shadow: 0 0 18px rgba(168, 85, 247, 0.35) !important;
 }
 
 .glow-emerald {
-    box-shadow: 0 0 25px rgba(0, 255, 136, 0.45) !important;
+    box-shadow: 0 0 18px rgba(16, 185, 129, 0.35) !important;
 }
 
 .glow-amber {
-    box-shadow: 0 0 25px rgba(255, 170, 0, 0.5) !important;
+    box-shadow: 0 0 18px rgba(245, 158, 11, 0.35) !important;
 }
 
 .glow-red {
-    box-shadow: 0 0 30px rgba(255, 0, 60, 0.6) !important;
+    box-shadow: var(--glow-critical) !important;
 }
 
 .glow-text-cyan {
-    text-shadow: 0 0 12px rgba(0, 240, 255, 0.8), 0 0 24px rgba(0, 240, 255, 0.4) !important;
+    text-shadow: 0 0 12px rgba(56, 189, 248, 0.6);
 }
 
 .glow-text-purple {
-    text-shadow: 0 0 12px rgba(191, 0, 255, 0.8), 0 0 24px rgba(191, 0, 255, 0.4) !important;
+    text-shadow: 0 0 12px rgba(168, 85, 247, 0.6);
 }
 
 .glow-text-emerald {
-    text-shadow: 0 0 12px rgba(0, 255, 136, 0.8), 0 0 24px rgba(0, 255, 136, 0.4) !important;
+    text-shadow: 0 0 12px rgba(16, 185, 129, 0.6);
 }
 
 .glow-text-amber {
-    text-shadow: 0 0 12px rgba(255, 170, 0, 0.8) !important;
+    text-shadow: 0 0 12px rgba(245, 158, 11, 0.6);
 }
 
 .glow-text-red {
-    text-shadow: 0 0 15px rgba(255, 0, 60, 0.9) !important;
+    text-shadow: 0 0 12px rgba(239, 68, 68, 0.6);
 }
 
-/* Deep Black Form Controls & Input Styling */
+/* ==========================================================================
+   Form Controls, Inputs & Select Dropdowns
+   ========================================================================== */
 .cyber-input,
 input[type="text"],
 input[type="email"],
 input[type="password"],
 select,
 textarea {
-    background-color: #030408 !important;
-    border: 1px solid rgba(0, 240, 255, 0.35) !important;
-    color: #ffffff !important;
-    font-family: 'Share Tech Mono', monospace !important;
+    background-color: var(--color-surface-container-low) !important;
+    border: var(--border-medium) !important;
+    color: var(--color-on-surface) !important;
+    border-radius: 6px !important;
+    font-family: var(--font-mono) !important;
     transition: all 0.2s ease;
 }
 
@@ -185,41 +239,55 @@ input[type="email"]:focus,
 input[type="password"]:focus,
 select:focus,
 textarea:focus {
-    background-color: #05070e !important;
-    border-color: #00f0ff !important;
-    box-shadow: 0 0 18px rgba(0, 240, 255, 0.4), inset 0 0 10px rgba(0, 240, 255, 0.15) !important;
-    color: #ffffff !important;
+    background-color: var(--color-surface-container) !important;
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 1px var(--color-primary), 0 0 12px rgba(56, 189, 248, 0.2) !important;
     outline: none !important;
 }
 
-/* Fix Dropdown Menus in Chrome & Windows (Prevent light/white option popups) */
 select option {
-    background-color: #05070e !important;
-    color: #00f0ff !important;
+    background-color: var(--color-surface-container-high) !important;
+    color: var(--color-on-surface) !important;
     padding: 8px 12px !important;
 }
 
-select option:checked,
-select option:hover {
-    background-color: #0c1224 !important;
-    color: #ffffff !important;
-}
-
-/* Fix Browser Autofill White Flash */
 input:-webkit-autofill,
 input:-webkit-autofill:hover, 
 input:-webkit-autofill:focus,
 input:-webkit-autofill:active {
-    -webkit-text-fill-color: #00f0ff !important;
-    -webkit-box-shadow: 0 0 0px 1000px #04060c inset !important;
-    box-shadow: 0 0 0px 1000px #04060c inset !important;
+    -webkit-text-fill-color: var(--color-on-surface) !important;
+    -webkit-box-shadow: 0 0 0px 1000px var(--color-surface-container-low) inset !important;
+    box-shadow: 0 0 0px 1000px var(--color-surface-container-low) inset !important;
     transition: background-color 5000s ease-in-out 0s;
 }
 
-/* Sci-Fi Laser Sweep */
+/* ==========================================================================
+   Buttons (Obsidian Cipher Style)
+   ========================================================================== */
+.cyber-btn {
+    position: relative;
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border-radius: 6px !important;
+    transition: all 0.15s ease;
+}
+
+.cyber-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--glow-primary);
+}
+
+.cyber-btn:active {
+    transform: translateY(1px);
+}
+
+/* Laser Scanning Line */
 @keyframes cyberLaser {
     0% { transform: translateY(-100%); opacity: 0; }
-    40% { opacity: 0.9; }
+    50% { opacity: 0.75; }
     100% { transform: translateY(1000%); opacity: 0; }
 }
 
@@ -227,99 +295,80 @@ input:-webkit-autofill:active {
     position: absolute;
     left: 0;
     right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent, #00f0ff, #38bdf8, transparent);
-    box-shadow: 0 0 14px #00f0ff;
-    animation: cyberLaser 4.5s ease-in-out infinite;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #38bdf8, #00f0ff, transparent);
+    box-shadow: 0 0 10px #38bdf8;
+    animation: cyberLaser 5s ease-in-out infinite;
     pointer-events: none;
-    z-index: 3;
+    z-index: 2;
 }
 
-/* Radar & Beacons */
+/* Radar & Pulsing Beacon */
 @keyframes cyberRadar {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
 }
 
 .cyber-radar-spin {
-    animation: cyberRadar 8s linear infinite;
+    animation: cyberRadar 10s linear infinite;
 }
 
 .cyber-radar-reverse {
-    animation: cyberRadar 12s linear infinite reverse;
+    animation: cyberRadar 14s linear infinite reverse;
 }
 
 @keyframes cyberBeaconPulse {
-    0%, 100% { transform: scale(1); opacity: 1; filter: drop-shadow(0 0 6px currentColor); }
-    50% { transform: scale(1.4); opacity: 0.35; }
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.4; }
 }
 
 .cyber-beacon {
     animation: cyberBeaconPulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Subtle CRT Scanlines */
+/* Scanlines overlay */
 .scanlines-overlay {
     background: repeating-linear-gradient(
         0deg,
-        rgba(0, 0, 0, 0.35),
-        rgba(0, 0, 0, 0.35) 1px,
+        rgba(0, 0, 0, 0.2),
+        rgba(0, 0, 0, 0.2) 1px,
         transparent 1px,
         transparent 3px
     );
     pointer-events: none;
 }
 
-/* Cyber Button with High-Tech Angled Corners */
-.cyber-btn {
-    position: relative;
-    font-family: 'Orbitron', sans-serif;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    transition: all 0.2s ease;
-    clip-path: polygon(7px 0, 100% 0, 100% calc(100% - 7px), calc(100% - 7px) 100%, 0 100%, 0 7px);
-}
-
-.cyber-btn:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 0 25px rgba(0, 240, 255, 0.5) !important;
-}
-
-.cyber-btn:active {
-    transform: translateY(1px);
-}
-
-/* Custom Jet-Black Cyber Scrollbar */
+/* Scrollbar Styling */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: #020204;
+    background: var(--color-surface-container-lowest);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #1e293b;
-    border-radius: 3px;
-    border: 1px solid rgba(0, 240, 255, 0.3);
+    background: var(--color-surface-container-high);
+    border-radius: 4px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #00f0ff;
-    box-shadow: 0 0 10px #00f0ff;
+    background: var(--color-primary);
+    box-shadow: 0 0 8px var(--color-primary);
 }
 
-/* Deep Pitch-Black Overrides for all Slate Containers & Tables */
+/* ==========================================================================
+   Tailwind Slate Hierarchy Remapped to Obsidian Cipher Surface Tokens
+   ========================================================================== */
 .bg-slate-950,
 .bg-slate-950\/95,
 .bg-slate-950\/90,
 .bg-slate-950\/85,
 .bg-slate-950\/80,
-.bg-slate-950\/70,
-.bg-slate-950\/60,
-.bg-slate-950\/40 {
-    background-color: #020306 !important;
+.bg-slate-950\/70 {
+    background-color: var(--color-surface-container-lowest) !important;
 }
 
 .bg-slate-900,
@@ -329,57 +378,68 @@ input:-webkit-autofill:active {
 .bg-slate-900\/70,
 .bg-slate-900\/60,
 .bg-slate-900\/40 {
-    background-color: #070912 !important;
+    background-color: var(--color-surface) !important;
 }
 
 .bg-slate-800,
 .bg-slate-800\/80,
 .bg-slate-800\/60,
 .bg-slate-800\/40 {
-    background-color: #0c101d !important;
+    background-color: var(--color-surface-container) !important;
 }
 
 .bg-slate-700,
 .bg-slate-700\/50,
+.bg-slate-700\/30,
 .bg-slate-700\/20 {
-    background-color: #101626 !important;
+    background-color: var(--color-surface-container-high) !important;
 }
 
-/* Sharp Contrast Borders */
+/* Border Hierarchy */
 .border-slate-800,
 .border-slate-800\/80,
 .border-slate-800\/60 {
-    border-color: rgba(26, 36, 60, 0.8) !important;
+    border-color: rgba(255, 255, 255, 0.07) !important;
 }
 
 .border-slate-700,
 .border-slate-700\/80,
 .border-slate-700\/50 {
-    border-color: rgba(45, 60, 95, 0.7) !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
 }
 
-/* Table High-Contrast Dark Enhancements */
+/* Typography Hierarchy */
+.text-slate-200 { color: var(--color-on-surface) !important; }
+.text-slate-300 { color: var(--color-on-surface) !important; }
+.text-slate-400 { color: var(--color-on-surface-variant) !important; }
+.text-slate-500 { color: var(--color-outline) !important; }
+.text-slate-600 { color: var(--color-outline-variant) !important; }
+
+/* Table Component Normalization */
 table {
     border-collapse: separate !important;
     border-spacing: 0 !important;
 }
 
 thead {
-    background-color: #04050a !important;
-    border-bottom: 2px solid rgba(0, 240, 255, 0.25) !important;
+    background-color: var(--color-surface-container-low) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 thead th {
-    color: #94a3b8 !important;
-    font-weight: 700 !important;
+    color: var(--color-outline) !important;
+    font-size: 0.6875rem !important; /* 11px */
+    letter-spacing: 0.05em !important;
+    text-transform: uppercase !important;
+    font-weight: 600 !important;
 }
 
 tbody tr {
-    background-color: #070912 !important;
-    border-bottom: 1px solid rgba(26, 36, 60, 0.6) !important;
-    transition: background-color 0.15s ease;
+    background-color: transparent !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+    transition: background-color 0.12s ease;
 }
 
 tbody tr:hover {
-    background-color: #0d1222 !important;
+    background-color: var(--color-surface-container-high) !important;
 }

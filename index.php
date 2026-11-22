@@ -81,6 +81,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="color-scheme" content="dark">
     <title>Enterprise Zero-Trust IAM - Cyber Access Terminal</title>
     <script src="assets/js/tailwind.js"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        surface: {
+                            DEFAULT: '#0f131c',
+                            dim: '#0f131c',
+                            bright: '#353942',
+                            lowest: '#0a0e16',
+                            low: '#181c24',
+                            container: '#1c2029',
+                            high: '#262a34',
+                            highest: '#31353f',
+                        },
+                        primary: {
+                            DEFAULT: '#38bdf8',
+                            dim: '#0284c7',
+                            container: '#004d69',
+                        },
+                        cyber: {
+                            neon: '#00f0ff',
+                            success: '#10b981',
+                            warning: '#f59e0b',
+                            critical: '#ef4444',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Share Tech Mono', 'monospace'],
+                    },
+                    borderRadius: {
+                        DEFAULT: '4px',
+                        md: '6px',
+                        lg: '8px',
+                        xl: '12px',
+                    }
+                }
+            }
+        };
+    </script>
     <link href="assets/css/all.min.css" rel="stylesheet">
     <link href="assets/css/cyber-theme.css" rel="stylesheet">
     <script src="assets/js/cyber-effects.js" defer></script>
