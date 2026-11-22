@@ -1,6 +1,11 @@
 <?php
+/**
+ * Enterprise IAM Portal - Single Sign-On (SSO) & Authentication Gateway
+ * Direct access to enterprise directory with role-based identity evaluation.
+ */
+
 session_start();
-require_once 'db.php';
+require_once __DIR__ . '/db.php';
 
 if (isset($_SESSION['user_id'])) {
     header("Location: dashboard.php");
@@ -24,11 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $user = $result->fetch_assoc();
 
     if ($user && password_verify($password, $user['password_hash'])) {
-        // Check if account has been suspended (RBAC Zero-Trust Enforcement)
+        // Check if account has been suspended (RBAC Enforcement)
         if (isset($user['is_active']) && (int) $user['is_active'] === 0) {
-            $error = "Access Denied: Account UID-" . str_pad($user['user_id'], 4, '0', STR_PAD_LEFT) . " has been SUSPENDED by the SOC Administrator due to policy violation or detected anomaly.";
+            $error = "Access Denied: Account UID-" . str_pad($user['user_id'], 4, '0', STR_PAD_LEFT) . " has been SUSPENDED by the administrator due to policy enforcement.";
             
-            // Log suspended access attempt for AI Sentinel telemetry
+            // Log suspended access attempt
             $action_type = "SUSPENDED_LOGIN_ATTEMPT";
             $action_desc = "Blocked authentication attempt on suspended account: " . $email;
             $log_stmt = $conn->prepare("INSERT INTO audit_logs (user_id, action_type, action_description, ip_address) VALUES (?, ?, ?, ?)");
@@ -37,14 +42,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } else {
             // Account is active; evaluate MFA requirement
             if (!empty($user['mfa_secret'])) {
-                // User has MFA enabled, hold in pending state (Session Intercept)
+                // User has MFA enabled, hold in pending state
                 $_SESSION['pending_user_id'] = $user['user_id'];
                 header("Location: mfa_verify.php");
                 exit();
             } else {
                 // No MFA configured, grant session and record audit
                 $_SESSION['user_id'] = $user['user_id'];
-                $_SESSION['fresh_login'] = true; // Trigger Animated Cybersecurity Welcome HUD
                 
                 $action_type = "LOGIN";
                 $action_desc = "User authenticated successfully (Standard)";
@@ -58,9 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     } else {
-        $error = "Invalid enterprise credentials.";
+        $error = "Invalid enterprise credentials. Please verify your email and password.";
         
-        // Log failed login attempt for AI Sentinel Brute-Force & Spray analysis
+        // Log failed login attempt
         $action_type = "LOGIN_FAIL";
         $target_uid = $user ? (int) $user['user_id'] : null;
         $action_desc = $user 
@@ -79,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="dark light">
-    <title>Enterprise Zero-Trust IAM - Cyber Access Terminal</title>
+    <title>Sign In &mdash; Enterprise IAM</title>
     <!-- Immediate Theme Application to Prevent Flash of Wrong Theme -->
     <script>
         (function() {
@@ -94,95 +98,90 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         })();
     </script>
     <script src="assets/js/tailwind.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        "surface": "#0f131c",
-                        "surface-dim": "#0f131c",
-                        "surface-bright": "#353942",
-                        "surface-container-lowest": "#0a0e16",
-                        "surface-container-low": "#181c24",
-                        "surface-container": "#1c2028",
-                        "surface-container-high": "#262a33",
-                        "surface-container-highest": "#31353e",
-                        "on-surface": "#dfe2ee",
-                        "on-surface-variant": "#bdc8d1",
-                        "outline": "#87929a",
-                        "outline-variant": "#3e484f",
-                        "primary": "#8ed5ff",
-                        "primary-container": "#38bdf8",
-                        "on-primary": "#00354a",
-                        "on-primary-container": "#004965",
-                        "secondary": "#4edea3",
-                        "secondary-container": "#00a572",
-                        "tertiary": "#ffc174",
-                        "tertiary-container": "#f59e0b",
-                        "error": "#ffb4ab",
-                        "error-container": "#93000a",
-                        "on-error": "#690005"
-                    },
-                    fontFamily: {
-                        sans: ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'Share Tech Mono', 'monospace'],
-                    }
-                }
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#0d1117",
+              "surface-container-lowest": "#090d13",
+              "surface-container-low": "#161b22",
+              "surface-container": "#1c2128",
+              "surface-container-high": "#21262d",
+              "surface-container-highest": "#30363d",
+              "on-surface": "#e6edf3",
+              "on-surface-variant": "#8b949e",
+              "primary": "#2f81f7",
+              "primary-container": "#1f6feb",
+              "on-primary": "#ffffff"
+            },
+            fontFamily: {
+              sans: ["Geist", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+              mono: ["JetBrains Mono", "Share Tech Mono", "monospace"]
             }
-        };
+          }
+        }
+      };
     </script>
     <link href="assets/css/all.min.css" rel="stylesheet">
     <link href="assets/css/cyber-theme.css?v=<?php echo time(); ?>" rel="stylesheet">
     <script src="assets/js/cyber-effects.js" defer></script>
 </head>
-<body class="bg-[#090d16] min-h-screen flex flex-col items-center justify-center px-4 py-8 relative text-slate-300">
+<body class="bg-[#0d1117] min-h-screen flex flex-col items-center justify-center px-4 py-8 relative text-[#e6edf3] font-sans antialiased selection:bg-[#2f81f7] selection:text-white">
 
-    <!-- Top Telemetry Status Header -->
-    <header class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 py-2.5 bg-[#0c101a]/90 border-b border-[#1c2233] backdrop-blur-md text-xs font-sans text-slate-400">
-        <div class="flex items-center space-x-2.5">
-            <div class="w-6 h-6 rounded-md bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
-                <i class="fa-solid fa-shield-halved text-xs"></i>
+    <!-- Top Telemetry Header -->
+    <header class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 h-16 bg-[#161b22] border-b border-[#30363d] backdrop-blur-md text-xs font-sans">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-md bg-[#2f81f7]/15 border border-[#2f81f7]/30 flex items-center justify-center text-[#2f81f7] shrink-0">
+                <i class="fa-solid fa-shield-halved text-sm"></i>
             </div>
-            <span class="font-bold text-white tracking-tight">SECURE·DEFENSE</span>
-            <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20 font-semibold">ZERO-TRUST</span>
+            <div class="flex flex-col">
+                <span class="font-semibold text-white tracking-tight">Enterprise IAM</span>
+                <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Identity Governance</span>
+            </div>
         </div>
-        <div class="hidden sm:flex items-center space-x-4 text-xs font-mono">
-            <span class="flex items-center"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400 mr-1.5"></span> AI Sentinel: <strong class="text-emerald-400 ml-1">ONLINE</strong></span>
-            <span class="text-slate-600">|</span>
-            <span>Cipher: <strong class="text-sky-300">TLS 1.3 / AES-256</strong></span>
-            <span class="text-slate-600">|</span>
-            <span class="text-slate-400">Host: <strong class="text-white">iam.secure-defense.internal</strong></span>
+
+        <div class="flex items-center gap-4">
+            <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0d1117] border border-[#30363d] text-xs font-mono text-slate-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span>Environment: Production</span>
+            </div>
+
+            <!-- Theme Switcher -->
+            <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-md bg-[#0d1117] border border-[#30363d] text-slate-300 hover:text-white hover:bg-[#21262d] transition text-xs" title="Toggle Light / Dark mode">
+                <i id="themeToggleIcon" class="fa-solid fa-sun text-amber-400"></i>
+            </button>
         </div>
     </header>
 
-    <!-- Main Okta-Grade Sign-In Card -->
-    <div class="relative z-10 w-full max-w-md my-auto pt-8">
-        <div class="bg-[#10141f] rounded-xl p-8 sm:p-9 shadow-2xl border border-[#1c2233]">
+    <!-- Main Sign-In Card -->
+    <div class="relative z-10 w-full max-w-md my-auto pt-16">
+        <div class="bg-[#161b22] rounded-xl p-8 sm:p-9 shadow-2xl border border-[#30363d]">
             
             <!-- Company / Tenant Header -->
             <div class="text-center mb-7">
-                <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-400 mb-3 shadow-inner">
-                    <i class="fa-solid fa-shield-halved text-2xl"></i>
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-[#2f81f7]/15 border border-[#2f81f7]/30 text-[#2f81f7] mb-3 shadow-xs">
+                    <i class="fa-solid fa-shield-halved text-xl"></i>
                 </div>
-                <h1 class="text-xl sm:text-2xl font-bold text-white tracking-tight font-sans">
-                    Sign in to SecureDefense
+                <h1 class="text-xl font-bold text-white tracking-tight">
+                    Sign in to Enterprise IAM
                 </h1>
-                <p class="text-xs text-slate-400 mt-1 font-sans">
-                    Single Sign-On &bull; Zero-Trust Identity Gateway
+                <p class="text-xs text-slate-400 mt-1">
+                    Single Sign-On &bull; Role-Based Access Governance
                 </p>
-                <div class="mt-2.5 inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
-                    <i class="fa-solid fa-lock text-[10px]"></i>
+                <div class="mt-3 inline-flex items-center gap-2 px-3 py-0.5 rounded-full text-xs font-mono text-slate-300 bg-[#0d1117] border border-[#30363d]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
                     <span>iam.secure-defense.internal</span>
                 </div>
             </div>
 
             <?php if ($error): ?>
-                <div class="bg-red-500/10 border border-red-500/30 text-red-300 p-3.5 rounded-lg mb-6 text-xs flex items-start">
-                    <i class="fa-solid fa-circle-exclamation mr-2.5 mt-0.5 text-base text-red-400 flex-shrink-0"></i>
+                <div class="bg-red-500/10 border border-red-500/30 text-red-400 p-3.5 rounded-lg mb-6 text-xs flex items-start gap-2.5 font-mono">
+                    <i class="fa-solid fa-circle-exclamation mt-0.5 text-sm shrink-0"></i>
                     <div>
-                        <strong class="text-red-400 font-semibold">Authentication Alert:</strong>
-                        <p class="mt-0.5 text-slate-300"><?php echo htmlspecialchars($error); ?></p>
+                        <strong class="text-white">Authentication Alert:</strong>
+                        <p class="mt-0.5 text-red-300"><?php echo htmlspecialchars($error); ?></p>
                     </div>
                 </div>
             <?php endif; ?>
@@ -191,14 +190,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <form method="POST" action="" class="space-y-4">
                 <div>
                     <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                        <span>Email or Username</span>
+                        <span>Email Address</span>
                         <span class="text-[10px] text-slate-500 font-mono">PRINCIPAL</span>
                     </label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
-                            <i class="fa-regular fa-envelope text-sm"></i>
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                            <i class="fa-regular fa-envelope text-xs"></i>
                         </div>
-                        <input type="email" id="loginEmail" name="email" class="w-full pl-10 pr-4 py-2.5 rounded-md text-sm bg-[#090d16] border border-[#1c2233] text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500 transition" placeholder="admin@organization.com" required autocomplete="username">
+                        <input type="email" id="loginEmail" name="email" class="w-full pl-9 pr-3 py-2 rounded-md text-xs bg-[#0d1117] border border-[#30363d] text-white placeholder:text-slate-600 focus:outline-none focus:border-[#2f81f7] transition" placeholder="admin@organization.com" required autocomplete="username">
                     </div>
                 </div>
                 
@@ -208,42 +207,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <span class="text-[10px] text-slate-500 font-mono">CREDENTIAL</span>
                     </label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
-                            <i class="fa-solid fa-lock text-sm"></i>
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                            <i class="fa-solid fa-lock text-xs"></i>
                         </div>
-                        <input type="password" id="loginPass" name="password" class="w-full pl-10 pr-4 py-2.5 rounded-md text-sm bg-[#090d16] border border-[#1c2233] text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500 transition" placeholder="••••••••••••" required autocomplete="current-password">
+                        <input type="password" id="loginPass" name="password" class="w-full pl-9 pr-3 py-2 rounded-md text-xs bg-[#0d1117] border border-[#30363d] text-white placeholder:text-slate-600 focus:outline-none focus:border-[#2f81f7] transition" placeholder="••••••••••••" required autocomplete="current-password">
                     </div>
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="w-full py-2.5 px-4 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-sm rounded-md transition shadow-md flex items-center justify-center space-x-2 mt-2">
+                <button type="submit" class="w-full py-2.5 px-4 bg-[#2f81f7] hover:bg-blue-600 text-white font-semibold text-xs rounded-md transition shadow-xs flex items-center justify-center gap-2 mt-2">
                     <span>Sign In</span>
                     <i class="fa-solid fa-arrow-right text-xs"></i>
                 </button>
             </form>
             
             <!-- Quick Demo Credentials Selector for Presentation / Defense -->
-            <div class="mt-6 pt-4 border-t border-[#1c2233]">
+            <div class="mt-6 pt-4 border-t border-[#30363d]">
                 <p class="text-[11px] font-semibold text-slate-400 mb-2 flex items-center justify-between">
-                    <span>Pre-Configured Identities:</span>
-                    <span class="text-[10px] font-mono text-sky-400">DEMO READY</span>
+                    <span>Demo Identity Profiles:</span>
+                    <span class="text-[10px] font-mono text-[#2f81f7]">PRE-LOADED</span>
                 </p>
-                <div class="grid grid-cols-3 gap-1.5 text-[11px] font-mono">
-                    <button type="button" onclick="setDemo('admin@organization.com', 'admin123')" class="p-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-[#1c2233] text-center transition truncate" title="Super Admin UID-1 (Tier 3)">
-                        <span class="text-purple-400 font-bold">Tier 3</span> Admin
+                <div class="grid grid-cols-3 gap-2 text-xs font-mono">
+                    <button type="button" onclick="setDemo('admin@organization.com', 'admin123')" class="p-2 rounded-md bg-[#0d1117] hover:bg-[#21262d] text-slate-300 border border-[#30363d] text-center transition truncate text-[11px]" title="Super Admin UID-1 (Tier 3)">
+                        <span class="text-purple-400 font-bold block">Tier 3</span>
+                        <span class="text-slate-400">Admin</span>
                     </button>
-                    <button type="button" onclick="setDemo('auditor@organization.com', 'auditor123')" class="p-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-[#1c2233] text-center transition truncate" title="Auditor UID-2 (Tier 2)">
-                        <span class="text-sky-400 font-bold">Tier 2</span> Audit
+                    <button type="button" onclick="setDemo('auditor@organization.com', 'auditor123')" class="p-2 rounded-md bg-[#0d1117] hover:bg-[#21262d] text-slate-300 border border-[#30363d] text-center transition truncate text-[11px]" title="Auditor UID-2 (Tier 2)">
+                        <span class="text-sky-400 font-bold block">Tier 2</span>
+                        <span class="text-slate-400">Audit</span>
                     </button>
-                    <button type="button" onclick="setDemo('staff@organization.com', 'staff123')" class="p-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-[#1c2233] text-center transition truncate" title="Staff UID-3 (Tier 1)">
-                        <span class="text-amber-400 font-bold">Tier 1</span> Staff
+                    <button type="button" onclick="setDemo('staff@organization.com', 'staff123')" class="p-2 rounded-md bg-[#0d1117] hover:bg-[#21262d] text-slate-300 border border-[#30363d] text-center transition truncate text-[11px]" title="Staff UID-3 (Tier 1)">
+                        <span class="text-amber-400 font-bold block">Tier 1</span>
+                        <span class="text-slate-400">Staff</span>
                     </button>
                 </div>
             </div>
 
             <!-- Footer Compliance Readout -->
-            <div class="mt-5 text-center text-[10px] text-slate-500 font-mono">
-                NIST SP 800-207 ZERO-TRUST &bull; PROTECTED BY AI SENTINEL
+            <div class="mt-5 text-center text-[10px] text-slate-500 font-mono uppercase tracking-wider">
+                Enterprise Identity &amp; Access Governance &bull; RFC 6238 TOTP
             </div>
         </div>
     </div>

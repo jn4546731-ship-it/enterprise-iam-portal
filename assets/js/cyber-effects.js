@@ -264,9 +264,41 @@ const CyberFX = {
 };
 
 // ==============================================================================
+// 5. GLOBAL ENTERPRISE THEME TOGGLE
+// ==============================================================================
+function updateThemeIcon(theme) {
+    const icon = document.getElementById('themeToggleIcon');
+    if (!icon) return;
+    if (theme === 'light') {
+        icon.className = 'fa-solid fa-moon text-xs text-indigo-400';
+    } else {
+        icon.className = 'fa-solid fa-sun text-xs text-amber-400';
+    }
+}
+
+function toggleTheme() {
+    const isDark = document.documentElement.classList.contains('dark');
+    if (isDark) {
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+        localStorage.setItem('iam_theme', 'light');
+        updateThemeIcon('light');
+    } else {
+        document.documentElement.classList.add('dark');
+        document.documentElement.classList.remove('light');
+        localStorage.setItem('iam_theme', 'dark');
+        updateThemeIcon('dark');
+    }
+}
+
+// ==============================================================================
 // 4. AUTO-ATTACH EVENT LISTENERS ON PAGE LOAD
 // ==============================================================================
 window.addEventListener('DOMContentLoaded', function () {
+    // Sync theme icon on load
+    const currentTheme = localStorage.getItem('iam_theme') || 'dark';
+    updateThemeIcon(currentTheme);
+
     // 1. Initialize background particle canvas
     new CyberBackground();
 

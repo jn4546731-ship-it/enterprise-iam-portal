@@ -1,7 +1,12 @@
 <?php
+/**
+ * Enterprise IAM Portal - Multi-Factor Authentication Verification Gate
+ * Challenge intercept requiring RFC 6238 TOTP passcode before granting full session.
+ */
+
 session_start();
-require_once 'db.php';
-require_once 'mfa_helper.php';
+require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/mfa_helper.php';
 
 if (!isset($_SESSION['pending_user_id'])) {
     header("Location: index.php");
@@ -11,27 +16,25 @@ if (!isset($_SESSION['pending_user_id'])) {
 $pending_user_id = (int) $_SESSION['pending_user_id'];
 $error = '';
 
+$stmt = $conn->prepare("SELECT mfa_secret, is_active, email FROM users WHERE user_id = ?");
+$stmt->bind_param("i", $pending_user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+
+if (!$user || (isset($user['is_active']) && (int) $user['is_active'] === 0)) {
+    unset($_SESSION['pending_user_id']);
+    header("Location: index.php?error=suspended");
+    exit();
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $entered_code = trim($_POST['mfa_code'] ?? '');
     $ip_address = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
 
-    $stmt = $conn->prepare("SELECT mfa_secret, is_active, email FROM users WHERE user_id = ?");
-    $stmt->bind_param("i", $pending_user_id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $user = $result->fetch_assoc();
-
-    // Verify account active status
-    if (!$user || (isset($user['is_active']) && (int) $user['is_active'] === 0)) {
-        unset($_SESSION['pending_user_id']);
-        header("Location: index.php?error=suspended");
-        exit();
-    }
-
-    if ($user && verifyMfaToken($user['mfa_secret'], $entered_code)) {
+    if (verifyMfaToken($user['mfa_secret'], $entered_code)) {
         // MFA passed! Promote to full authenticated session
         $_SESSION['user_id'] = $pending_user_id;
-        $_SESSION['fresh_login'] = true; // Trigger Animated Cybersecurity Welcome HUD
         unset($_SESSION['pending_user_id']); 
         
         // Audit Log for successful MFA
@@ -53,18 +56,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $log_stmt->bind_param("isss", $pending_user_id, $action_type, $action_desc, $ip_address);
         $log_stmt->execute();
         
-        $error = "Invalid Authenticator code. Please check your token and try again.";
+        $error = "Invalid verification code. Please check your authenticator token and try again.";
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="dark light">
-    <title>Quantum MFA Challenge - Enterprise Zero-Trust</title>
+    <title>Two-Step Verification &mdash; Enterprise IAM</title>
     <!-- Immediate Theme Application to Prevent Flash of Wrong Theme -->
     <script>
         (function() {
@@ -79,94 +81,94 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         })();
     </script>
     <script src="assets/js/tailwind.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        "surface": "#0f131c",
-                        "surface-dim": "#0f131c",
-                        "surface-bright": "#353942",
-                        "surface-container-lowest": "#0a0e16",
-                        "surface-container-low": "#181c24",
-                        "surface-container": "#1c2028",
-                        "surface-container-high": "#262a33",
-                        "surface-container-highest": "#31353e",
-                        "on-surface": "#dfe2ee",
-                        "on-surface-variant": "#bdc8d1",
-                        "outline": "#87929a",
-                        "outline-variant": "#3e484f",
-                        "primary": "#8ed5ff",
-                        "primary-container": "#38bdf8",
-                        "on-primary": "#00354a",
-                        "on-primary-container": "#004965",
-                        "secondary": "#4edea3",
-                        "secondary-container": "#00a572",
-                        "tertiary": "#ffc174",
-                        "tertiary-container": "#f59e0b",
-                        "error": "#ffb4ab",
-                        "error-container": "#93000a",
-                        "on-error": "#690005"
-                    },
-                    fontFamily: {
-                        sans: ["Geist", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
-                        mono: ["JetBrains Mono", "Share Tech Mono", "monospace"]
-                    }
-                }
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#0d1117",
+              "surface-container-lowest": "#090d13",
+              "surface-container-low": "#161b22",
+              "surface-container": "#1c2128",
+              "surface-container-high": "#21262d",
+              "surface-container-highest": "#30363d",
+              "on-surface": "#e6edf3",
+              "on-surface-variant": "#8b949e",
+              "primary": "#2f81f7",
+              "primary-container": "#1f6feb",
+              "on-primary": "#ffffff"
+            },
+            fontFamily: {
+              sans: ["Geist", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+              mono: ["JetBrains Mono", "Share Tech Mono", "monospace"]
             }
-        };
+          }
+        }
+      };
     </script>
     <link href="assets/css/all.min.css" rel="stylesheet">
     <link href="assets/css/cyber-theme.css?v=<?php echo time(); ?>" rel="stylesheet">
     <script src="assets/js/cyber-effects.js" defer></script>
 </head>
-<body class="bg-[#090d16] min-h-screen flex flex-col items-center justify-center px-4 py-8 relative text-slate-300">
+<body class="bg-[#0d1117] min-h-screen flex flex-col items-center justify-center px-4 py-8 relative text-[#e6edf3] font-sans antialiased selection:bg-[#2f81f7] selection:text-white">
 
-    <!-- Top Telemetry Status Header -->
-    <header class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 py-2.5 bg-[#0c101a]/90 border-b border-[#1c2233] backdrop-blur-md text-xs font-sans text-slate-400">
-        <div class="flex items-center space-x-2.5">
-            <div class="w-6 h-6 rounded-md bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
-                <i class="fa-solid fa-shield-halved text-xs"></i>
+    <!-- Top Telemetry Header -->
+    <header class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 h-16 bg-[#161b22] border-b border-[#30363d] backdrop-blur-md text-xs font-sans">
+        <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-md bg-[#2f81f7]/15 border border-[#2f81f7]/30 flex items-center justify-center text-[#2f81f7] shrink-0">
+                <i class="fa-solid fa-shield-halved text-sm"></i>
             </div>
-            <span class="font-bold text-white tracking-tight">SECURE·DEFENSE</span>
-            <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">MFA INTERCEPT</span>
+            <div class="flex flex-col">
+                <span class="font-semibold text-white tracking-tight">Enterprise IAM</span>
+                <span class="text-[10px] font-mono text-slate-400 uppercase tracking-wider">Identity Governance</span>
+            </div>
         </div>
-        <div class="hidden sm:flex items-center space-x-4 text-xs font-mono">
-            <span>Session: <strong class="text-amber-400">QUARANTINE_PENDING</strong></span>
-            <span class="text-slate-600">|</span>
-            <span>Standard: <strong class="text-sky-300">RFC 6238 TOTP</strong></span>
-            <span class="text-slate-600">|</span>
-            <span>Window: <strong class="text-slate-300">30s Rolling</strong></span>
+
+        <div class="flex items-center gap-4">
+            <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0d1117] border border-[#30363d] text-xs font-mono text-slate-300">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                <span>Environment: Production</span>
+            </div>
+
+            <!-- Theme Switcher -->
+            <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-md bg-[#0d1117] border border-[#30363d] text-slate-300 hover:text-white hover:bg-[#21262d] transition text-xs" title="Toggle Light / Dark mode">
+                <i id="themeToggleIcon" class="fa-solid fa-sun text-amber-400"></i>
+            </button>
+
+            <a href="logout.php" class="text-xs text-slate-400 hover:text-white transition flex items-center gap-1.5 font-sans pl-2 border-l border-[#30363d]">
+                <i class="fa-solid fa-arrow-left text-xs"></i>
+                <span>Cancel Sign In</span>
+            </a>
         </div>
     </header>
 
-    <!-- Main Okta-Grade MFA Card -->
-    <div class="relative z-10 w-full max-w-md my-auto pt-8">
-        <div class="bg-[#10141f] rounded-xl p-8 sm:p-9 shadow-2xl border border-[#1c2233]">
+    <!-- Main Verification Card -->
+    <div class="relative z-10 w-full max-w-md my-auto pt-16">
+        <div class="bg-[#161b22] rounded-xl p-8 sm:p-9 shadow-2xl border border-[#30363d]">
             
             <div class="text-center mb-6">
-                <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 mb-3 shadow-inner">
-                    <i class="fa-solid fa-mobile-screen-button text-2xl"></i>
+                <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-[#2f81f7]/15 border border-[#2f81f7]/30 text-[#2f81f7] mb-3 shadow-xs">
+                    <i class="fa-solid fa-fingerprint text-xl"></i>
                 </div>
-                <h1 class="text-xl sm:text-2xl font-bold text-white tracking-tight font-sans">
+                <h1 class="text-xl font-bold text-white tracking-tight">
                     Two-Step Verification
                 </h1>
-                <p class="text-xs text-slate-400 mt-1 font-sans">
-                    Enter the 6-digit code from your authenticator app
+                <p class="text-xs text-slate-400 mt-1">
+                    Enter the 6-digit passcode generated by your authenticator app
                 </p>
-                <div class="mt-2.5 inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-mono text-amber-300 bg-amber-500/10 border border-amber-500/20">
-                    <i class="fa-solid fa-user-check text-[10px]"></i>
+                <div class="mt-3 inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-mono text-slate-300 bg-[#0d1117] border border-[#30363d]">
+                    <i class="fa-solid fa-user-shield text-[#2f81f7] text-[11px]"></i>
                     <span class="truncate max-w-[220px]"><?php echo htmlspecialchars($user['email'] ?? 'Authenticated Identity'); ?></span>
                 </div>
             </div>
 
             <?php if ($error): ?>
-                <div class="bg-red-500/10 border border-red-500/30 text-red-300 p-3.5 rounded-lg mb-6 text-xs flex items-start">
-                    <i class="fa-solid fa-circle-exclamation mr-2.5 mt-0.5 text-base text-red-400 flex-shrink-0"></i>
+                <div class="bg-red-500/10 border border-red-500/30 text-red-400 p-3.5 rounded-lg mb-6 text-xs flex items-start gap-2.5 font-mono">
+                    <i class="fa-solid fa-circle-exclamation mt-0.5 text-sm shrink-0"></i>
                     <div>
-                        <strong class="text-red-400 font-semibold">Verification Failed:</strong>
-                        <p class="mt-0.5 text-slate-300"><?php echo htmlspecialchars($error); ?></p>
+                        <strong class="text-white">Verification Failed:</strong>
+                        <p class="mt-0.5 text-red-300"><?php echo htmlspecialchars($error); ?></p>
                     </div>
                 </div>
             <?php endif; ?>
@@ -178,47 +180,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         6-Digit Security Code
                     </label>
                     <input type="text" name="mfa_code" maxlength="6" autofocus 
-                           class="w-full px-4 py-3.5 rounded-lg text-center tracking-[0.45em] font-mono font-bold text-2xl bg-[#090d16] border border-[#1c2233] text-sky-400 placeholder:text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500 transition" 
+                           class="w-full px-4 py-3 rounded-md text-center tracking-[0.45em] font-mono font-bold text-2xl bg-[#0d1117] border border-[#30363d] text-[#2f81f7] placeholder:text-slate-700 focus:outline-none focus:border-[#2f81f7] transition" 
                            placeholder="000000" required autocomplete="one-time-code" inputmode="numeric">
                     
                     <!-- 30-Second Rolling Code Progress Bar -->
                     <div class="mt-3 flex items-center justify-between text-[11px] font-mono text-slate-500">
                         <span id="totpSecLabel">Rolling Code Active</span>
-                        <div class="w-28 bg-[#090d16] rounded-full h-1.5 overflow-hidden border border-[#1c2233]">
-                            <div id="totpProgressBar" class="bg-sky-400 h-full transition-all duration-1000 ease-linear" style="width: 100%;"></div>
+                        <div class="w-28 bg-[#0d1117] rounded-full h-1.5 overflow-hidden border border-[#30363d]">
+                            <div id="totpProgressBar" class="bg-[#2f81f7] h-full transition-all duration-1000 ease-linear" style="width: 100%;"></div>
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" class="w-full py-2.5 px-4 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-sm rounded-md transition shadow-md flex items-center justify-center space-x-2">
-                    <i class="fa-solid fa-shield-check text-sm"></i>
+                <button type="submit" class="w-full py-2.5 px-4 bg-[#2f81f7] hover:bg-blue-600 text-white font-semibold text-xs rounded-md transition shadow-xs flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-shield-check text-xs"></i>
                     <span>Verify Identity</span>
                 </button>
             </form>
             
-            <div class="mt-6 pt-4 border-t border-[#1c2233] text-center text-xs">
-                <a href="logout.php" class="text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5 font-sans">
+            <div class="mt-6 pt-4 border-t border-[#30363d] text-center text-xs">
+                <a href="logout.php" class="text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5 font-sans">
                     <i class="fa-solid fa-arrow-left text-xs"></i>
                     <span>Cancel and return to sign in</span>
                 </a>
             </div>
         </div>
+
+        <!-- Footer Compliance Readout -->
+        <div class="mt-4 text-center text-[10px] text-slate-500 font-mono uppercase tracking-wider">
+            RFC 6238 TOTP Standard &bull; Zero-Trust Session Intercept
+        </div>
     </div>
 
-    <!-- Live TOTP 30-second slice sync script -->
+    <!-- Rolling 30-Second TOTP Window Sync -->
     <script>
         function updateTotpProgress() {
-            const now = Math.floor(Date.now() / 1000);
-            const remaining = 30 - (now % 30);
-            const pct = (remaining / 30) * 100;
-            const bar = document.getElementById('totpProgressBar');
-            const lbl = document.getElementById('totpSecLabel');
-            if (bar) bar.style.width = pct + '%';
-            if (lbl) lbl.textContent = `Token Refresh in ${remaining}s`;
+            var now = new Date();
+            var seconds = now.getSeconds();
+            var remaining = 30 - (seconds % 30);
+            var percentage = (remaining / 30) * 100;
+            
+            var bar = document.getElementById('totpProgressBar');
+            var label = document.getElementById('totpSecLabel');
+            if (bar) bar.style.width = percentage + '%';
+            if (label) label.innerText = remaining + 's window';
         }
         setInterval(updateTotpProgress, 1000);
         updateTotpProgress();
     </script>
-
 </body>
 </html>

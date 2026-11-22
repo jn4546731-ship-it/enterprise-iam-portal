@@ -1,8 +1,7 @@
 <?php
 /**
- * Enterprise Zero-Trust IAM Portal - Official Executive Audit & Compliance Report
- * Generates an executive-level printable summary and audit ledger.
- * Fulfills University Final Project Reporting & Documentation Standards.
+ * Enterprise IAM Portal - Official Executive Audit & Compliance Report
+ * Generates an executive-level summary and immutable audit ledger.
  */
 
 session_start();
@@ -43,6 +42,8 @@ $user_display_name = trim(($current_user['first_name'] ?? '') . ' ' . ($current_
 if (empty($user_display_name)) {
     $user_display_name = explode('@', $user_email)[0];
 }
+$user_dept = !empty($current_user['department']) ? $current_user['department'] : 'General Operations';
+$user_title = !empty($current_user['job_title']) ? $current_user['job_title'] : 'Staff Analyst';
 $user_clearance = $current_user['security_clearance'] ?? 'Tier 1';
 $user_role = $current_user['role'] ?? 'Staff';
 
@@ -109,8 +110,8 @@ $events_24h = (int) (($total_24h_res ? $total_24h_res->fetch_assoc()['cnt'] : 0)
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="dark light">
-    <title>Executive Compliance & SOC Audit Summary - Enterprise Zero-Trust IAM</title>
-    <!-- Immediate Theme Application to Prevent Flash of Wrong Theme -->
+    <title>Executive Compliance &amp; Audit Report &mdash; Enterprise IAM</title>
+    <!-- Immediate Theme Application -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('iam_theme') || 'dark';
@@ -124,43 +125,31 @@ $events_24h = (int) (($total_24h_res ? $total_24h_res->fetch_assoc()['cnt'] : 0)
         })();
     </script>
     <script src="assets/js/tailwind.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        "surface": "#0f131c",
-                        "surface-dim": "#0f131c",
-                        "surface-bright": "#353942",
-                        "surface-container-lowest": "#0a0e16",
-                        "surface-container-low": "#181c24",
-                        "surface-container": "#1c2028",
-                        "surface-container-high": "#262a33",
-                        "surface-container-highest": "#31353e",
-                        "on-surface": "#dfe2ee",
-                        "on-surface-variant": "#bdc8d1",
-                        "outline": "#87929a",
-                        "outline-variant": "#3e484f",
-                        "primary": "#8ed5ff",
-                        "primary-container": "#38bdf8",
-                        "on-primary": "#00354a",
-                        "on-primary-container": "#004965",
-                        "secondary": "#4edea3",
-                        "secondary-container": "#00a572",
-                        "tertiary": "#ffc174",
-                        "tertiary-container": "#f59e0b",
-                        "error": "#ffb4ab",
-                        "error-container": "#93000a",
-                        "on-error": "#690005"
-                    },
-                    fontFamily: {
-                        sans: ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'Share Tech Mono', 'monospace'],
-                    }
-                }
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#0d1117",
+              "surface-container-lowest": "#090d13",
+              "surface-container-low": "#161b22",
+              "surface-container": "#1c2128",
+              "surface-container-high": "#21262d",
+              "surface-container-highest": "#30363d",
+              "on-surface": "#e6edf3",
+              "on-surface-variant": "#8b949e",
+              "primary": "#2f81f7",
+              "primary-container": "#1f6feb",
+              "on-primary": "#ffffff"
+            },
+            fontFamily: {
+              sans: ["Geist", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+              mono: ["JetBrains Mono", "Share Tech Mono", "monospace"]
             }
-        };
+          }
+        }
+      };
     </script>
     <link href="assets/css/all.min.css" rel="stylesheet">
     <link href="assets/css/cyber-theme.css?v=<?php echo time(); ?>" rel="stylesheet">
@@ -170,288 +159,432 @@ $events_24h = (int) (($total_24h_res ? $total_24h_res->fetch_assoc()['cnt'] : 0)
                 background: #ffffff !important;
                 color: #000000 !important;
             }
-            .no-print {
+            .no-print, aside, header {
                 display: none !important;
             }
+            .pl-64 {
+                padding-left: 0 !important;
+            }
+            main {
+                padding-top: 0 !important;
+                background: #ffffff !important;
+                color: #000000 !important;
+            }
             .print-card {
-                border: 1px solid #cccccc !important;
+                border: 1px solid #d1d5db !important;
                 background: #ffffff !important;
                 color: #000000 !important;
                 box-shadow: none !important;
             }
             .print-table th {
-                background: #f1f5f9 !important;
-                color: #000000 !important;
-                border-bottom: 2px solid #334155 !important;
+                background: #f3f4f6 !important;
+                color: #111827 !important;
+                border-bottom: 2px solid #374151 !important;
             }
             .print-table td {
-                color: #1e293b !important;
-                border-bottom: 1px solid #e2e8f0 !important;
+                color: #1f2937 !important;
+                border-bottom: 1px solid #e5e7eb !important;
             }
             .print-badge {
-                border: 1px solid #666666 !important;
-                color: #000000 !important;
+                border: 1px solid #6b7280 !important;
+                color: #111827 !important;
                 background: transparent !important;
-            }
-            .page-break {
-                page-break-after: always;
             }
         }
     </style>
 </head>
-<body class="bg-[#090d16] text-slate-200 font-sans min-h-screen p-4 sm:p-8 antialiased">
+<body class="bg-[#0d1117] font-sans text-[#e6edf3] antialiased selection:bg-[#2f81f7] selection:text-white min-h-screen">
 
-    <!-- Top Action Bar (Screen Only) -->
-    <div class="max-w-5xl mx-auto mb-6 flex justify-between items-center no-print bg-[#0c101a] p-3.5 rounded-lg border border-[#1c2233]">
-        <div class="flex items-center space-x-3">
-            <a href="dashboard.php" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-[#1c2233] transition flex items-center">
-                <i class="fa-solid fa-arrow-left mr-1.5"></i> Back to Directory
-            </a>
-            <span class="text-xs text-slate-600 hidden sm:inline">|</span>
-            <span class="text-xs text-sky-400 font-medium hidden sm:inline"><i class="fa-solid fa-file-shield mr-1"></i> NIST SP 800-207 Compliance Audit Export</span>
-        </div>
-        
-        <div class="flex items-center space-x-2">
-            <!-- Theme Toggle Button (Light / Dark Mode) -->
-            <button onclick="toggleTheme()" id="themeToggleBtn" class="px-2.5 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-[#1c2233] transition flex items-center gap-1.5" title="Switch Theme (Light / Dark)">
-                <i id="themeToggleIcon" class="fa-solid fa-sun text-xs text-amber-400"></i>
-                <span class="hidden md:inline font-mono text-[11px]">Theme</span>
-            </button>
-            <a href="dashboard.php?export=csv" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-[#1c2233] transition flex items-center">
-                <i class="fa-solid fa-file-csv mr-1.5 text-sky-400"></i> Export CSV
-            </a>
-            <button onclick="window.print()" class="px-3.5 py-1.5 rounded-md text-xs font-semibold text-slate-950 bg-sky-400 hover:bg-sky-300 transition flex items-center shadow-sm">
-                <i class="fa-solid fa-print mr-1.5"></i> Print Official Report (PDF)
-            </button>
-        </div>
-    </div>
+    <!-- ========================================================================= -->
+    <!-- LEFT FIXED NAVIGATION SIDEBAR                                             -->
+    <!-- ========================================================================= -->
+    <aside id="appSidebar" class="no-print fixed left-0 top-0 h-screen w-64 bg-[#161b22] border-r border-[#30363d] z-50 flex flex-col justify-between shadow-xl transition-transform duration-300">
+        <div class="flex flex-col h-full overflow-y-auto custom-scrollbar">
+            <!-- Brand Header -->
+            <div class="h-16 flex items-center gap-3 px-5 bg-[#0d1117] border-b border-[#30363d]">
+                <div class="w-8 h-8 rounded-md bg-[#2f81f7]/15 border border-[#2f81f7]/30 flex items-center justify-center text-[#2f81f7] shrink-0">
+                    <i class="fa-solid fa-shield-halved text-base"></i>
+                </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="text-sm text-white font-semibold tracking-tight truncate">Enterprise IAM</span>
+                    <span class="text-[10px] font-mono text-slate-400 tracking-wider uppercase font-medium">Identity Governance</span>
+                </div>
+            </div>
 
-    <!-- Official Report Document Container -->
-    <main class="max-w-5xl mx-auto cyber-card print-card rounded-2xl p-6 sm:p-10 shadow-2xl border border-cyan-500/40 relative overflow-hidden bg-slate-950">
-        
-        <!-- Document Watermark & Laser Accent -->
-        <div class="cyber-laser-beam opacity-30 no-print"></div>
+            <!-- Directory Sync Status Chip -->
+            <div class="px-4 py-3">
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded bg-[#0d1117] border border-[#30363d]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="font-mono text-[10px] text-slate-300 uppercase font-medium truncate">Directory Sync: Connected</span>
+                </div>
+            </div>
 
-        <!-- Document Official Header -->
-        <header class="border-b border-cyan-500/30 pb-6 mb-6">
-            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <div>
-                    <div class="flex items-center space-x-2 mb-1">
-                        <span class="h-2 w-2 rounded-full bg-cyan-400 cyber-beacon"></span>
-                        <span class="font-tech text-xs tracking-widest text-cyan-400 uppercase font-bold">SCHOOL OF COMPUTING & INFORMATICS &bull; ENTERPRISE ZERO-TRUST SOC</span>
+            <!-- Categorized Navigation -->
+            <nav class="flex-1 px-3 py-2 space-y-1 text-xs font-sans">
+                <a href="dashboard.php" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-table-cells-large text-sm w-4 text-center"></i>
+                    <span>Overview</span>
+                </a>
+
+                <a href="setup_mfa.php" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-fingerprint text-sm w-4 text-center"></i>
+                    <span>Authentication &amp; MFA</span>
+                </a>
+
+                <a href="dashboard.php#usersDirectory" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-users text-sm w-4 text-center"></i>
+                    <span>Users &amp; Directory</span>
+                </a>
+
+                <a href="dashboard.php#usersDirectory" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-user-shield text-sm w-4 text-center"></i>
+                    <span>Roles &amp; Permissions (RBAC)</span>
+                </a>
+
+                <a href="vault.php" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-lock text-sm w-4 text-center"></i>
+                    <span>Access Policies</span>
+                </a>
+
+                <!-- Audit Logs (Active Page) -->
+                <a href="audit_report.php" class="flex items-center gap-2.5 px-3 py-2 rounded-md bg-[#21262d] border border-[#30363d] text-white shadow-xs font-medium">
+                    <i class="fa-solid fa-list-check text-sm text-[#2f81f7] w-4 text-center"></i>
+                    <span>Audit Logs</span>
+                </a>
+
+                <a href="api_management.php" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-key text-sm w-4 text-center"></i>
+                    <span>Active Sessions</span>
+                </a>
+
+                <a href="dashboard.php" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-gear text-sm w-4 text-center"></i>
+                    <span>System Settings</span>
+                </a>
+            </nav>
+
+            <!-- Sidebar User Card in Footer -->
+            <div class="p-3 border-t border-[#30363d] bg-[#0d1117]">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full bg-[#2f81f7]/15 text-[#2f81f7] flex items-center justify-center font-bold text-xs shrink-0 border border-[#2f81f7]/30">
+                        <?php echo strtoupper(substr($user_email ?? 'A', 0, 1)); ?>
                     </div>
-                    <h1 class="font-orbitron text-2xl sm:text-3xl font-extrabold text-white tracking-wider glow-text-cyan">
-                        EXECUTIVE SECURITY AUDIT REPORT
-                    </h1>
-                    <p class="font-tech text-xs text-slate-400 mt-0.5">
-                        Role-Based Access Control, Cryptographic Multi-Factor Telemetry & Behavioral Audit Trail
-                    </p>
+                    <div class="min-w-0">
+                        <p class="text-xs font-semibold text-white truncate"><?php echo htmlspecialchars($user_display_name); ?></p>
+                        <p class="text-[10px] font-mono text-emerald-400 truncate flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            <span><?php echo htmlspecialchars($user_role); ?> (<?php echo htmlspecialchars($user_clearance); ?>)</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- ========================================================================= -->
+    <!-- MAIN WORKSPACE CONTAINER                                                  -->
+    <!-- ========================================================================= -->
+    <div class="pl-64 flex flex-col min-h-screen">
+
+        <!-- Top Fixed Header -->
+        <header class="no-print fixed top-0 right-0 left-64 h-16 bg-[#161b22] border-b border-[#30363d] z-40 flex items-center justify-between px-6 shadow-xs backdrop-blur-md">
+            <!-- Search Bar -->
+            <div class="relative w-96 max-w-md">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" placeholder="Search audit logs, events, identities... (Ctrl+K)" class="w-full bg-[#0d1117] border border-[#30363d] rounded-md pl-9 pr-14 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2f81f7] transition font-sans">
+                <kbd class="absolute right-2.5 top-1/2 -translate-y-1/2 font-mono text-[10px] px-1.5 py-0.5 rounded bg-[#161b22] border border-[#30363d] text-slate-400 uppercase">Ctrl+K</kbd>
+            </div>
+
+            <!-- Header Controls -->
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0d1117] border border-[#30363d] text-xs font-mono text-slate-300">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span>Environment: Production</span>
                 </div>
 
-                <div class="text-right font-tech text-xs space-y-1">
-                    <div class="inline-block px-3 py-1 rounded bg-purple-950/60 border border-purple-500/40 text-purple-300 font-bold text-[11px]">
-                        CLASSIFICATION: CONFIDENTIAL
+                <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-md bg-[#0d1117] border border-[#30363d] text-slate-300 hover:text-white hover:bg-[#21262d] transition text-xs" title="Toggle Light / Dark mode">
+                    <i id="themeToggleIcon" class="fa-solid fa-sun text-amber-400"></i>
+                </button>
+
+                <div class="flex items-center gap-3 pl-3 border-l border-[#30363d]">
+                    <div class="w-8 h-8 rounded-full bg-[#2f81f7]/20 border border-[#2f81f7]/40 flex items-center justify-center font-bold text-xs text-[#2f81f7] shrink-0">
+                        <?php echo strtoupper(substr($user_email ?? 'A', 0, 1)); ?>
                     </div>
-                    <p class="text-slate-400">Doc Ref: <span class="text-cyan-400 font-mono font-bold">MKU-IAM-SEC-<?php echo date('Ymd-His'); ?></span></p>
-                    <p class="text-slate-400">Generated: <span class="text-white font-mono"><?php echo date('Y-m-d H:i:s T'); ?></span></p>
+                    <div class="hidden md:flex flex-col text-left">
+                        <span class="text-xs font-semibold text-white leading-tight whitespace-nowrap"><?php echo htmlspecialchars($user_display_name); ?></span>
+                        <span class="text-[11px] font-mono text-slate-400 whitespace-nowrap"><?php echo htmlspecialchars($user_title); ?></span>
+                    </div>
+                    <a href="logout.php" class="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-md transition ml-1" title="Sign out of enterprise session">
+                        <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+                    </a>
                 </div>
             </div>
         </header>
 
-        <!-- Executive Metadata & Scope Grid -->
-        <section class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-8 font-tech text-xs">
-            <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
-                <span class="text-slate-500 text-[10px] uppercase block font-bold">System Architecture</span>
-                <span class="text-cyan-300 font-bold font-orbitron text-xs">Zero-Trust Perimeter</span>
-                <span class="text-[10px] text-slate-400 block mt-0.5">NIST SP 800-207</span>
-            </div>
-            <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
-                <span class="text-slate-500 text-[10px] uppercase block font-bold">Auditing Authority</span>
-                <span class="text-purple-300 font-bold font-orbitron text-xs"><?php echo htmlspecialchars($user_display_name); ?></span>
-                <span class="text-[10px] text-slate-400 block mt-0.5"><?php echo htmlspecialchars($user_role); ?> (<?php echo htmlspecialchars($user_clearance); ?>)</span>
-            </div>
-            <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
-                <span class="text-slate-500 text-[10px] uppercase block font-bold">Air-Gap Status</span>
-                <span class="text-emerald-400 font-bold font-orbitron text-xs">100% Offline Secured</span>
-                <span class="text-[10px] text-slate-400 block mt-0.5">Zero CDN / Self-Contained</span>
-            </div>
-            <div class="bg-slate-900/80 p-3.5 rounded-xl border border-slate-800">
-                <span class="text-slate-500 text-[10px] uppercase block font-bold">Encrypted Domain</span>
-                <span class="text-blue-300 font-bold font-orbitron text-xs truncate block">TLS 1.3 Certified</span>
-                <span class="text-[10px] text-slate-400 block mt-0.5">iam.secure-defense.internal</span>
-            </div>
-        </section>
+        <!-- Main Content Area -->
+        <main class="relative pt-20 w-full min-h-screen bg-[#0d1117] px-6 py-6 text-[#e6edf3]">
 
-        <!-- Section 1: Executive KPI Summary -->
-        <section class="mb-8">
-            <h3 class="font-orbitron text-sm font-bold text-white uppercase tracking-wider mb-3 flex items-center">
-                <i class="fa-solid fa-chart-simple text-cyan-400 mr-2"></i> Section 1: Identity & Telemetry Metrics
-            </h3>
-
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
-                <div class="cyber-card p-4 rounded-xl border border-cyan-500/30">
-                    <span class="text-[10px] font-tech text-cyan-400 uppercase font-bold">Total Identities</span>
-                    <p class="font-orbitron text-2xl font-bold text-white mt-1"><?php echo $total_identities; ?></p>
-                    <span class="text-[10px] font-tech text-slate-400"><?php echo $active_identities; ?> Active &bull; <?php echo $suspended_count; ?> Suspended</span>
+            <!-- 1. BREADCRUMB, MAIN HEADING & ACTION BUTTONS -->
+            <div class="no-print flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#30363d] mb-6">
+                <div>
+                    <div class="flex items-center gap-2 text-xs font-mono text-slate-400 mb-1.5">
+                        <span>Administration</span>
+                        <span class="text-slate-600">/</span>
+                        <span class="text-slate-200 font-semibold">Audit Logs &amp; Compliance</span>
+                        <span class="text-slate-600 ml-1">&bull;</span>
+                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            Environment: Production
+                        </span>
+                    </div>
+                    <h1 class="text-2xl font-bold text-white tracking-tight">Executive Security Audit Report</h1>
+                    <p class="text-xs text-slate-400 mt-1 max-w-2xl">Role-based access verification, multi-factor authentication telemetry, and immutable audit ledger.</p>
                 </div>
 
-                <div class="cyber-card p-4 rounded-xl border border-emerald-500/30">
-                    <span class="text-[10px] font-tech text-emerald-400 uppercase font-bold">MFA Adoption Ratio</span>
-                    <p class="font-orbitron text-2xl font-bold text-emerald-400 mt-1"><?php echo $mfa_rate; ?>%</p>
-                    <span class="text-[10px] font-tech text-slate-400"><?php echo $mfa_enrolled; ?> Identities Enrolled (RFC 6238)</span>
-                </div>
+                <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+                    <button onclick="window.print()" class="px-3.5 py-2 rounded-md bg-[#2f81f7] hover:bg-blue-600 text-white text-xs font-semibold shadow-xs transition flex items-center gap-2">
+                        <i class="fa-solid fa-print text-xs"></i>
+                        <span>Print Official Report (PDF)</span>
+                    </button>
 
-                <div class="cyber-card p-4 rounded-xl border border-purple-500/30">
-                    <span class="text-[10px] font-tech text-purple-400 uppercase font-bold">Clearance Distribution</span>
-                    <div class="text-[11px] font-tech text-slate-300 mt-1 space-y-0.5">
-                        <div class="flex justify-between"><span>Tier 3 (Admin):</span> <strong class="text-purple-400"><?php echo $tier_counts['Tier 3']; ?></strong></div>
-                        <div class="flex justify-between"><span>Tier 2 (Auditor):</span> <strong class="text-cyan-400"><?php echo $tier_counts['Tier 2']; ?></strong></div>
-                        <div class="flex justify-between"><span>Tier 1 (Staff):</span> <strong class="text-amber-400"><?php echo $tier_counts['Tier 1']; ?></strong></div>
+                    <a href="dashboard.php?export=csv" class="px-3.5 py-2 rounded-md bg-[#161b22] hover:bg-[#21262d] text-slate-200 border border-[#30363d] text-xs font-medium transition flex items-center gap-2 shadow-xs">
+                        <i class="fa-solid fa-file-csv text-xs text-slate-400"></i>
+                        <span>Export CSV</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- 2. DOCUMENT CONTAINER (Clean Dark Slate on screen, Clean White on Print) -->
+            <div class="print-card rounded-lg bg-[#161b22] border border-[#30363d] p-6 sm:p-8 shadow-xs max-w-5xl mx-auto space-y-8">
+                
+                <!-- Document Header Section -->
+                <div class="border-b border-[#30363d] pb-6">
+                    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <div class="flex items-center space-x-2 mb-1.5">
+                                <span class="h-2 w-2 rounded-full bg-[#2f81f7]"></span>
+                                <span class="text-xs font-mono text-[#2f81f7] uppercase font-semibold">Enterprise Zero-Trust IAM &bull; Audit Division</span>
+                            </div>
+                            <h2 class="text-2xl font-bold text-white tracking-tight">Executive Security Audit Ledger</h2>
+                            <p class="text-xs text-slate-400 mt-0.5">Role-Based Access Control, Cryptographic MFA Telemetry &amp; Access Activity</p>
+                        </div>
+
+                        <div class="text-left sm:text-right text-xs font-mono space-y-1">
+                            <span class="inline-block px-2.5 py-0.5 rounded text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                Classification: Official
+                            </span>
+                            <p class="text-slate-400">Ref: <span class="text-white font-bold">IAM-AUDIT-<?php echo date('Ymd-His'); ?></span></p>
+                            <p class="text-slate-400">Date: <span class="text-slate-200"><?php echo date('Y-m-d H:i:s T'); ?></span></p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="cyber-card p-4 rounded-xl border border-amber-500/30">
-                    <span class="text-[10px] font-tech text-amber-400 uppercase font-bold">Cryptographic API Keys</span>
-                    <p class="font-orbitron text-2xl font-bold text-amber-400 mt-1"><?php echo $active_api_keys; ?> / <?php echo $total_api_keys; ?></p>
-                    <span class="text-[10px] font-tech text-slate-400">160-bit HMAC-SHA256 Bearer</span>
-                </div>
-            </div>
-        </section>
+                <!-- Scope Metadata Grid -->
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-xs font-sans">
+                    <div class="bg-[#0d1117] p-3.5 rounded-md border border-[#30363d]">
+                        <span class="text-slate-400 text-[10px] uppercase font-mono block">Framework</span>
+                        <strong class="text-white text-xs mt-0.5 block">NIST SP 800-207</strong>
+                        <span class="text-[10px] text-slate-400">Zero-Trust Architecture</span>
+                    </div>
 
-        <!-- Section 2: Zero-Trust RBAC Policy Matrix -->
-        <section class="mb-8">
-            <h3 class="font-orbitron text-sm font-bold text-white uppercase tracking-wider mb-3 flex items-center">
-                <i class="fa-solid fa-lock text-purple-400 mr-2"></i> Section 2: Role-Based Access Control (RBAC) Enforcement Policy
-            </h3>
+                    <div class="bg-[#0d1117] p-3.5 rounded-md border border-[#30363d]">
+                        <span class="text-slate-400 text-[10px] uppercase font-mono block">Auditing Authority</span>
+                        <strong class="text-white text-xs mt-0.5 block truncate"><?php echo htmlspecialchars($user_display_name); ?></strong>
+                        <span class="text-[10px] text-slate-400"><?php echo htmlspecialchars($user_role); ?> (<?php echo htmlspecialchars($user_clearance); ?>)</span>
+                    </div>
 
-            <div class="overflow-x-auto border border-slate-800 rounded-xl">
-                <table class="w-full text-left text-xs font-tech print-table">
-                    <thead class="bg-slate-950 text-slate-400 text-[10px] uppercase tracking-wider">
-                        <tr>
-                            <th class="p-3">Resource / Crown Jewel</th>
-                            <th class="p-3">Required Tier</th>
-                            <th class="p-3">Tier 1 (Staff)</th>
-                            <th class="p-3">Tier 2 (Auditor)</th>
-                            <th class="p-3">Tier 3 (Admin)</th>
-                            <th class="p-3">Enforcement Standard</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-800/80 text-slate-300">
-                        <tr>
-                            <td class="p-3 font-bold text-white">General SOC Command Telemetry</td>
-                            <td class="p-3 text-amber-400">Tier 1+</td>
-                            <td class="p-3 text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i> ALLOWED</td>
-                            <td class="p-3 text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i> ALLOWED</td>
-                            <td class="p-3 text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i> ALLOWED</td>
-                            <td class="p-3 text-slate-400">Session MAC</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 font-bold text-white">Customer PII Database</td>
-                            <td class="p-3 text-cyan-400">Tier 2+</td>
-                            <td class="p-3 text-red-400 font-bold"><i class="fa-solid fa-xmark mr-1"></i> BLOCKED (Violation)</td>
-                            <td class="p-3 text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i> ALLOWED (Inspect)</td>
-                            <td class="p-3 text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i> ALLOWED (Full)</td>
-                            <td class="p-3 text-slate-400">GDPR / ISO-27001</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 font-bold text-white">Q3 Corporate Financial Statements</td>
-                            <td class="p-3 text-cyan-400">Tier 2+</td>
-                            <td class="p-3 text-red-400 font-bold"><i class="fa-solid fa-xmark mr-1"></i> BLOCKED (Violation)</td>
-                            <td class="p-3 text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i> ALLOWED (Audit CSV)</td>
-                            <td class="p-3 text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i> ALLOWED (Full)</td>
-                            <td class="p-3 text-slate-400">SOX-404 / GAAP</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 font-bold text-white">Production Server Root SSH Key Pair</td>
-                            <td class="p-3 text-purple-400">Tier 3 Only</td>
-                            <td class="p-3 text-red-400 font-bold"><i class="fa-solid fa-xmark mr-1"></i> BLOCKED (Critical)</td>
-                            <td class="p-3 text-red-400 font-bold"><i class="fa-solid fa-xmark mr-1"></i> BLOCKED (Critical)</td>
-                            <td class="p-3 text-emerald-400 font-bold"><i class="fa-solid fa-check mr-1"></i> ALLOWED (Ed25519)</td>
-                            <td class="p-3 text-slate-400">NIST SP 800-53</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+                    <div class="bg-[#0d1117] p-3.5 rounded-md border border-[#30363d]">
+                        <span class="text-slate-400 text-[10px] uppercase font-mono block">Air-Gap Status</span>
+                        <strong class="text-emerald-400 text-xs mt-0.5 block">100% Offline Secured</strong>
+                        <span class="text-[10px] text-slate-400">Self-Contained Local Assets</span>
+                    </div>
 
-        <!-- Section 3: Immutable Audit Ledger Trail -->
-        <section class="mb-10">
-            <h3 class="font-orbitron text-sm font-bold text-white uppercase tracking-wider mb-3 flex items-center justify-between">
-                <span><i class="fa-solid fa-list-check text-emerald-400 mr-2"></i> Section 3: Recent Cryptographic Audit Event Ledger</span>
-                <span class="text-xs font-tech text-slate-400 lowercase font-normal">(latest <?php echo count($logs); ?> entries)</span>
-            </h3>
-
-            <div class="overflow-x-auto border border-slate-800 rounded-xl">
-                <table class="w-full text-left text-xs font-tech print-table">
-                    <thead class="bg-slate-950 text-slate-400 text-[10px] uppercase tracking-wider">
-                        <tr>
-                            <th class="p-2.5">Log ID</th>
-                            <th class="p-2.5">Timestamp</th>
-                            <th class="p-2.5">Event Type</th>
-                            <th class="p-2.5">Identity</th>
-                            <th class="p-2.5">Security Description</th>
-                            <th class="p-2.5 text-right">Client IP</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-800/80 text-slate-300">
-                        <?php foreach ($logs as $l): 
-                            $is_fail = (stripos($l['action_type'], 'FAIL') !== false || stripos($l['action_type'], 'DENIED') !== false);
-                        ?>
-                        <tr>
-                            <td class="p-2.5 font-mono text-slate-500">#<?php echo (int)$l['log_id']; ?></td>
-                            <td class="p-2.5 font-mono text-slate-400 whitespace-nowrap"><?php echo htmlspecialchars($l['created_at']); ?></td>
-                            <td class="p-2.5 whitespace-nowrap">
-                                <span class="px-2 py-0.5 rounded text-[10px] font-bold font-mono print-badge <?php echo $is_fail ? 'bg-red-500/20 text-red-400 border border-red-500/40' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40'; ?>">
-                                    <?php echo htmlspecialchars($l['action_type']); ?>
-                                </span>
-                            </td>
-                            <td class="p-2.5 text-white whitespace-nowrap"><?php echo htmlspecialchars($l['email'] ?? 'UID-' . $l['user_id']); ?></td>
-                            <td class="p-2.5 text-slate-400 text-[11px]"><?php echo htmlspecialchars($l['action_description']); ?></td>
-                            <td class="p-2.5 text-cyan-400 text-right font-mono whitespace-nowrap"><?php echo htmlspecialchars($l['ip_address']); ?></td>
-                        </tr>
-                        <?php endforeach; ?>
-                    </tbody>
-                </table>
-            </div>
-        </section>
-
-        <!-- Section 4: Official University / Departmental Certification & Sign-Off -->
-        <section class="border-t border-slate-800 pt-8 mt-12 font-tech">
-            <h4 class="font-orbitron text-xs font-bold text-slate-400 uppercase tracking-widest mb-6">
-                Official Validation & Compliance Sign-Off
-            </h4>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-xs text-slate-300">
-                <!-- Developer / Student Block -->
-                <div class="border-t-2 border-slate-700 pt-3">
-                    <p class="font-bold text-white uppercase">Project Developer / Candidate</p>
-                    <p class="text-slate-400 mt-1">Name: ....................................................</p>
-                    <p class="text-slate-400 mt-1">Reg No: ..................................................</p>
-                    <p class="text-slate-400 mt-1">Signature: ..............................................</p>
-                    <p class="text-slate-400 mt-1">Date: <?php echo date('Y-m-d'); ?></p>
+                    <div class="bg-[#0d1117] p-3.5 rounded-md border border-[#30363d]">
+                        <span class="text-slate-400 text-[10px] uppercase font-mono block">Enclave Domain</span>
+                        <strong class="text-sky-300 text-xs mt-0.5 block truncate">TLS 1.3 Active</strong>
+                        <span class="text-[10px] text-slate-400 truncate">iam.secure-defense.internal</span>
+                    </div>
                 </div>
 
-                <!-- Academic Supervisor Block -->
-                <div class="border-t-2 border-slate-700 pt-3">
-                    <p class="font-bold text-white uppercase">Project Supervisor / Panelist</p>
-                    <p class="text-slate-400 mt-1">Name: ....................................................</p>
-                    <p class="text-slate-400 mt-1">Department: Enterprise Computing / IT</p>
-                    <p class="text-slate-400 mt-1">Signature: ..............................................</p>
-                    <p class="text-slate-400 mt-1">Date: .....................................................</p>
+                <!-- Section 1: Executive KPI Summary -->
+                <div>
+                    <h3 class="text-sm font-semibold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-simple text-[#2f81f7]"></i>
+                        <span>Section 1: Identity &amp; Telemetry Metrics</span>
+                    </h3>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="bg-[#0d1117] p-4 rounded-md border border-[#30363d]">
+                            <span class="text-[11px] text-slate-400 font-medium">Total Identities</span>
+                            <div class="text-2xl font-bold text-white mt-1"><?php echo $total_identities; ?></div>
+                            <span class="text-[10px] text-slate-400 font-mono"><?php echo $active_identities; ?> Active &bull; <?php echo $suspended_count; ?> Suspended</span>
+                        </div>
+
+                        <div class="bg-[#0d1117] p-4 rounded-md border border-[#30363d]">
+                            <span class="text-[11px] text-slate-400 font-medium">MFA Adoption Rate</span>
+                            <div class="text-2xl font-bold text-emerald-400 mt-1"><?php echo $mfa_rate; ?>%</div>
+                            <span class="text-[10px] text-slate-400 font-mono"><?php echo $mfa_enrolled; ?> Enrolled (RFC 6238)</span>
+                        </div>
+
+                        <div class="bg-[#0d1117] p-4 rounded-md border border-[#30363d]">
+                            <span class="text-[11px] text-slate-400 font-medium">Clearance Distribution</span>
+                            <div class="text-xs text-slate-300 mt-1 space-y-0.5 font-mono">
+                                <div class="flex justify-between"><span>Tier 3 (Admin):</span> <strong class="text-purple-400"><?php echo $tier_counts['Tier 3']; ?></strong></div>
+                                <div class="flex justify-between"><span>Tier 2 (Auditor):</span> <strong class="text-sky-400"><?php echo $tier_counts['Tier 2']; ?></strong></div>
+                                <div class="flex justify-between"><span>Tier 1 (Staff):</span> <strong class="text-slate-300"><?php echo $tier_counts['Tier 1']; ?></strong></div>
+                            </div>
+                        </div>
+
+                        <div class="bg-[#0d1117] p-4 rounded-md border border-[#30363d]">
+                            <span class="text-[11px] text-slate-400 font-medium">Cryptographic API Keys</span>
+                            <div class="text-2xl font-bold text-[#2f81f7] mt-1"><?php echo $active_api_keys; ?> / <?php echo $total_api_keys; ?></div>
+                            <span class="text-[10px] text-slate-400 font-mono">160-bit HMAC-SHA256</span>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- CISO / Head of Department Block -->
-                <div class="border-t-2 border-slate-700 pt-3">
-                    <p class="font-bold text-white uppercase">Head of Department / Lead Auditor</p>
-                    <p class="text-slate-400 mt-1">Status: <span class="text-emerald-400 font-bold">[VERIFIED & APPROVED]</span></p>
-                    <p class="text-slate-400 mt-1">Signature & Stamp: ..............................</p>
-                    <p class="text-slate-400 mt-1">Date: .....................................................</p>
+                <!-- Section 2: RBAC Policy Matrix -->
+                <div>
+                    <h3 class="text-sm font-semibold text-white uppercase tracking-wider mb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-lock text-[#2f81f7]"></i>
+                        <span>Section 2: Role-Based Access Control (RBAC) Policy Enforcement</span>
+                    </h3>
+
+                    <div class="overflow-x-auto border border-[#30363d] rounded-md">
+                        <table class="w-full text-left text-xs font-sans print-table">
+                            <thead class="bg-[#0d1117] text-slate-400 font-mono text-[10px] uppercase tracking-wider border-b border-[#30363d]">
+                                <tr>
+                                    <th class="p-3">Resource Target</th>
+                                    <th class="p-3">Required Tier</th>
+                                    <th class="p-3">Tier 1 (Staff)</th>
+                                    <th class="p-3">Tier 2 (Auditor)</th>
+                                    <th class="p-3">Tier 3 (Admin)</th>
+                                    <th class="p-3">Compliance Basis</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#30363d] text-slate-300">
+                                <tr>
+                                    <td class="p-3 font-semibold text-white">General Directory Telemetry</td>
+                                    <td class="p-3 text-slate-300 font-mono">Tier 1+</td>
+                                    <td class="p-3 text-emerald-400 font-semibold"><i class="fa-solid fa-check mr-1"></i> ALLOWED</td>
+                                    <td class="p-3 text-emerald-400 font-semibold"><i class="fa-solid fa-check mr-1"></i> ALLOWED</td>
+                                    <td class="p-3 text-emerald-400 font-semibold"><i class="fa-solid fa-check mr-1"></i> ALLOWED</td>
+                                    <td class="p-3 text-slate-400">Session Attestation</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold text-white">Customer PII Database</td>
+                                    <td class="p-3 text-sky-400 font-mono">Tier 2+</td>
+                                    <td class="p-3 text-red-400 font-semibold"><i class="fa-solid fa-xmark mr-1"></i> BLOCKED</td>
+                                    <td class="p-3 text-emerald-400 font-semibold"><i class="fa-solid fa-check mr-1"></i> ALLOWED</td>
+                                    <td class="p-3 text-emerald-400 font-semibold"><i class="fa-solid fa-check mr-1"></i> ALLOWED</td>
+                                    <td class="p-3 text-slate-400">GDPR &bull; ISO-27001</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold text-white">Q3 Corporate Financials</td>
+                                    <td class="p-3 text-sky-400 font-mono">Tier 2+</td>
+                                    <td class="p-3 text-red-400 font-semibold"><i class="fa-solid fa-xmark mr-1"></i> BLOCKED</td>
+                                    <td class="p-3 text-emerald-400 font-semibold"><i class="fa-solid fa-check mr-1"></i> ALLOWED</td>
+                                    <td class="p-3 text-emerald-400 font-semibold"><i class="fa-solid fa-check mr-1"></i> ALLOWED</td>
+                                    <td class="p-3 text-slate-400">SOX-404 &bull; GAAP</td>
+                                </tr>
+                                <tr>
+                                    <td class="p-3 font-semibold text-white">Production Server SSH Key Pair</td>
+                                    <td class="p-3 text-purple-400 font-mono">Tier 3 Only</td>
+                                    <td class="p-3 text-red-400 font-semibold"><i class="fa-solid fa-xmark mr-1"></i> BLOCKED</td>
+                                    <td class="p-3 text-red-400 font-semibold"><i class="fa-solid fa-xmark mr-1"></i> BLOCKED</td>
+                                    <td class="p-3 text-emerald-400 font-semibold"><i class="fa-solid fa-check mr-1"></i> ALLOWED</td>
+                                    <td class="p-3 text-slate-400">NIST SP 800-53</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
+
+                <!-- Section 3: Immutable Audit Event Ledger -->
+                <div>
+                    <h3 class="text-sm font-semibold text-white uppercase tracking-wider mb-3 flex items-center justify-between">
+                        <span class="flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-[#2f81f7]"></i>
+                            <span>Section 3: Recent Audit Event Ledger</span>
+                        </span>
+                        <span class="text-xs font-mono text-slate-400 font-normal">Last <?php echo count($logs); ?> Events Recorded</span>
+                    </h3>
+
+                    <div class="overflow-x-auto border border-[#30363d] rounded-md">
+                        <table class="w-full text-left text-xs font-sans print-table">
+                            <thead class="bg-[#0d1117] text-slate-400 font-mono text-[10px] uppercase tracking-wider border-b border-[#30363d]">
+                                <tr>
+                                    <th class="p-2.5">ID</th>
+                                    <th class="p-2.5">Timestamp</th>
+                                    <th class="p-2.5">Action Type</th>
+                                    <th class="p-2.5">Identity</th>
+                                    <th class="p-2.5">Description</th>
+                                    <th class="p-2.5 text-right">Client IP</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-[#30363d] text-slate-300">
+                                <?php foreach ($logs as $l): 
+                                    $is_fail = (stripos($l['action_type'], 'FAIL') !== false || stripos($l['action_type'], 'DENIED') !== false);
+                                ?>
+                                <tr class="hover:bg-[#21262d]/50 transition">
+                                    <td class="p-2.5 font-mono text-slate-500">#<?php echo (int)$l['log_id']; ?></td>
+                                    <td class="p-2.5 font-mono text-slate-400 whitespace-nowrap"><?php echo htmlspecialchars($l['created_at']); ?></td>
+                                    <td class="p-2.5 whitespace-nowrap">
+                                        <span class="px-2 py-0.5 rounded text-[10px] font-medium font-mono print-badge <?php echo $is_fail ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'; ?>">
+                                            <?php echo htmlspecialchars($l['action_type']); ?>
+                                        </span>
+                                    </td>
+                                    <td class="p-2.5 text-white whitespace-nowrap font-medium"><?php echo htmlspecialchars($l['email'] ?? 'UID-' . $l['user_id']); ?></td>
+                                    <td class="p-2.5 text-slate-300 text-[11px]"><?php echo htmlspecialchars($l['action_description']); ?></td>
+                                    <td class="p-2.5 text-right font-mono text-slate-400 whitespace-nowrap"><code><?php echo htmlspecialchars($l['ip_address']); ?></code></td>
+                                </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Section 4: Sign-Off / Approval Block -->
+                <div class="border-t border-[#30363d] pt-6 font-sans">
+                    <h4 class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-5">
+                        Audit Attestation &amp; Sign-Off
+                    </h4>
+
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-xs text-slate-300">
+                        <div class="border-t border-[#30363d] pt-3">
+                            <p class="font-semibold text-white uppercase text-[11px]">System Engineer / Lead</p>
+                            <p class="text-slate-400 mt-1">Name: John Njoroge</p>
+                            <p class="text-slate-400 mt-1">Status: Attested</p>
+                            <p class="text-slate-400 mt-1">Date: <?php echo date('Y-m-d'); ?></p>
+                        </div>
+
+                        <div class="border-t border-[#30363d] pt-3">
+                            <p class="font-semibold text-white uppercase text-[11px]">Compliance Auditor</p>
+                            <p class="text-slate-400 mt-1">Role: Internal Security Audit</p>
+                            <p class="text-slate-400 mt-1">Verdict: Compliant (NIST SP 800-207)</p>
+                            <p class="text-slate-400 mt-1">Date: <?php echo date('Y-m-d'); ?></p>
+                        </div>
+
+                        <div class="border-t border-[#30363d] pt-3">
+                            <p class="font-semibold text-white uppercase text-[11px]">Chief Information Security Officer</p>
+                            <p class="text-emerald-400 font-semibold mt-1">Status: Approved &amp; Enforced</p>
+                            <p class="text-slate-400 mt-1">Enclave: iam.secure-defense.internal</p>
+                            <p class="text-slate-400 mt-1">Date: <?php echo date('Y-m-d'); ?></p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-        </section>
 
-    </main>
+            <!-- Footer -->
+            <div class="no-print mt-8 text-center border-t border-[#30363d] pt-6 text-xs text-slate-500 font-mono">
+                <i class="fa-solid fa-shield-halved text-[#2f81f7] mr-1"></i>
+                ENTERPRISE IDENTITY &amp; ACCESS MANAGEMENT &bull; AIR-GAPPED DEPLOYMENT &bull; iam.secure-defense.internal
+            </div>
+        </main>
+    </div>
 
+    <!-- JavaScript Handlers -->
     <script>
         // Theme Switcher (Light / Dark Mode)
         function toggleTheme() {

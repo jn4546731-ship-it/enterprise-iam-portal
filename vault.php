@@ -1,6 +1,6 @@
 <?php
 /**
- * Enterprise Zero-Trust IAM Portal - Protected Resources (The Crown Jewels Vault)
+ * Enterprise IAM Portal - Access Policies & Protected Resources (The Vault)
  * Implements Role-Based Access Control (RBAC) & Clearance Tiers (Tier 1, Tier 2, Tier 3)
  * Full audit logging of all authorized and unauthorized access attempts.
  */
@@ -73,7 +73,7 @@ $client_ip = $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1';
 // -------------------------------------------------------------
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vault_action'])) {
     if (!isset($_POST['csrf_token']) || !hash_equals($_SESSION['csrf_token'], $_POST['csrf_token'])) {
-        $feedback_msg = "<div class='cyber-card cyber-brackets bg-red-950/60 border border-red-500/50 text-red-400 p-4 rounded-xl mb-6 text-xs font-tech flex items-center'><i class='fa-solid fa-triangle-exclamation mr-2 text-lg text-red-500'></i> CSRF validation failed. Action aborted.</div>";
+        $feedback_msg = "<div class='p-3.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono mb-6 flex items-center'><i class='fa-solid fa-triangle-exclamation mr-2 text-base'></i> CSRF validation failed. Action aborted.</div>";
     } else {
         $resource_id = $_POST['resource_id'] ?? '';
         $action_requested = $_POST['vault_action']; // 'inspect' or 'download'
@@ -136,16 +136,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vault_action'])) {
                 exit();
             }
 
-            $feedback_msg = "<div class='cyber-card cyber-brackets bg-emerald-950/60 border border-emerald-500/50 text-emerald-300 p-4 rounded-xl mb-6 text-xs font-tech flex items-center shadow-lg glow-emerald'><i class='fa-solid fa-circle-check mr-3 text-lg text-emerald-400'></i> <div><strong class='font-orbitron font-bold text-white'>ACCESS AUTHORIZED:</strong> Identity clearance {$user_clearance} validated. Operation logged to cryptographic immutable ledger.</div></div>";
+            $feedback_msg = "<div class='p-3.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-mono mb-6 flex items-center'><i class='fa-solid fa-circle-check mr-2 text-base text-emerald-400'></i> <div><strong class='text-white'>ACCESS AUTHORIZED:</strong> Clearance {$user_clearance} validated. Operation logged to immutable audit ledger.</div></div>";
         } else {
-            // Unauthorized Breach / Access Attempt
+            // Unauthorized Access Attempt
             $action_type = "ACCESS_DENIED_UNAUTHORIZED_RESOURCE";
             $action_desc = "UNAUTHORIZED ACCESS ATTEMPT: User {$user_email} ({$user_clearance}) tried to access '{$res_label}' (Requires Tier {$required_tier}+). Action BLOCKED by Zero-Trust RBAC Policy.";
             $log = $conn->prepare("INSERT INTO audit_logs (user_id, action_type, action_description, ip_address) VALUES (?, ?, ?, ?)");
             $log->bind_param("isss", $current_user_id, $action_type, $action_desc, $client_ip);
             $log->execute();
 
-            $feedback_msg = "<div class='cyber-card cyber-brackets bg-red-950/80 border border-red-500/60 text-red-300 p-4 rounded-xl mb-6 text-xs font-tech flex items-center shadow-2xl glow-red animate-pulse'><i class='fa-solid fa-triangle-exclamation mr-3 text-xl text-red-400'></i> <div><strong class='font-orbitron font-bold text-white'>SECURITY ACCESS VIOLATION LOGGED:</strong> Access Denied for <span class='text-red-400 font-bold'>{$res_label}</span>. Current clearance level (<span class='text-amber-400 font-bold'>{$user_clearance}</span>) is insufficient. Security incident permanently written to SOC Audit Ledger and flagged by AI Sentinel.</div></div>";
+            $feedback_msg = "<div class='p-3.5 rounded-lg bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-mono mb-6 flex items-center'><i class='fa-solid fa-ban mr-2 text-base text-red-400'></i> <div><strong class='text-white'>ACCESS DENIED:</strong> Access blocked for <span class='text-red-300 font-bold'>{$res_label}</span>. Current clearance level (<span class='text-amber-400 font-bold'>{$user_clearance}</span>) is insufficient. Security incident recorded.</div></div>";
         }
     }
 }
@@ -156,8 +156,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vault_action'])) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="dark light">
-    <title>Enterprise Crown Jewels Vault - Zero-Trust RBAC Protection</title>
-    <!-- Immediate Theme Application to Prevent Flash of Wrong Theme -->
+    <title>Access Policies &amp; Protected Resources &mdash; Enterprise IAM</title>
+    <!-- Immediate Theme Application -->
     <script>
         (function() {
             const savedTheme = localStorage.getItem('iam_theme') || 'dark';
@@ -171,606 +171,509 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vault_action'])) {
         })();
     </script>
     <script src="assets/js/tailwind.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        "surface": "#0f131c",
-                        "surface-dim": "#0f131c",
-                        "surface-bright": "#353942",
-                        "surface-container-lowest": "#0a0e16",
-                        "surface-container-low": "#181c24",
-                        "surface-container": "#1c2028",
-                        "surface-container-high": "#262a33",
-                        "surface-container-highest": "#31353e",
-                        "on-surface": "#dfe2ee",
-                        "on-surface-variant": "#bdc8d1",
-                        "outline": "#87929a",
-                        "outline-variant": "#3e484f",
-                        "primary": "#8ed5ff",
-                        "primary-container": "#38bdf8",
-                        "on-primary": "#00354a",
-                        "on-primary-container": "#004965",
-                        "secondary": "#4edea3",
-                        "secondary-container": "#00a572",
-                        "tertiary": "#ffc174",
-                        "tertiary-container": "#f59e0b",
-                        "error": "#ffb4ab",
-                        "error-container": "#93000a",
-                        "on-error": "#690005"
-                    },
-                    fontFamily: {
-                        sans: ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'Share Tech Mono', 'monospace'],
-                    }
-                }
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#0d1117",
+              "surface-container-lowest": "#090d13",
+              "surface-container-low": "#161b22",
+              "surface-container": "#1c2128",
+              "surface-container-high": "#21262d",
+              "surface-container-highest": "#30363d",
+              "on-surface": "#e6edf3",
+              "on-surface-variant": "#8b949e",
+              "primary": "#2f81f7",
+              "primary-container": "#1f6feb",
+              "on-primary": "#ffffff"
+            },
+            fontFamily: {
+              sans: ["Geist", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+              mono: ["JetBrains Mono", "Share Tech Mono", "monospace"]
             }
-        };
+          }
+        }
+      };
     </script>
     <link href="assets/css/all.min.css" rel="stylesheet">
     <link href="assets/css/cyber-theme.css?v=<?php echo time(); ?>" rel="stylesheet">
     <script src="assets/js/cyber-effects.js" defer></script>
 </head>
-<body class="cyber-bg cyber-grid-overlay text-slate-300 font-sans min-h-screen flex flex-col antialiased relative selection:bg-purple-500 selection:text-black">
+<body class="bg-[#0d1117] font-sans text-[#e6edf3] antialiased selection:bg-[#2f81f7] selection:text-white min-h-screen">
 
-    <!-- Top Enterprise Navigation Bar (Okta Standard) -->
-    <nav class="bg-[#0e131f] border-b border-[#1c2230] px-4 sm:px-6 py-2.5 flex justify-between items-center sticky top-0 z-30">
-        <div class="flex items-center space-x-3">
-            <button id="mobileSidebarToggle" onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-400 hover:text-sky-400 rounded-lg hover:bg-slate-800 transition">
-                <i class="fa-solid fa-bars text-base"></i>
-            </button>
-            <div class="flex items-center space-x-2.5">
-                <div class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
-                    <i class="fa-solid fa-shield-halved text-sm"></i>
+    <!-- ========================================================================= -->
+    <!-- LEFT FIXED NAVIGATION SIDEBAR                                             -->
+    <!-- ========================================================================= -->
+    <aside id="appSidebar" class="fixed left-0 top-0 h-screen w-64 bg-[#161b22] border-r border-[#30363d] z-50 flex flex-col justify-between shadow-xl transition-transform duration-300">
+        <div class="flex flex-col h-full overflow-y-auto custom-scrollbar">
+            <!-- Brand Header -->
+            <div class="h-16 flex items-center gap-3 px-5 bg-[#0d1117] border-b border-[#30363d]">
+                <div class="w-8 h-8 rounded-md bg-[#2f81f7]/15 border border-[#2f81f7]/30 flex items-center justify-center text-[#2f81f7] shrink-0">
+                    <i class="fa-solid fa-shield-halved text-base"></i>
                 </div>
-                <div>
-                    <div class="flex items-center space-x-2">
-                        <span class="font-sans font-bold text-sm tracking-tight text-white">SECURE·DEFENSE</span>
-                        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/25 font-semibold">ZERO-TRUST IAM</span>
-                    </div>
-                    <p class="text-[10px] text-slate-400 font-sans">Enterprise Identity & Access Governance</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Center: Security Scope Pill -->
-        <div class="hidden xl:flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900 border border-[#1c2230] text-xs text-slate-400">
-            <span class="inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
-            <span class="font-mono text-emerald-400 font-medium">iam.secure-defense.internal</span>
-            <span class="text-slate-600">•</span>
-            <span class="text-slate-400">Air-Gapped Production Enclave</span>
-        </div>
-
-        <!-- Right: Telemetry & Profile -->
-        <div class="flex items-center space-x-3 text-xs">
-            <div class="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-slate-900 border border-[#1c2230]">
-                <span class="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-                <span class="text-slate-400 text-[11px]">Sentinel:</span>
-                <span class="text-emerald-400 font-semibold text-[11px]">ACTIVE</span>
-            </div>
-
-            <!-- Theme Toggle Button (Light / Dark Mode) -->
-            <button onclick="toggleTheme()" id="themeToggleBtn" class="p-1.5 px-2.5 rounded-md bg-slate-900 hover:bg-slate-800 border border-slate-700/60 text-slate-300 hover:text-white transition flex items-center gap-1.5" title="Switch Theme (Light / Dark)">
-                <i id="themeToggleIcon" class="fa-solid fa-sun text-xs text-amber-400"></i>
-                <span class="hidden md:inline font-mono text-[11px]">Theme</span>
-            </button>
-
-            <span class="hidden md:inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-mono font-bold bg-purple-500/10 text-purple-300 border border-purple-500/30">
-                <i class="fa-solid fa-gem mr-1 text-[10px] text-purple-400"></i> <?php echo htmlspecialchars($user_clearance); ?>
-            </span>
-
-            <div class="flex items-center space-x-2 bg-slate-900/90 pl-1 pr-3 py-1 rounded-full border border-[#1c2230]">
-                <div class="w-6 h-6 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/40 flex items-center justify-center font-bold text-[11px]">
-                    <?php echo strtoupper(substr($user_email, 0, 1)); ?>
-                </div>
-                <span class="text-slate-200 font-medium text-xs hidden sm:inline"><?php echo htmlspecialchars($user_email); ?></span>
-            </div>
-
-            <a href="logout.php" class="px-2.5 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition flex items-center" title="Sign out of enterprise session">
-                <i class="fa-solid fa-arrow-right-from-bracket mr-1.5 text-xs"></i> Sign out
-            </a>
-        </div>
-    </nav>
-
-    <!-- Main Container With Unified Responsive Sidebar -->
-    <div class="flex-1 flex overflow-hidden">
-
-        <!-- Sidebar Navigation Drawer (Okta Standard) -->
-        <aside id="appSidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-[#0c101a] border-r border-[#1c2230] flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:z-auto">
-            
-            <!-- User Summary Header Card -->
-            <div class="p-3.5 border-b border-[#1c2230]">
-                <div class="p-3 rounded-lg bg-slate-900/60 border border-[#1c2230]">
-                    <div class="flex items-center space-x-2.5">
-                        <div class="w-9 h-9 rounded-md bg-purple-500/15 border border-purple-500/30 flex items-center justify-center text-purple-300 font-bold text-sm">
-                            <?php echo strtoupper(substr($user_email, 0, 1)); ?>
-                        </div>
-                        <div class="overflow-hidden">
-                            <h4 class="font-sans text-xs font-semibold text-white truncate"><?php echo htmlspecialchars($user_name); ?></h4>
-                            <p class="font-mono text-[11px] text-slate-400 truncate"><?php echo htmlspecialchars($user_title); ?></p>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between text-[11px] font-sans pt-2 mt-2 border-t border-[#1c2230]">
-                        <span class="text-slate-500">Dept:</span>
-                        <span class="text-slate-300 truncate max-w-[130px] font-medium"><?php echo htmlspecialchars($user_dept); ?></span>
-                    </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="text-sm text-white font-semibold tracking-tight truncate">Enterprise IAM</span>
+                    <span class="text-[10px] font-mono text-slate-400 tracking-wider uppercase font-medium">Identity Governance</span>
                 </div>
             </div>
 
-            <!-- Navigation Links (Categorized Okta IA) -->
-            <nav class="flex-1 p-3 space-y-4 overflow-y-auto custom-scrollbar text-xs">
-                
-                <!-- Section 1: Directory & Governance -->
-                <div>
-                    <div class="px-3 mb-1.5 text-[11px] font-sans font-semibold uppercase tracking-wider text-slate-500">
-                        Directory & Governance
-                    </div>
-                    <div class="space-y-0.5">
-                        <a href="dashboard.php" class="flex items-center space-x-3 px-3 py-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
-                            <i class="fa-solid fa-users w-4 text-center"></i>
-                            <span class="text-xs">User Directory</span>
-                        </a>
-                        <a href="dashboard.php#sentinelTelemetry" class="flex items-center space-x-3 px-3 py-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
-                            <i class="fa-solid fa-shield-virus w-4 text-center"></i>
-                            <span class="text-xs">AI Risk Telemetry</span>
-                        </a>
-                    </div>
+            <!-- Directory Sync Status Chip -->
+            <div class="px-4 py-3">
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded bg-[#0d1117] border border-[#30363d]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="font-mono text-[10px] text-slate-300 uppercase font-medium truncate">Directory Sync: Connected</span>
                 </div>
+            </div>
 
-                <!-- Section 2: Security & Authentication -->
-                <div>
-                    <div class="px-3 mb-1.5 text-[11px] font-sans font-semibold uppercase tracking-wider text-slate-500">
-                        Authentication & Policies
-                    </div>
-                    <div class="space-y-0.5">
-                        <a href="setup_mfa.php" class="flex items-center space-x-3 px-3 py-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
-                            <i class="fa-solid fa-mobile-screen-button w-4 text-center"></i>
-                            <span class="text-xs">Multi-Factor Auth (MFA)</span>
-                        </a>
-                    </div>
-                </div>
+            <!-- Categorized Navigation -->
+            <nav class="flex-1 px-3 py-2 space-y-1 text-xs font-sans">
+                <a href="dashboard.php" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-table-cells-large text-sm w-4 text-center"></i>
+                    <span>Overview</span>
+                </a>
 
-                <!-- Section 3: Privileged Access (PAM) -->
-                <div>
-                    <div class="px-3 mb-1.5 text-[11px] font-sans font-semibold uppercase tracking-wider text-slate-500">
-                        Privileged Access (PAM)
-                    </div>
-                    <div class="space-y-0.5">
-                        <a href="vault.php" class="flex items-center space-x-3 px-3 py-2 rounded-md bg-sky-500/10 text-sky-400 font-semibold border-l-2 border-sky-400 transition">
-                            <i class="fa-solid fa-vault w-4 text-center"></i>
-                            <span class="text-xs">Crown Jewels Vault</span>
-                            <span class="ml-auto text-[10px] font-mono px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 font-bold">RBAC</span>
-                        </a>
-                        <a href="api_management.php" class="flex items-center space-x-3 px-3 py-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
-                            <i class="fa-solid fa-key w-4 text-center"></i>
-                            <span class="text-xs">API Credentials</span>
-                        </a>
-                    </div>
-                </div>
+                <a href="setup_mfa.php" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-fingerprint text-sm w-4 text-center"></i>
+                    <span>Authentication &amp; MFA</span>
+                </a>
 
-                <!-- Section 4: Reports & Compliance -->
-                <div>
-                    <div class="px-3 mb-1.5 text-[11px] font-sans font-semibold uppercase tracking-wider text-slate-500">
-                        Reports & Compliance
-                    </div>
-                    <div class="space-y-0.5">
-                        <a href="audit_report.php" class="flex items-center space-x-3 px-3 py-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
-                            <i class="fa-solid fa-file-shield w-4 text-center"></i>
-                            <span class="text-xs">Executive Audit Report</span>
-                            <span class="ml-auto text-[10px] font-mono px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 font-bold">NIST</span>
-                        </a>
-                        <a href="dashboard.php?export=csv" class="flex items-center space-x-3 px-3 py-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
-                            <i class="fa-solid fa-file-csv w-4 text-center"></i>
-                            <span class="text-xs">Export Audit CSV</span>
-                        </a>
-                    </div>
-                </div>
+                <a href="dashboard.php#usersDirectory" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-users text-sm w-4 text-center"></i>
+                    <span>Users &amp; Directory</span>
+                </a>
 
+                <a href="dashboard.php#usersDirectory" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-user-shield text-sm w-4 text-center"></i>
+                    <span>Roles &amp; Permissions (RBAC)</span>
+                </a>
+
+                <!-- Access Policies (Active Page) -->
+                <a href="vault.php" class="flex items-center gap-2.5 px-3 py-2 rounded-md bg-[#21262d] border border-[#30363d] text-white shadow-xs font-medium">
+                    <i class="fa-solid fa-lock text-sm text-[#2f81f7] w-4 text-center"></i>
+                    <span>Access Policies</span>
+                </a>
+
+                <a href="audit_report.php" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-list-check text-sm w-4 text-center"></i>
+                    <span>Audit Logs</span>
+                </a>
+
+                <a href="api_management.php" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-key text-sm w-4 text-center"></i>
+                    <span>Active Sessions</span>
+                </a>
+
+                <a href="dashboard.php" class="flex items-center gap-2.5 px-3 py-2 rounded-md text-slate-400 hover:bg-[#21262d] hover:text-white transition-colors">
+                    <i class="fa-solid fa-gear text-sm w-4 text-center"></i>
+                    <span>System Settings</span>
+                </a>
             </nav>
 
-            <!-- Sidebar Footer Status -->
-            <div class="p-3 border-t border-[#1c2230] text-[11px] font-sans text-slate-500">
-                <div class="flex items-center space-x-2 text-emerald-400 mb-0.5">
-                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-                    <span class="font-semibold text-xs">Zero-Trust Active</span>
+            <!-- Sidebar User Card in Footer -->
+            <div class="p-3 border-t border-[#30363d] bg-[#0d1117]">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-8 h-8 rounded-full bg-[#2f81f7]/15 text-[#2f81f7] flex items-center justify-center font-bold text-xs shrink-0 border border-[#2f81f7]/30">
+                        <?php echo strtoupper(substr($user_email ?? 'A', 0, 1)); ?>
+                    </div>
+                    <div class="min-w-0">
+                        <p class="text-xs font-semibold text-white truncate"><?php echo htmlspecialchars($user_name); ?></p>
+                        <p class="text-[10px] font-mono text-emerald-400 truncate flex items-center gap-1">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            <span><?php echo htmlspecialchars($user_role); ?> (<?php echo htmlspecialchars($user_clearance); ?>)</span>
+                        </p>
+                    </div>
                 </div>
-                <div class="text-[10px] text-slate-500">ED25519 &bull; AES-256 ENCLAVE</div>
             </div>
-        </aside>
+        </div>
+    </aside>
 
-        <!-- Sidebar Backdrop for Mobile -->
-        <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 backdrop-blur-xs z-30 hidden lg:hidden"></div>
+    <!-- ========================================================================= -->
+    <!-- MAIN WORKSPACE CONTAINER                                                  -->
+    <!-- ========================================================================= -->
+    <div class="pl-64 flex flex-col min-h-screen">
 
-        <!-- Main Workspace Area -->
-        <main class="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8">
+        <!-- Top Fixed Header -->
+        <header class="fixed top-0 right-0 left-64 h-16 bg-[#161b22] border-b border-[#30363d] z-40 flex items-center justify-between px-6 shadow-xs backdrop-blur-md">
+            <!-- Search Bar -->
+            <div class="relative w-96 max-w-md">
+                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+                <input type="text" placeholder="Search access policies, resources, audit logs... (Ctrl+K)" class="w-full bg-[#0d1117] border border-[#30363d] rounded-md pl-9 pr-14 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2f81f7] transition font-sans">
+                <kbd class="absolute right-2.5 top-1/2 -translate-y-1/2 font-mono text-[10px] px-1.5 py-0.5 rounded bg-[#161b22] border border-[#30363d] text-slate-400 uppercase">Ctrl+K</kbd>
+            </div>
+
+            <!-- Top Header Right Controls -->
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0d1117] border border-[#30363d] text-xs font-mono text-slate-300">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                    <span>Environment: Production</span>
+                </div>
+
+                <!-- Theme Switcher -->
+                <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-md bg-[#0d1117] border border-[#30363d] text-slate-300 hover:text-white hover:bg-[#21262d] transition text-xs" title="Toggle Light / Dark mode">
+                    <i id="themeToggleIcon" class="fa-solid fa-sun text-amber-400"></i>
+                </button>
+
+                <!-- User Profile -->
+                <div class="flex items-center gap-3 pl-3 border-l border-[#30363d]">
+                    <div class="w-8 h-8 rounded-full bg-[#2f81f7]/20 border border-[#2f81f7]/40 flex items-center justify-center font-bold text-xs text-[#2f81f7] shrink-0">
+                        <?php echo strtoupper(substr($user_email ?? 'A', 0, 1)); ?>
+                    </div>
+                    <div class="hidden md:flex flex-col text-left">
+                        <span class="text-xs font-semibold text-white leading-tight whitespace-nowrap"><?php echo htmlspecialchars($user_name); ?></span>
+                        <span class="text-[11px] font-mono text-slate-400 whitespace-nowrap"><?php echo htmlspecialchars($user_title); ?></span>
+                    </div>
+                    <a href="logout.php" class="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-md transition ml-1" title="Sign out of enterprise session">
+                        <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="relative pt-20 w-full min-h-screen bg-[#0d1117] px-6 py-6 text-[#e6edf3]">
 
             <?php if (!empty($feedback_msg)) echo $feedback_msg; ?>
 
-            <!-- Page Header -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 border-b border-purple-500/20 pb-6">
+            <!-- 1. BREADCRUMB, MAIN HEADING & ACTION BUTTONS -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#30363d]">
                 <div>
-                    <div class="flex items-center space-x-2 mb-2">
-                        <span class="px-2.5 py-0.5 text-[10px] font-tech font-bold uppercase rounded-md bg-purple-500/20 text-purple-300 border border-purple-500/40">
-                            ENTERPRISE ASSET PROTECTION LAYER // RBAC GATEWAY
+                    <!-- Clean Breadcrumb & Environment Status -->
+                    <div class="flex items-center gap-2 text-xs font-mono text-slate-400 mb-1.5">
+                        <span>Administration</span>
+                        <span class="text-slate-600">/</span>
+                        <span class="text-slate-200 font-semibold">Access Policies</span>
+                        <span class="text-slate-600 ml-1">&bull;</span>
+                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                            Environment: Production
                         </span>
-                        <span class="text-xs text-slate-500 font-tech">&bull; Mandatory Access Control</span>
                     </div>
-                    <h2 class="font-orbitron text-2xl sm:text-3xl font-extrabold text-white tracking-tight glow-text-purple mb-1">
-                        Protected Resources: "The Crown Jewels"
-                    </h2>
-                    <p class="font-tech text-slate-400 text-xs sm:text-sm max-w-2xl">
-                        Simulating the mission-critical core assets of the enterprise under dynamic Role-Based Access Control (RBAC) and Security Clearance Tiers. Every access attempt, authorized or prohibited, commits a cryptographically hashed event to the audit ledger.
-                    </p>
+                    <!-- Main Heading & Subtitle -->
+                    <h1 class="text-2xl font-bold text-white tracking-tight">Access Policies &amp; Protected Resources</h1>
+                    <p class="text-xs text-slate-400 mt-1 max-w-2xl">Manage Role-Based Access Control (RBAC) tiers and evaluate access authorization for sensitive databases, financials, and credentials.</p>
                 </div>
 
-                <!-- Fast Identity State Switcher -->
-                <div class="cyber-card cyber-brackets p-3.5 rounded-xl border border-purple-500/30 flex items-center space-x-4 shadow-lg">
-                    <div class="text-right font-tech">
-                        <p class="text-[10px] uppercase text-slate-500 font-bold tracking-wider">Active Identity State</p>
-                        <p class="text-xs font-bold text-white font-orbitron"><?php echo htmlspecialchars($user_role); ?> <span class="text-purple-400">(<?php echo htmlspecialchars($user_clearance); ?>)</span></p>
+                <!-- Practical Action Buttons -->
+                <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+                    <div class="px-3.5 py-1.5 rounded-md bg-[#161b22] border border-[#30363d] text-xs font-mono flex items-center gap-2">
+                        <span class="text-slate-400">Your Clearance:</span>
+                        <strong class="text-[#2f81f7]"><?php echo htmlspecialchars($user_role); ?> (<?php echo htmlspecialchars($user_clearance); ?>)</strong>
                     </div>
-                    <div class="h-8 w-[1px] bg-slate-800"></div>
-                    <a href="dashboard.php" class="cyber-btn text-xs font-tech font-bold text-purple-300 hover:text-white flex items-center bg-purple-950/60 hover:bg-purple-900/60 border border-purple-500/40 px-3 py-1.5 rounded-lg transition shadow glow-purple" title="Modify Clearance or User Roles in Command Center">
-                        <i class="fa-solid fa-sliders mr-1.5 text-purple-400"></i> Change Role
+
+                    <a href="dashboard.php#usersDirectory" class="px-3.5 py-2 rounded-md bg-[#2f81f7] hover:bg-blue-600 text-white text-xs font-semibold shadow-xs transition flex items-center gap-2">
+                        <i class="fa-solid fa-sliders text-xs"></i>
+                        <span>Manage Roles</span>
+                    </a>
+
+                    <a href="dashboard.php?export=csv" class="px-3.5 py-2 rounded-md bg-[#161b22] hover:bg-[#21262d] text-slate-200 border border-[#30363d] text-xs font-medium transition flex items-center gap-2 shadow-xs">
+                        <i class="fa-solid fa-download text-xs text-slate-400"></i>
+                        <span>Export Audit CSV</span>
                     </a>
                 </div>
             </div>
 
-            <!-- Clearance Tier Matrix Card (Defense Visualizer) -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
+            <!-- 2. CLEARANCE TIER MATRIX (3 Cards in Dark Slate Aesthetic) -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 my-6">
                 <!-- Tier 1 Overview -->
-                <div class="cyber-card cyber-brackets p-5 rounded-2xl border <?php echo ($tier_numeric === 1) ? 'border-amber-500/60 glow-amber' : 'border-slate-800/80'; ?> transition">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="font-orbitron text-xs font-bold text-amber-400 flex items-center">
-                            <i class="fa-solid fa-id-badge mr-1.5"></i> TIER 1 // RESTRICTED
+                <div class="p-5 rounded-lg bg-[#161b22] border <?php echo ($tier_numeric === 1) ? 'border-[#2f81f7] ring-1 ring-[#2f81f7]/30' : 'border-[#30363d]'; ?> shadow-xs">
+                    <div class="flex items-center justify-between text-xs mb-2">
+                        <span class="font-semibold text-slate-300 flex items-center gap-1.5">
+                            <i class="fa-solid fa-id-badge text-amber-400"></i> Tier 1 &mdash; Restricted
                         </span>
                         <?php if ($tier_numeric === 1): ?>
-                            <span class="text-[9px] font-tech bg-amber-500/20 text-amber-300 border border-amber-500/40 px-2 py-0.5 rounded font-bold uppercase">YOUR CLEARANCE</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold uppercase">Your Level</span>
                         <?php endif; ?>
                     </div>
-                    <p class="font-tech text-xs font-bold text-white">Staff / General Employees</p>
-                    <p class="font-tech text-[11px] text-slate-400 mt-1 leading-relaxed">Standard enterprise workspace access. Read privileges for sensitive PII databases, financial ledgers, and SSH root key pairs are strictly locked.</p>
+                    <div class="text-sm font-semibold text-white">Staff / General Employees</div>
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">Standard enterprise workspace access. Read privileges for sensitive PII databases, financial ledgers, and SSH root key pairs are strictly locked.</p>
                 </div>
 
                 <!-- Tier 2 Overview -->
-                <div class="cyber-card cyber-brackets p-5 rounded-2xl border <?php echo ($tier_numeric === 2) ? 'border-cyan-500/60 glow-cyan' : 'border-slate-800/80'; ?> transition">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="font-orbitron text-xs font-bold text-cyan-400 flex items-center">
-                            <i class="fa-solid fa-file-shield mr-1.5"></i> TIER 2 // CONFIDENTIAL
+                <div class="p-5 rounded-lg bg-[#161b22] border <?php echo ($tier_numeric === 2) ? 'border-[#2f81f7] ring-1 ring-[#2f81f7]/30' : 'border-[#30363d]'; ?> shadow-xs">
+                    <div class="flex items-center justify-between text-xs mb-2">
+                        <span class="font-semibold text-slate-300 flex items-center gap-1.5">
+                            <i class="fa-solid fa-file-shield text-sky-400"></i> Tier 2 &mdash; Confidential
                         </span>
                         <?php if ($tier_numeric === 2): ?>
-                            <span class="text-[9px] font-tech bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 px-2 py-0.5 rounded font-bold uppercase">YOUR CLEARANCE</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-sky-500/10 text-sky-400 border border-sky-500/20 font-bold uppercase">Your Level</span>
                         <?php endif; ?>
                     </div>
-                    <p class="font-tech text-xs font-bold text-white">Auditors & Compliance Officers</p>
-                    <p class="font-tech text-[11px] text-slate-400 mt-1 leading-relaxed">Read & inspection privileges for Customer PII records and Corporate Financial statements. Production infrastructure SSH root access remains locked.</p>
+                    <div class="text-sm font-semibold text-white">Auditors &amp; Compliance Officers</div>
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">Inspection privileges for Customer PII records and Corporate Financial statements. Production infrastructure SSH root access remains locked.</p>
                 </div>
 
                 <!-- Tier 3 Overview -->
-                <div class="cyber-card cyber-brackets p-5 rounded-2xl border <?php echo ($tier_numeric === 3) ? 'border-purple-500/60 glow-purple' : 'border-slate-800/80'; ?> transition">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="font-orbitron text-xs font-bold text-purple-400 flex items-center">
-                            <i class="fa-solid fa-gem mr-1.5"></i> TIER 3 // TOP SECRET
+                <div class="p-5 rounded-lg bg-[#161b22] border <?php echo ($tier_numeric === 3) ? 'border-[#2f81f7] ring-1 ring-[#2f81f7]/30' : 'border-[#30363d]'; ?> shadow-xs">
+                    <div class="flex items-center justify-between text-xs mb-2">
+                        <span class="font-semibold text-slate-300 flex items-center gap-1.5">
+                            <i class="fa-solid fa-gem text-purple-400"></i> Tier 3 &mdash; Top Secret
                         </span>
                         <?php if ($tier_numeric === 3): ?>
-                            <span class="text-[9px] font-tech bg-purple-500/20 text-purple-300 border border-purple-500/40 px-2 py-0.5 rounded font-bold uppercase">YOUR CLEARANCE</span>
+                            <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-purple-500/10 text-purple-300 border border-purple-500/20 font-bold uppercase">Your Level</span>
                         <?php endif; ?>
                     </div>
-                    <p class="font-tech text-xs font-bold text-white">SOC Administrators & CISOs</p>
-                    <p class="font-tech text-[11px] text-slate-400 mt-1 leading-relaxed">Full unrestricted authorization across all enterprise crown jewels, cryptographic key enclaves, cloud infrastructure bastions, and telemetry streams.</p>
+                    <div class="text-sm font-semibold text-white">SOC Administrators &amp; CISOs</div>
+                    <p class="text-xs text-slate-400 mt-1 leading-relaxed">Full unrestricted authorization across all enterprise protected resources, cryptographic key enclaves, and cloud infrastructure bastions.</p>
                 </div>
             </div>
 
-            <!-- CROWN JEWELS GRID (THE 3 PROTECTED DATABASES) -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10">
+            <!-- 3. PROTECTED RESOURCES GRID (3 Cards) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
 
-                <!-- ============================================================== -->
-                <!-- CROWN JEWEL 1: CUSTOMER PII DATABASE (Requires Tier 2+)       -->
-                <!-- ============================================================== -->
-                <?php 
-                $can_access_pii = ($tier_numeric >= 2);
-                ?>
-                <div class="cyber-card cyber-brackets rounded-2xl border <?php echo $can_access_pii ? 'border-cyan-500/40 shadow-2xl' : 'border-red-500/40 bg-red-950/10'; ?> flex flex-col justify-between overflow-hidden relative group">
-                    <div class="cyber-laser-beam opacity-30"></div>
-                    
-                    <!-- Top Ribbon -->
-                    <div class="p-5 border-b <?php echo $can_access_pii ? 'border-cyan-500/20 bg-slate-950/80' : 'border-red-500/20 bg-red-950/30'; ?> flex justify-between items-center">
+                <!-- RESOURCE 1: CUSTOMER PII DATABASE (Requires Tier 2+) -->
+                <?php $can_access_pii = ($tier_numeric >= 2); ?>
+                <div class="rounded-lg bg-[#161b22] border <?php echo $can_access_pii ? 'border-[#30363d]' : 'border-red-500/30 bg-red-950/5'; ?> shadow-xs flex flex-col justify-between overflow-hidden">
+                    <div class="p-5 border-b border-[#30363d] flex justify-between items-center bg-[#0d1117]">
                         <div class="flex items-center space-x-3">
-                            <div class="h-10 w-10 rounded-xl <?php echo $can_access_pii ? 'bg-cyan-950/70 text-cyan-400 border border-cyan-500/50 glow-cyan-sm' : 'bg-red-950/70 text-red-400 border border-red-500/50 glow-red'; ?> flex items-center justify-center text-lg">
+                            <div class="h-9 w-9 rounded-md <?php echo $can_access_pii ? 'bg-sky-500/15 text-sky-400 border border-sky-500/30' : 'bg-red-500/15 text-red-400 border border-red-500/30'; ?> flex items-center justify-center text-sm font-bold">
                                 <i class="fa-solid <?php echo $can_access_pii ? 'fa-id-card' : 'fa-lock'; ?>"></i>
                             </div>
                             <div>
-                                <h3 class="font-orbitron text-sm font-bold text-white">Customer PII Database</h3>
-                                <p class="text-[10px] font-tech text-slate-400 uppercase tracking-wider">CLASS: CONFIDENTIAL // TIER 2+</p>
+                                <h3 class="text-sm font-semibold text-white">Customer PII Database</h3>
+                                <p class="text-[10px] font-mono text-slate-400 uppercase">Class: Confidential &bull; Tier 2+</p>
                             </div>
                         </div>
-                        <span class="text-[10px] font-tech font-bold px-2.5 py-1 rounded-md <?php echo $can_access_pii ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-red-500/20 text-red-300 border border-red-500/40 animate-pulse'; ?>">
-                            <?php echo $can_access_pii ? 'CLEARED' : 'LOCKED'; ?>
+                        <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded <?php echo $can_access_pii ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'; ?>">
+                            <?php echo $can_access_pii ? 'Cleared' : 'Locked'; ?>
                         </span>
                     </div>
 
-                    <!-- Body Content -->
-                    <div class="p-5 flex-1 space-y-4 font-tech">
-                        <p class="text-xs text-slate-400 leading-relaxed">
-                            Encrypted relational cluster storing 45,820 customer identity records, Social Security & National ID tokens, session hashes, and PCI-DSS billing information.
+                    <div class="p-5 flex-1 space-y-4 text-xs font-sans">
+                        <p class="text-slate-400 leading-relaxed">
+                            Encrypted database storing 45,820 customer identity records, government ID numbers, session tokens, and billing information.
                         </p>
 
-                        <!-- Mock Data Preview / Lock Overlay -->
-                        <div class="bg-slate-950/90 rounded-xl p-3 border border-slate-800 text-[11px] font-tech relative overflow-hidden">
+                        <!-- Data Preview Container -->
+                        <div class="bg-[#0d1117] rounded-md p-3 border border-[#30363d] text-xs font-mono relative overflow-hidden">
                             <?php if (!$can_access_pii): ?>
-                                <!-- Red Denied Overlay -->
-                                <div class="absolute inset-0 bg-red-950/90 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center z-10 border border-red-500/50">
-                                    <div class="h-10 w-10 rounded-full bg-red-500/20 border border-red-500/50 flex items-center justify-center text-red-400 mb-2">
-                                        <i class="fa-solid fa-ban text-lg"></i>
-                                    </div>
-                                    <h4 class="font-orbitron text-xs font-bold text-red-300 tracking-wider">ACCESS DENIED: INSUFFICIENT CLEARANCE</h4>
-                                    <p class="text-[10px] text-red-300/80 mt-1 max-w-[220px]">Requires Tier 2 (Auditor) or Tier 3 (Admin). Your clearance: <strong class="text-amber-400"><?php echo htmlspecialchars($user_clearance); ?></strong>.</p>
+                                <div class="absolute inset-0 bg-[#0d1117]/95 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center z-10 border border-red-500/30">
+                                    <i class="fa-solid fa-ban text-red-400 text-lg mb-1"></i>
+                                    <span class="text-xs font-bold text-red-300">Access Restricted</span>
+                                    <span class="text-[10px] text-slate-400 mt-0.5">Requires Tier 2+ clearance</span>
                                 </div>
                             <?php endif; ?>
 
-                            <div class="space-y-1.5 <?php echo !$can_access_pii ? 'filter blur-sm select-none opacity-40' : ''; ?>">
-                                <div class="flex justify-between text-slate-500 border-b border-slate-800 pb-1 text-[10px] uppercase font-bold">
+                            <div class="space-y-1.5 <?php echo !$can_access_pii ? 'filter blur-sm select-none opacity-30' : ''; ?>">
+                                <div class="flex justify-between text-slate-500 border-b border-[#30363d] pb-1 text-[10px] uppercase font-bold">
                                     <span>Record UUID</span>
-                                    <span>Identity Token</span>
-                                    <span>Encryption</span>
+                                    <span>Identity</span>
+                                    <span>Cipher</span>
                                 </div>
-                                <div class="flex justify-between text-slate-300">
-                                    <span class="text-cyan-400 font-bold">UID-9481-C</span>
-                                    <span>Sophia Vance (SSN: ***-**-8192)</span>
-                                    <span class="text-emerald-400 font-bold">AES-256</span>
+                                <div class="flex justify-between text-slate-300 text-[11px]">
+                                    <span class="text-sky-400">UID-9481-C</span>
+                                    <span>Sophia Vance (ID: ***-8192)</span>
+                                    <span class="text-emerald-400">AES-256</span>
                                 </div>
-                                <div class="flex justify-between text-slate-300">
-                                    <span class="text-cyan-400 font-bold">UID-9482-D</span>
-                                    <span>Marcus Chen (SSN: ***-**-3341)</span>
-                                    <span class="text-emerald-400 font-bold">AES-256</span>
-                                </div>
-                                <div class="flex justify-between text-slate-300">
-                                    <span class="text-cyan-400 font-bold">UID-9483-E</span>
-                                    <span>Elena Rostova (SSN: ***-**-5109)</span>
-                                    <span class="text-emerald-400 font-bold">AES-256</span>
+                                <div class="flex justify-between text-slate-300 text-[11px]">
+                                    <span class="text-sky-400">UID-9482-D</span>
+                                    <span>Marcus Chen (ID: ***-3341)</span>
+                                    <span class="text-emerald-400">AES-256</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">
-                            <span>Compliance: <span class="text-slate-300">GDPR &bull; ISO-27001</span></span>
-                            <span>Records: <span class="text-cyan-400 font-bold">45,820</span></span>
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-[#30363d] font-mono">
+                            <span>Compliance: <strong class="text-slate-300">GDPR &bull; ISO 27001</strong></span>
+                            <span>Records: <strong class="text-slate-200">45,820</strong></span>
                         </div>
                     </div>
 
-                    <!-- Footer Action Buttons -->
-                    <div class="p-5 bg-slate-950/70 border-t border-slate-800/80 font-tech">
+                    <!-- Actions Footer -->
+                    <div class="p-4 bg-[#0d1117] border-t border-[#30363d]">
                         <?php if ($can_access_pii): ?>
-                            <div class="grid grid-cols-2 gap-2.5">
-                                <button onclick="openModal('piiModal')" class="cyber-btn w-full bg-cyan-950/50 hover:bg-cyan-900/60 text-cyan-300 border border-cyan-500/40 py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center glow-cyan-sm">
-                                    <i class="fa-solid fa-eye mr-1.5 text-cyan-400"></i> Inspect PII
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="openModal('piiModal')" class="w-full bg-[#2f81f7] hover:bg-blue-600 text-white py-2 px-3 rounded-md text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-xs">
+                                    <i class="fa-solid fa-eye text-xs"></i> Inspect PII
                                 </button>
                                 <form method="POST" action="" class="w-full">
                                     <input type="hidden" name="vault_action" value="inspect">
                                     <input type="hidden" name="resource_id" value="res_pii">
                                     <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                                    <button type="submit" class="cyber-btn w-full bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center">
-                                        <i class="fa-solid fa-fingerprint mr-1.5 text-emerald-400"></i> Audit Query
+                                    <button type="submit" class="w-full bg-[#161b22] hover:bg-[#21262d] text-slate-200 border border-[#30363d] py-2 px-3 rounded-md text-xs font-medium transition flex items-center justify-center gap-1.5">
+                                        <i class="fa-solid fa-fingerprint text-emerald-400"></i> Audit Query
                                     </button>
                                 </form>
                             </div>
                         <?php else: ?>
-                            <!-- Staff Blocked Button with Simulated Breach Logging -->
-                            <form method="POST" action="" onsubmit="return confirm('WARNING: Attempting to access an unauthorized resource will log a security alert under your user ID. Proceed?');">
+                            <form method="POST" action="" onsubmit="return confirm('WARNING: Attempting to access an unauthorized resource will log a security policy alert. Proceed?');">
                                 <input type="hidden" name="vault_action" value="inspect">
                                 <input type="hidden" name="resource_id" value="res_pii">
                                 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                                <button type="submit" class="cyber-btn w-full bg-red-950/40 hover:bg-red-900/50 text-red-400 border border-red-500/40 py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center group glow-red">
-                                    <i class="fa-solid fa-lock mr-2 text-red-500 group-hover:scale-110 transition"></i>
-                                    <span>Access Locked (Trigger Violation)</span>
+                                <button type="submit" class="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 py-2 px-3 rounded-md text-xs font-semibold transition flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-lock text-xs"></i> Access Locked (Evaluate Policy)
                                 </button>
                             </form>
                         <?php endif; ?>
                     </div>
                 </div>
 
-                <!-- ============================================================== -->
-                <!-- CROWN JEWEL 2: Q3 CORPORATE FINANCIALS (Requires Tier 2+)     -->
-                <!-- ============================================================== -->
-                <?php 
-                $can_access_fin = ($tier_numeric >= 2);
-                ?>
-                <div class="cyber-card cyber-brackets rounded-2xl border <?php echo $can_access_fin ? 'border-emerald-500/40 shadow-2xl' : 'border-red-500/40 bg-red-950/10'; ?> flex flex-col justify-between overflow-hidden relative group">
-                    <div class="cyber-laser-beam opacity-30"></div>
-                    
-                    <!-- Top Ribbon -->
-                    <div class="p-5 border-b <?php echo $can_access_fin ? 'border-emerald-500/20 bg-slate-950/80' : 'border-red-500/20 bg-red-950/30'; ?> flex justify-between items-center">
+                <!-- RESOURCE 2: Q3 CORPORATE FINANCIALS (Requires Tier 2+) -->
+                <?php $can_access_fin = ($tier_numeric >= 2); ?>
+                <div class="rounded-lg bg-[#161b22] border <?php echo $can_access_fin ? 'border-[#30363d]' : 'border-red-500/30 bg-red-950/5'; ?> shadow-xs flex flex-col justify-between overflow-hidden">
+                    <div class="p-5 border-b border-[#30363d] flex justify-between items-center bg-[#0d1117]">
                         <div class="flex items-center space-x-3">
-                            <div class="h-10 w-10 rounded-xl <?php echo $can_access_fin ? 'bg-emerald-950/70 text-emerald-400 border border-emerald-500/50 glow-emerald' : 'bg-red-950/70 text-red-400 border border-red-500/50 glow-red'; ?> flex items-center justify-center text-lg">
+                            <div class="h-9 w-9 rounded-md <?php echo $can_access_fin ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30' : 'bg-red-500/15 text-red-400 border border-red-500/30'; ?> flex items-center justify-center text-sm font-bold">
                                 <i class="fa-solid <?php echo $can_access_fin ? 'fa-chart-pie' : 'fa-lock'; ?>"></i>
                             </div>
                             <div>
-                                <h3 class="font-orbitron text-sm font-bold text-white">Q3 Corporate Financials</h3>
-                                <p class="text-[10px] font-tech text-slate-400 uppercase tracking-wider">CLASS: RESTRICTED FINANCIAL // TIER 2+</p>
+                                <h3 class="text-sm font-semibold text-white">Q3 Corporate Financials</h3>
+                                <p class="text-[10px] font-mono text-slate-400 uppercase">Class: Financial &bull; Tier 2+</p>
                             </div>
                         </div>
-                        <span class="text-[10px] font-tech font-bold px-2.5 py-1 rounded-md <?php echo $can_access_fin ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40' : 'bg-red-500/20 text-red-300 border border-red-500/40 animate-pulse'; ?>">
-                            <?php echo $can_access_fin ? 'CLEARED' : 'LOCKED'; ?>
+                        <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded <?php echo $can_access_fin ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'; ?>">
+                            <?php echo $can_access_fin ? 'Cleared' : 'Locked'; ?>
                         </span>
                     </div>
 
-                    <!-- Body Content -->
-                    <div class="p-5 flex-1 space-y-4 font-tech">
-                        <p class="text-xs text-slate-400 leading-relaxed">
-                            Consolidated corporate treasury ledgers, Q3 net revenue performance ($14.2M), EBITDA projections, executive compensation schedules, and SWIFT authorizations.
+                    <div class="p-5 flex-1 space-y-4 text-xs font-sans">
+                        <p class="text-slate-400 leading-relaxed">
+                            Corporate treasury ledgers, Q3 net operating revenue ($14.2M), EBITDA projections, and executive compensation schedules.
                         </p>
 
-                        <!-- Mock Data Preview / Lock Overlay -->
-                        <div class="bg-slate-950/90 rounded-xl p-3 border border-slate-800 text-[11px] font-tech relative overflow-hidden">
+                        <!-- Data Preview Container -->
+                        <div class="bg-[#0d1117] rounded-md p-3 border border-[#30363d] text-xs font-mono relative overflow-hidden">
                             <?php if (!$can_access_fin): ?>
-                                <!-- Red Denied Overlay -->
-                                <div class="absolute inset-0 bg-red-950/90 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center z-10 border border-red-500/50">
-                                    <div class="h-10 w-10 rounded-full bg-red-500/20 border border-red-500/50 flex items-center justify-center text-red-400 mb-2">
-                                        <i class="fa-solid fa-ban text-lg"></i>
-                                    </div>
-                                    <h4 class="font-orbitron text-xs font-bold text-red-300 tracking-wider">ACCESS DENIED: INSUFFICIENT CLEARANCE</h4>
-                                    <p class="text-[10px] text-red-300/80 mt-1 max-w-[220px]">Requires Tier 2 (Auditor) or Tier 3 (Admin). Your clearance: <strong class="text-amber-400"><?php echo htmlspecialchars($user_clearance); ?></strong>.</p>
+                                <div class="absolute inset-0 bg-[#0d1117]/95 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center z-10 border border-red-500/30">
+                                    <i class="fa-solid fa-ban text-red-400 text-lg mb-1"></i>
+                                    <span class="text-xs font-bold text-red-300">Access Restricted</span>
+                                    <span class="text-[10px] text-slate-400 mt-0.5">Requires Tier 2+ clearance</span>
                                 </div>
                             <?php endif; ?>
 
-                            <div class="space-y-1.5 <?php echo !$can_access_fin ? 'filter blur-sm select-none opacity-40' : ''; ?>">
-                                <div class="flex justify-between text-slate-500 border-b border-slate-800 pb-1 text-[10px] uppercase font-bold">
+                            <div class="space-y-1.5 <?php echo !$can_access_fin ? 'filter blur-sm select-none opacity-30' : ''; ?>">
+                                <div class="flex justify-between text-slate-500 border-b border-[#30363d] pb-1 text-[10px] uppercase font-bold">
                                     <span>Fiscal Category</span>
-                                    <span>Q3 Realized</span>
-                                    <span>EBITDA Margin</span>
+                                    <span>Realized</span>
+                                    <span>Status</span>
                                 </div>
-                                <div class="flex justify-between text-slate-300">
-                                    <span class="text-emerald-400 font-bold">Gross Enterprise ARR</span>
+                                <div class="flex justify-between text-slate-300 text-[11px]">
+                                    <span class="text-emerald-400">Enterprise ARR</span>
                                     <span class="font-bold">$14,210,000</span>
-                                    <span class="text-emerald-400 font-bold">+28.4%</span>
+                                    <span class="text-emerald-400">+28.4%</span>
                                 </div>
-                                <div class="flex justify-between text-slate-300">
-                                    <span class="text-emerald-400 font-bold">R&D / SOC Security</span>
-                                    <span>$3,190,000</span>
-                                    <span class="text-cyan-400 font-bold">Allocated</span>
-                                </div>
-                                <div class="flex justify-between text-slate-300">
-                                    <span class="text-emerald-400 font-bold">Corporate Treasury Cash</span>
-                                    <span>$8,450,000</span>
-                                    <span class="text-emerald-400 font-bold">Audited</span>
+                                <div class="flex justify-between text-slate-300 text-[11px]">
+                                    <span class="text-emerald-400">Security &amp; IAM</span>
+                                    <span class="font-bold">$3,190,000</span>
+                                    <span class="text-sky-400">Audited</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">
-                            <span>Audit Standard: <span class="text-slate-300">SOX-404 &bull; GAAP</span></span>
-                            <span>Ledger Status: <span class="text-emerald-400 font-bold">BALANCED</span></span>
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-[#30363d] font-mono">
+                            <span>Standard: <strong class="text-slate-300">SOX-404 &bull; GAAP</strong></span>
+                            <span>Ledger: <strong class="text-emerald-400">Balanced</strong></span>
                         </div>
                     </div>
 
-                    <!-- Footer Action Buttons -->
-                    <div class="p-5 bg-slate-950/70 border-t border-slate-800/80 font-tech">
+                    <!-- Actions Footer -->
+                    <div class="p-4 bg-[#0d1117] border-t border-[#30363d]">
                         <?php if ($can_access_fin): ?>
-                            <div class="grid grid-cols-2 gap-2.5">
-                                <button onclick="openModal('finModal')" class="cyber-btn w-full bg-emerald-950/50 hover:bg-emerald-900/60 text-emerald-300 border border-emerald-500/40 py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center glow-emerald">
-                                    <i class="fa-solid fa-chart-line mr-1.5 text-emerald-400"></i> View Ledger
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="openModal('finModal')" class="w-full bg-[#2f81f7] hover:bg-blue-600 text-white py-2 px-3 rounded-md text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-xs">
+                                    <i class="fa-solid fa-chart-line text-xs"></i> View Ledger
                                 </button>
                                 <form method="POST" action="" class="w-full">
                                     <input type="hidden" name="vault_action" value="download_fin_csv">
                                     <input type="hidden" name="resource_id" value="res_fin">
                                     <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                                    <button type="submit" class="cyber-btn w-full bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center">
-                                        <i class="fa-solid fa-download mr-1.5 text-cyan-400"></i> Export CSV
+                                    <button type="submit" class="w-full bg-[#161b22] hover:bg-[#21262d] text-slate-200 border border-[#30363d] py-2 px-3 rounded-md text-xs font-medium transition flex items-center justify-center gap-1.5">
+                                        <i class="fa-solid fa-download text-xs text-slate-400"></i> Export CSV
                                     </button>
                                 </form>
                             </div>
                         <?php else: ?>
-                            <!-- Staff Blocked Button with Simulated Breach Logging -->
-                            <form method="POST" action="" onsubmit="return confirm('WARNING: Attempting to access an unauthorized resource will log a security alert under your user ID. Proceed?');">
+                            <form method="POST" action="" onsubmit="return confirm('WARNING: Attempting to access an unauthorized resource will log a security policy alert. Proceed?');">
                                 <input type="hidden" name="vault_action" value="inspect">
                                 <input type="hidden" name="resource_id" value="res_fin">
                                 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                                <button type="submit" class="cyber-btn w-full bg-red-950/40 hover:bg-red-900/50 text-red-400 border border-red-500/40 py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center group glow-red">
-                                    <i class="fa-solid fa-lock mr-2 text-red-500 group-hover:scale-110 transition"></i>
-                                    <span>Access Locked (Trigger Violation)</span>
+                                <button type="submit" class="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 py-2 px-3 rounded-md text-xs font-semibold transition flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-lock text-xs"></i> Access Locked (Evaluate Policy)
                                 </button>
                             </form>
                         <?php endif; ?>
                     </div>
                 </div>
 
-                <!-- ============================================================== -->
-                <!-- CROWN JEWEL 3: PRODUCTION SERVER SSH KEYS (Requires Tier 3)   -->
-                <!-- ============================================================== -->
-                <?php 
-                $can_access_ssh = ($tier_numeric >= 3);
-                ?>
-                <div class="cyber-card cyber-brackets rounded-2xl border <?php echo $can_access_ssh ? 'border-purple-500/40 shadow-2xl' : 'border-red-500/40 bg-red-950/10'; ?> flex flex-col justify-between overflow-hidden relative group">
-                    <div class="cyber-laser-beam opacity-30"></div>
-                    
-                    <!-- Top Ribbon -->
-                    <div class="p-5 border-b <?php echo $can_access_ssh ? 'border-purple-500/20 bg-slate-950/80' : 'border-red-500/20 bg-red-950/30'; ?> flex justify-between items-center">
+                <!-- RESOURCE 3: PRODUCTION SERVER SSH KEYS (Requires Tier 3) -->
+                <?php $can_access_ssh = ($tier_numeric >= 3); ?>
+                <div class="rounded-lg bg-[#161b22] border <?php echo $can_access_ssh ? 'border-[#30363d]' : 'border-red-500/30 bg-red-950/5'; ?> shadow-xs flex flex-col justify-between overflow-hidden">
+                    <div class="p-5 border-b border-[#30363d] flex justify-between items-center bg-[#0d1117]">
                         <div class="flex items-center space-x-3">
-                            <div class="h-10 w-10 rounded-xl <?php echo $can_access_ssh ? 'bg-purple-950/70 text-purple-400 border border-purple-500/50 glow-purple' : 'bg-red-950/70 text-red-400 border border-red-500/50 glow-red'; ?> flex items-center justify-center text-lg">
+                            <div class="h-9 w-9 rounded-md <?php echo $can_access_ssh ? 'bg-purple-500/15 text-purple-400 border border-purple-500/30' : 'bg-red-500/15 text-red-400 border border-red-500/30'; ?> flex items-center justify-center text-sm font-bold">
                                 <i class="fa-solid <?php echo $can_access_ssh ? 'fa-key' : 'fa-lock'; ?>"></i>
                             </div>
                             <div>
-                                <h3 class="font-orbitron text-sm font-bold text-white">Production Server SSH Keys</h3>
-                                <p class="text-[10px] font-tech text-slate-400 uppercase tracking-wider">CLASS: TOP SECRET // TIER 3 ADMIN ONLY</p>
+                                <h3 class="text-sm font-semibold text-white">Production Server SSH Keys</h3>
+                                <p class="text-[10px] font-mono text-slate-400 uppercase">Class: Top Secret &bull; Tier 3 Admin</p>
                             </div>
                         </div>
-                        <span class="text-[10px] font-tech font-bold px-2.5 py-1 rounded-md <?php echo $can_access_ssh ? 'bg-purple-500/20 text-purple-300 border border-purple-500/40' : 'bg-red-500/20 text-red-300 border border-red-500/40 animate-pulse'; ?>">
-                            <?php echo $can_access_ssh ? 'CLEARED' : 'LOCKED'; ?>
+                        <span class="text-[10px] font-mono font-medium px-2 py-0.5 rounded <?php echo $can_access_ssh ? 'bg-purple-500/10 text-purple-300 border border-purple-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20'; ?>">
+                            <?php echo $can_access_ssh ? 'Cleared' : 'Locked'; ?>
                         </span>
                     </div>
 
-                    <!-- Body Content -->
-                    <div class="p-5 flex-1 space-y-4 font-tech">
-                        <p class="text-xs text-slate-400 leading-relaxed">
-                            Root Ed25519 cryptographic private key pairs granting root shell privileges across Kubernetes core control clusters, AWS production VPC bastions, and database infrastructure.
+                    <div class="p-5 flex-1 space-y-4 text-xs font-sans">
+                        <p class="text-slate-400 leading-relaxed">
+                            Root Ed25519 private key pairs granting root shell privileges across Kubernetes core control planes and database infrastructure.
                         </p>
 
-                        <!-- Mock Data Preview / Lock Overlay -->
-                        <div class="bg-slate-950/90 rounded-xl p-3 border border-slate-800 text-[11px] font-tech relative overflow-hidden">
+                        <!-- Data Preview Container -->
+                        <div class="bg-[#0d1117] rounded-md p-3 border border-[#30363d] text-xs font-mono relative overflow-hidden">
                             <?php if (!$can_access_ssh): ?>
-                                <!-- Red Denied Overlay -->
-                                <div class="absolute inset-0 bg-red-950/90 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center z-10 border border-red-500/50">
-                                    <div class="h-10 w-10 rounded-full bg-red-500/20 border border-red-500/50 flex items-center justify-center text-red-400 mb-2">
-                                        <i class="fa-solid fa-shield-halved text-lg"></i>
-                                    </div>
-                                    <h4 class="font-orbitron text-xs font-bold text-red-300 tracking-wider">ACCESS DENIED: INSUFFICIENT CLEARANCE</h4>
-                                    <p class="text-[10px] text-red-300/80 mt-1 max-w-[220px]">Requires Tier 3 (Super Admin / CISO). Even Tier 2 Auditors are blocked from raw root infrastructure keys.</p>
+                                <div class="absolute inset-0 bg-[#0d1117]/95 backdrop-blur-xs flex flex-col items-center justify-center p-4 text-center z-10 border border-red-500/30">
+                                    <i class="fa-solid fa-ban text-red-400 text-lg mb-1"></i>
+                                    <span class="text-xs font-bold text-red-300">Access Restricted</span>
+                                    <span class="text-[10px] text-slate-400 mt-0.5">Requires Tier 3 (Super Admin)</span>
                                 </div>
                             <?php endif; ?>
 
-                            <div class="space-y-1.5 <?php echo !$can_access_ssh ? 'filter blur-sm select-none opacity-40' : ''; ?>">
-                                <div class="flex justify-between text-slate-500 border-b border-slate-800 pb-1 text-[10px] uppercase font-bold">
+                            <div class="space-y-1.5 <?php echo !$can_access_ssh ? 'filter blur-sm select-none opacity-30' : ''; ?>">
+                                <div class="flex justify-between text-slate-500 border-b border-[#30363d] pb-1 text-[10px] uppercase font-bold">
                                     <span>Target Host</span>
-                                    <span>Cipher / Fingerprint</span>
+                                    <span>Fingerprint</span>
                                 </div>
-                                <div class="flex justify-between text-slate-300">
-                                    <span class="text-purple-400 font-bold">k8s-prod-master-01</span>
-                                    <span>SHA256:4X7mQ9p...</span>
+                                <div class="flex justify-between text-slate-300 text-[11px]">
+                                    <span class="text-purple-400">k8s-prod-master-01</span>
+                                    <span>SHA256:4X7mQ...</span>
                                 </div>
-                                <div class="flex justify-between text-slate-300">
-                                    <span class="text-purple-400 font-bold">bastion-east.defense.net</span>
-                                    <span>SHA256:1v98Kll...</span>
-                                </div>
-                                <div class="flex justify-between text-slate-300">
-                                    <span class="text-purple-400 font-bold">mariadb-cluster-node-01</span>
-                                    <span>SHA256:9a32Zxc...</span>
+                                <div class="flex justify-between text-slate-300 text-[11px]">
+                                    <span class="text-purple-400">bastion-prod.net</span>
+                                    <span>SHA256:1v98K...</span>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-slate-800/80">
-                            <span>Cipher: <span class="text-slate-300">Ed25519 (OpenSSH)</span></span>
-                            <span>Key Strength: <span class="text-purple-400 font-bold">MIL-SPEC 256-BIT</span></span>
+                        <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1 border-t border-[#30363d] font-mono">
+                            <span>Algorithm: <strong class="text-slate-300">Ed25519</strong></span>
+                            <span>Key Length: <strong class="text-purple-400">256-Bit</strong></span>
                         </div>
                     </div>
 
-                    <!-- Footer Action Buttons -->
-                    <div class="p-5 bg-slate-950/70 border-t border-slate-800/80 font-tech">
+                    <!-- Actions Footer -->
+                    <div class="p-4 bg-[#0d1117] border-t border-[#30363d]">
                         <?php if ($can_access_ssh): ?>
-                            <div class="grid grid-cols-2 gap-2.5">
-                                <button onclick="openModal('sshModal')" class="cyber-btn w-full bg-purple-950/50 hover:bg-purple-900/60 text-purple-300 border border-purple-500/40 py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center glow-purple">
-                                    <i class="fa-solid fa-terminal mr-1.5 text-purple-400"></i> View Key Pair
+                            <div class="grid grid-cols-2 gap-2">
+                                <button onclick="openModal('sshModal')" class="w-full bg-[#2f81f7] hover:bg-blue-600 text-white py-2 px-3 rounded-md text-xs font-semibold transition flex items-center justify-center gap-1.5 shadow-xs">
+                                    <i class="fa-solid fa-terminal text-xs"></i> View Key
                                 </button>
                                 <form method="POST" action="" class="w-full">
                                     <input type="hidden" name="vault_action" value="download_ssh">
                                     <input type="hidden" name="resource_id" value="res_ssh">
                                     <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                                    <button type="submit" class="cyber-btn w-full bg-slate-900 hover:bg-slate-800 text-slate-200 border border-slate-700 py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center">
-                                        <i class="fa-solid fa-download mr-1.5 text-cyan-400"></i> Download .pem
+                                    <button type="submit" class="w-full bg-[#161b22] hover:bg-[#21262d] text-slate-200 border border-[#30363d] py-2 px-3 rounded-md text-xs font-medium transition flex items-center justify-center gap-1.5">
+                                        <i class="fa-solid fa-download text-xs text-slate-400"></i> Download .pem
                                     </button>
                                 </form>
                             </div>
                         <?php else: ?>
-                            <!-- Staff / Auditor Blocked Button with Simulated Breach Logging -->
-                            <form method="POST" action="" onsubmit="return confirm('CRITICAL SECURITY WARNING: Attempting to access Root Infrastructure Keys without Tier 3 clearance will trigger an immediate Incident Response event. Proceed?');">
+                            <form method="POST" action="" onsubmit="return confirm('CRITICAL WARNING: Attempting to access Root Infrastructure Keys without Tier 3 clearance will trigger an immediate Incident Response alert. Proceed?');">
                                 <input type="hidden" name="vault_action" value="inspect">
                                 <input type="hidden" name="resource_id" value="res_ssh">
                                 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                                <button type="submit" class="cyber-btn w-full bg-red-950/40 hover:bg-red-900/50 text-red-400 border border-red-500/40 py-2.5 px-3 rounded-xl text-xs font-bold transition flex items-center justify-center group glow-red">
-                                    <i class="fa-solid fa-lock mr-2 text-red-500 group-hover:scale-110 transition"></i>
-                                    <span>Access Locked (Trigger Violation)</span>
+                                <button type="submit" class="w-full bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 py-2 px-3 rounded-md text-xs font-semibold transition flex items-center justify-center gap-1.5">
+                                    <i class="fa-solid fa-lock text-xs"></i> Access Locked (Evaluate Policy)
                                 </button>
                             </form>
                         <?php endif; ?>
@@ -779,30 +682,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vault_action'])) {
 
             </div>
 
-            <!-- AUDIT STREAM SNAPSHOT (Protected Resources Activity) -->
-            <div class="cyber-card cyber-brackets rounded-2xl border border-purple-500/30 p-6 shadow-2xl mb-8">
-                <div class="flex items-center justify-between mb-4 border-b border-slate-800/80 pb-3">
-                    <div class="flex items-center space-x-2 text-white">
-                        <i class="fa-solid fa-shield-halved text-purple-400 text-base"></i>
-                        <h3 class="font-orbitron text-xs sm:text-sm font-bold tracking-wide">Protected Resources Live Audit Stream</h3>
+            <!-- 4. RECENT ACCESS & AUDIT LOGS TABLE -->
+            <div class="p-6 rounded-lg bg-[#161b22] border border-[#30363d] shadow-xs mb-8">
+                <div class="flex items-center justify-between pb-4 border-b border-[#30363d] mb-4">
+                    <div>
+                        <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-[#2f81f7]"></i>
+                            <span>Protected Resources Audit Ledger</span>
+                        </h3>
+                        <p class="text-xs text-slate-400 mt-0.5">Real-time record of all authorized and unauthorized access attempts to protected resources.</p>
                     </div>
-                    <span class="text-[10px] font-tech text-purple-300 bg-purple-950/60 px-2.5 py-0.5 rounded border border-purple-500/40 font-bold">
-                        IMMUTABLE MAC LEDGER
+                    <span class="text-xs font-mono text-slate-300 bg-[#0d1117] px-2.5 py-1 rounded border border-[#30363d]">
+                        Immutable Policy Log
                     </span>
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs font-tech">
-                        <thead class="bg-slate-950 text-slate-400 text-[11px] uppercase tracking-wider font-bold">
+                    <table class="w-full text-left text-xs font-sans">
+                        <thead class="bg-[#0d1117] text-slate-400 font-mono text-[11px] uppercase tracking-wider border-b border-[#30363d]">
                             <tr>
-                                <th class="px-4 py-3">Timestamp</th>
-                                <th class="px-4 py-3">Event Type</th>
-                                <th class="px-4 py-3">Target Identity</th>
-                                <th class="px-4 py-3">Security Action & Description</th>
-                                <th class="px-4 py-3 text-right">Client IP</th>
+                                <th class="px-3.5 py-2.5">Timestamp</th>
+                                <th class="px-3.5 py-2.5">Event Type</th>
+                                <th class="px-3.5 py-2.5">User</th>
+                                <th class="px-3.5 py-2.5">Description</th>
+                                <th class="px-3.5 py-2.5 text-right">IP Address</th>
                             </tr>
                         </thead>
-                        <tbody class="divide-y divide-slate-800/60">
+                        <tbody class="divide-y divide-[#30363d]">
                             <?php 
                             $v_logs = $conn->query("
                                 SELECT a.*, u.email 
@@ -816,23 +722,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vault_action'])) {
                                 while ($vl = $v_logs->fetch_assoc()):
                                     $is_denied = (stripos($vl['action_type'], 'DENIED') !== false);
                             ?>
-                            <tr class="hover:bg-slate-900/60 transition">
-                                <td class="px-4 py-3 text-slate-500 whitespace-nowrap"><?php echo htmlspecialchars($vl['created_at']); ?></td>
-                                <td class="px-4 py-3 whitespace-nowrap">
-                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold <?php echo $is_denied ? 'bg-red-500/20 text-red-400 border border-red-500/40 glow-red' : 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/40 glow-emerald'; ?>">
+                            <tr class="hover:bg-[#21262d]/60 transition">
+                                <td class="px-3.5 py-3 font-mono text-[11px] text-slate-400 whitespace-nowrap"><?php echo htmlspecialchars($vl['created_at']); ?></td>
+                                <td class="px-3.5 py-3 whitespace-nowrap">
+                                    <span class="px-2 py-0.5 rounded text-[11px] font-medium <?php echo $is_denied ? 'bg-red-500/10 text-red-400 border border-red-500/20' : 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'; ?>">
                                         <?php echo htmlspecialchars($vl['action_type']); ?>
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 text-slate-300 whitespace-nowrap font-bold"><?php echo htmlspecialchars($vl['email'] ?? 'UID-' . $vl['user_id']); ?></td>
-                                <td class="px-4 py-3 text-slate-400"><?php echo htmlspecialchars($vl['action_description']); ?></td>
-                                <td class="px-4 py-3 text-cyan-400 text-right whitespace-nowrap font-mono"><?php echo htmlspecialchars($vl['ip_address']); ?></td>
+                                <td class="px-3.5 py-3 text-slate-200 font-medium whitespace-nowrap"><?php echo htmlspecialchars($vl['email'] ?? 'UID-' . $vl['user_id']); ?></td>
+                                <td class="px-3.5 py-3 text-slate-300"><?php echo htmlspecialchars($vl['action_description']); ?></td>
+                                <td class="px-3.5 py-3 text-right whitespace-nowrap font-mono text-slate-400"><code><?php echo htmlspecialchars($vl['ip_address']); ?></code></td>
                             </tr>
                             <?php 
                                 endwhile;
                             else:
                             ?>
                             <tr>
-                                <td colspan="5" class="px-4 py-8 text-center text-slate-500 font-tech">No vault security actions logged yet. Interact with a resource above to trigger events.</td>
+                                <td colspan="5" class="px-4 py-8 text-center text-slate-500 font-mono text-xs">No resource access events logged yet. Interact with a protected asset above to test RBAC policies.</td>
                             </tr>
                             <?php endif; ?>
                         </tbody>
@@ -840,68 +746,66 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vault_action'])) {
                 </div>
             </div>
 
+            <!-- Footer -->
+            <div class="mt-8 text-center border-t border-[#30363d] pt-6 text-xs text-slate-500 font-mono">
+                <i class="fa-solid fa-shield-halved text-[#2f81f7] mr-1"></i>
+                ENTERPRISE IDENTITY &amp; ACCESS MANAGEMENT &bull; AIR-GAPPED DEPLOYMENT &bull; iam.secure-defense.internal
+            </div>
         </main>
     </div>
 
     <!-- ============================================================== -->
     <!-- MODAL 1: INSPECT DECRYPTED CUSTOMER PII                       -->
     <!-- ============================================================== -->
-    <div id="piiModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md flex justify-center items-center z-50 p-4">
-        <div class="cyber-card cyber-brackets bg-slate-950/95 border border-cyan-500/50 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-4 relative overflow-hidden">
-            <div class="cyber-laser-beam opacity-30"></div>
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <div class="flex items-center space-x-2.5 text-cyan-400">
-                    <i class="fa-solid fa-id-card text-lg"></i>
-                    <h3 class="font-orbitron font-bold text-white text-base">Customer PII Database &bull; Decrypted Enclave</h3>
+    <div id="piiModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs flex justify-center items-center z-50 p-4">
+        <div class="bg-[#161b22] border border-[#30363d] rounded-xl max-w-2xl w-full p-6 shadow-2xl space-y-4 relative">
+            <div class="flex justify-between items-center border-b border-[#30363d] pb-3">
+                <div class="flex items-center space-x-2 text-[#2f81f7]">
+                    <i class="fa-solid fa-id-card text-base"></i>
+                    <h3 class="font-sans font-bold text-white text-base">Customer PII Database &mdash; Decrypted View</h3>
                 </div>
                 <button onclick="closeModal('piiModal')" class="text-slate-400 hover:text-white transition">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-            <p class="text-xs font-tech text-slate-400">
-                Identity records decrypted via ephemeral Zero-Trust session key. Clearance Level 
-                <strong class="text-cyan-400 font-bold"><?php echo htmlspecialchars($user_clearance); ?></strong> verified.
+            <p class="text-xs text-slate-400">
+                Identity records decrypted for authorized session. Clearance Level: 
+                <strong class="text-emerald-400"><?php echo htmlspecialchars($user_clearance); ?></strong>.
             </p>
-            <div class="overflow-x-auto border border-slate-800 rounded-xl">
-                <table class="w-full text-left text-xs font-tech">
-                    <thead class="bg-slate-950 text-slate-400 text-[10px] uppercase tracking-wider">
+            <div class="overflow-x-auto border border-[#30363d] rounded-md">
+                <table class="w-full text-left text-xs font-sans">
+                    <thead class="bg-[#0d1117] text-slate-400 font-mono text-[10px] uppercase tracking-wider">
                         <tr>
                             <th class="p-3">Customer ID</th>
                             <th class="p-3">Full Name</th>
-                            <th class="p-3">Decrypted National ID</th>
-                            <th class="p-3">Billing Country</th>
+                            <th class="p-3">National ID</th>
+                            <th class="p-3">Country</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-800/80 text-slate-300">
+                    <tbody class="divide-y divide-[#30363d] text-slate-300">
                         <tr>
-                            <td class="p-3 text-cyan-400 font-bold font-mono">CUST-8491</td>
-                            <td class="p-3 font-semibold text-white">Sophia Vance</td>
-                            <td class="p-3 text-emerald-400 font-bold font-mono">928-44-8192</td>
+                            <td class="p-3 text-sky-400 font-bold font-mono">CUST-8491</td>
+                            <td class="p-3 font-medium text-white">Sophia Vance</td>
+                            <td class="p-3 text-emerald-400 font-mono">928-44-8192</td>
                             <td class="p-3">United Kingdom</td>
                         </tr>
                         <tr>
-                            <td class="p-3 text-cyan-400 font-bold font-mono">CUST-8492</td>
-                            <td class="p-3 font-semibold text-white">Marcus Chen</td>
-                            <td class="p-3 text-emerald-400 font-bold font-mono">419-82-3341</td>
+                            <td class="p-3 text-sky-400 font-bold font-mono">CUST-8492</td>
+                            <td class="p-3 font-medium text-white">Marcus Chen</td>
+                            <td class="p-3 text-emerald-400 font-mono">419-82-3341</td>
                             <td class="p-3">Canada</td>
                         </tr>
                         <tr>
-                            <td class="p-3 text-cyan-400 font-bold font-mono">CUST-8493</td>
-                            <td class="p-3 font-semibold text-white">Elena Rostova</td>
-                            <td class="p-3 text-emerald-400 font-bold font-mono">810-19-5109</td>
+                            <td class="p-3 text-sky-400 font-bold font-mono">CUST-8493</td>
+                            <td class="p-3 font-medium text-white">Elena Rostova</td>
+                            <td class="p-3 text-emerald-400 font-mono">810-19-5109</td>
                             <td class="p-3">Germany</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 text-cyan-400 font-bold font-mono">CUST-8494</td>
-                            <td class="p-3 font-semibold text-white">Tariq Al-Mansoor</td>
-                            <td class="p-3 text-emerald-400 font-bold font-mono">552-30-7714</td>
-                            <td class="p-3">United Arab Emirates</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="flex justify-end pt-2">
-                <button onclick="closeModal('piiModal')" class="cyber-btn bg-slate-800 hover:bg-slate-700 text-white text-xs font-tech font-bold px-4 py-2 rounded-xl transition">
+                <button onclick="closeModal('piiModal')" class="px-4 py-2 rounded-md bg-[#21262d] hover:bg-[#30363d] text-slate-200 text-xs font-semibold border border-[#30363d] transition">
                     Close Inspection
                 </button>
             </div>
@@ -911,58 +815,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vault_action'])) {
     <!-- ============================================================== -->
     <!-- MODAL 2: VIEW Q3 CORPORATE FINANCIAL LEDGER                   -->
     <!-- ============================================================== -->
-    <div id="finModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md flex justify-center items-center z-50 p-4">
-        <div class="cyber-card cyber-brackets bg-slate-950/95 border border-emerald-500/50 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-4 relative overflow-hidden">
-            <div class="cyber-laser-beam opacity-30"></div>
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <div class="flex items-center space-x-2.5 text-emerald-400">
-                    <i class="fa-solid fa-chart-pie text-lg"></i>
-                    <h3 class="font-orbitron font-bold text-white text-base">Q3 Financial Statement &bull; Executive Ledger</h3>
+    <div id="finModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs flex justify-center items-center z-50 p-4">
+        <div class="bg-[#161b22] border border-[#30363d] rounded-xl max-w-2xl w-full p-6 shadow-2xl space-y-4 relative">
+            <div class="flex justify-between items-center border-b border-[#30363d] pb-3">
+                <div class="flex items-center space-x-2 text-emerald-400">
+                    <i class="fa-solid fa-chart-pie text-base"></i>
+                    <h3 class="font-sans font-bold text-white text-base">Q3 Financial Statement &mdash; Executive Ledger</h3>
                 </div>
                 <button onclick="closeModal('finModal')" class="text-slate-400 hover:text-white transition">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-            <div class="grid grid-cols-2 gap-3 text-xs font-tech">
-                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-                    <span class="text-slate-500 uppercase font-bold text-[10px]">Gross Operating ARR:</span>
-                    <p class="font-orbitron text-lg font-bold text-emerald-400 mt-1">$14,210,000</p>
+            <div class="grid grid-cols-2 gap-3 text-xs font-sans">
+                <div class="bg-[#0d1117] p-3 rounded-md border border-[#30363d]">
+                    <span class="text-slate-400 uppercase text-[10px] font-mono">Gross ARR:</span>
+                    <p class="text-lg font-bold text-emerald-400 mt-0.5">$14,210,000</p>
                 </div>
-                <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800">
-                    <span class="text-slate-500 uppercase font-bold text-[10px]">Net EBITDA Margin:</span>
-                    <p class="font-orbitron text-lg font-bold text-cyan-400 mt-1">$4,850,000 (+34.1%)</p>
+                <div class="bg-[#0d1117] p-3 rounded-md border border-[#30363d]">
+                    <span class="text-slate-400 uppercase text-[10px] font-mono">EBITDA Margin:</span>
+                    <p class="text-lg font-bold text-sky-400 mt-0.5">$4,850,000 (+34.1%)</p>
                 </div>
             </div>
-            <div class="overflow-x-auto border border-slate-800 rounded-xl">
-                <table class="w-full text-left text-xs font-tech">
-                    <thead class="bg-slate-950 text-slate-400 text-[10px] uppercase tracking-wider">
+            <div class="overflow-x-auto border border-[#30363d] rounded-md">
+                <table class="w-full text-left text-xs font-sans">
+                    <thead class="bg-[#0d1117] text-slate-400 font-mono text-[10px] uppercase tracking-wider">
                         <tr>
                             <th class="p-3">Department</th>
                             <th class="p-3">Allocated Outlay</th>
-                            <th class="p-3">Auditor Signature</th>
+                            <th class="p-3">Auditor Verification</th>
                         </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-800/80 text-slate-300">
+                    <tbody class="divide-y divide-[#30363d] text-slate-300">
                         <tr>
-                            <td class="p-3 text-white font-semibold">Security Operations & IAM</td>
-                            <td class="p-3 text-emerald-400 font-bold font-mono">$1,850,000</td>
+                            <td class="p-3 font-medium text-white">Security Operations &amp; IAM</td>
+                            <td class="p-3 text-emerald-400 font-mono font-bold">$1,850,000</td>
                             <td class="p-3 text-slate-400 font-mono">VERIFIED // SOX-2026</td>
                         </tr>
                         <tr>
-                            <td class="p-3 text-white font-semibold">Cloud Compute Infrastructure</td>
-                            <td class="p-3 text-emerald-400 font-bold font-mono">$2,400,000</td>
-                            <td class="p-3 text-slate-400 font-mono">VERIFIED // SOX-2026</td>
-                        </tr>
-                        <tr>
-                            <td class="p-3 text-white font-semibold">Legal, Privacy & Compliance</td>
-                            <td class="p-3 text-emerald-400 font-bold font-mono">$720,000</td>
+                            <td class="p-3 font-medium text-white">Cloud Compute Infrastructure</td>
+                            <td class="p-3 text-emerald-400 font-mono font-bold">$2,400,000</td>
                             <td class="p-3 text-slate-400 font-mono">VERIFIED // SOX-2026</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
             <div class="flex justify-end pt-2">
-                <button onclick="closeModal('finModal')" class="cyber-btn bg-slate-800 hover:bg-slate-700 text-white text-xs font-tech font-bold px-4 py-2 rounded-xl transition">
+                <button onclick="closeModal('finModal')" class="px-4 py-2 rounded-md bg-[#21262d] hover:bg-[#30363d] text-slate-200 text-xs font-semibold border border-[#30363d] transition">
                     Close Ledger
                 </button>
             </div>
@@ -972,23 +870,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['vault_action'])) {
     <!-- ============================================================== -->
     <!-- MODAL 3: VIEW PRODUCTION SSH PRIVATE KEY                      -->
     <!-- ============================================================== -->
-    <div id="sshModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-md flex justify-center items-center z-50 p-4">
-        <div class="cyber-card cyber-brackets bg-slate-950/95 border border-purple-500/50 rounded-2xl max-w-2xl w-full p-6 sm:p-8 shadow-2xl space-y-4 relative overflow-hidden">
-            <div class="cyber-laser-beam opacity-30"></div>
-            <div class="flex justify-between items-center border-b border-slate-800 pb-3">
-                <div class="flex items-center space-x-2.5 text-purple-400">
-                    <i class="fa-solid fa-terminal text-lg"></i>
-                    <h3 class="font-orbitron font-bold text-white text-base">Production Root Key Enclave (Ed25519)</h3>
+    <div id="sshModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs flex justify-center items-center z-50 p-4">
+        <div class="bg-[#161b22] border border-[#30363d] rounded-xl max-w-2xl w-full p-6 shadow-2xl space-y-4 relative">
+            <div class="flex justify-between items-center border-b border-[#30363d] pb-3">
+                <div class="flex items-center space-x-2 text-purple-400">
+                    <i class="fa-solid fa-terminal text-base"></i>
+                    <h3 class="font-sans font-bold text-white text-base">Production Root Key Enclave (Ed25519)</h3>
                 </div>
                 <button onclick="closeModal('sshModal')" class="text-slate-400 hover:text-white transition">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-            <div class="bg-purple-950/30 border border-purple-500/40 p-3 rounded-xl text-xs text-purple-300 font-tech">
-                <i class="fa-solid fa-triangle-exclamation mr-1.5 text-purple-400"></i> TOP SECRET PRIVILEGED ASSET: Raw private key decrypted exclusively for UID-<?php echo $current_user_id; ?> (CISO/Admin).
+            <div class="bg-purple-500/10 border border-purple-500/20 p-3 rounded-md text-xs text-purple-300 font-mono">
+                <i class="fa-solid fa-shield-halved mr-1.5 text-purple-400"></i> Top Secret Asset: Decrypted for UID-<?php echo $current_user_id; ?> (<?php echo htmlspecialchars($user_role); ?>).
             </div>
             <div class="relative">
-                <pre id="sshKeyContent" class="bg-slate-950 p-4 rounded-xl border border-slate-800 text-[11px] font-mono text-emerald-400 overflow-x-auto leading-relaxed select-all">-----BEGIN OPENSSH PRIVATE KEY-----
+                <pre id="sshKeyContent" class="bg-[#0d1117] p-4 rounded-md border border-[#30363d] text-[11px] font-mono text-emerald-400 overflow-x-auto leading-relaxed select-all">-----BEGIN OPENSSH PRIVATE KEY-----
 b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZW
 QyNTUxOQAAACCE0K/X92Z/lWjRjFj3Jq9N7o01ZLkLm0123456789ABCDEFGHAAAJsAoW
 K2Cg123456789ABCDEFGHAAAAAtzc2gtZWQyNTUxOQAAACCE0K/X92Z/lWjRjFj3Jq9N7o
@@ -996,10 +893,10 @@ K2Cg123456789ABCDEFGHAAAAAtzc2gtZWQyNTUxOQAAACCE0K/X92Z/lWjRjFj3Jq9N7o
 -----END OPENSSH PRIVATE KEY-----</pre>
             </div>
             <div class="flex justify-between items-center pt-2">
-                <button onclick="copySSHKey()" id="copyKeyBtn" class="cyber-btn bg-purple-600 hover:bg-purple-500 text-white text-xs font-orbitron font-bold px-4 py-2 rounded-xl transition flex items-center shadow-lg glow-purple">
-                    <i class="fa-solid fa-copy mr-1.5"></i> Copy Private Key
+                <button onclick="copySSHKey()" id="copyKeyBtn" class="px-3.5 py-2 rounded-md bg-[#2f81f7] hover:bg-blue-600 text-white text-xs font-semibold shadow-xs transition flex items-center gap-1.5">
+                    <i class="fa-solid fa-copy text-xs"></i> Copy Private Key
                 </button>
-                <button onclick="closeModal('sshModal')" class="cyber-btn bg-slate-800 hover:bg-slate-700 text-white text-xs font-tech font-bold px-4 py-2 rounded-xl transition">
+                <button onclick="closeModal('sshModal')" class="px-4 py-2 rounded-md bg-[#21262d] hover:bg-[#30363d] text-slate-200 text-xs font-semibold border border-[#30363d] transition">
                     Close Window
                 </button>
             </div>
@@ -1008,31 +905,7 @@ K2Cg123456789ABCDEFGHAAAAAtzc2gtZWQyNTUxOQAAACCE0K/X92Z/lWjRjFj3Jq9N7o
 
     <!-- JavaScript Handlers -->
     <script>
-        function toggleSidebar() {
-            const sidebar = document.getElementById('appSidebar');
-            const backdrop = document.getElementById('sidebarBackdrop');
-            if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full');
-                backdrop.classList.remove('hidden');
-            } else {
-                sidebar.classList.add('-translate-x-full');
-                backdrop.classList.add('hidden');
-            }
-        }
-
-        function toggleGlobalAudio() {
-            if (window.CyberAudio) {
-                const muted = CyberAudio.toggleMute();
-                const icon = document.getElementById('navMuteIcon');
-                if (icon) {
-                    icon.className = muted ? 'fa-solid fa-volume-xmark text-xs text-red-400' : 'fa-solid fa-volume-high text-xs text-purple-400';
-                }
-                if (!muted) CyberAudio.accessGranted();
-            }
-        }
-
         function openModal(id) {
-            if (window.CyberAudio) CyberAudio.click();
             document.getElementById(id).classList.remove('hidden');
         }
 
@@ -1043,15 +916,14 @@ K2Cg123456789ABCDEFGHAAAAAtzc2gtZWQyNTUxOQAAACCE0K/X92Z/lWjRjFj3Jq9N7o
         function copySSHKey() {
             const keyText = document.getElementById('sshKeyContent').innerText;
             navigator.clipboard.writeText(keyText).then(() => {
-                if (window.CyberAudio) CyberAudio.accessGranted();
                 const btn = document.getElementById('copyKeyBtn');
-                btn.innerHTML = '<i class="fa-solid fa-check mr-1.5"></i> Copied!';
-                btn.classList.remove('bg-purple-600');
+                btn.innerHTML = '<i class="fa-solid fa-check text-xs"></i> Copied!';
+                btn.classList.remove('bg-[#2f81f7]');
                 btn.classList.add('bg-emerald-600');
                 setTimeout(() => {
-                    btn.innerHTML = '<i class="fa-solid fa-copy mr-1.5"></i> Copy Private Key';
+                    btn.innerHTML = '<i class="fa-solid fa-copy text-xs"></i> Copy Private Key';
                     btn.classList.remove('bg-emerald-600');
-                    btn.classList.add('bg-purple-600');
+                    btn.classList.add('bg-[#2f81f7]');
                 }, 2000);
             });
         }
