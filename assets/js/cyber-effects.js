@@ -164,6 +164,13 @@ class CyberBackground {
     animate() {
         if (!this.isRunning) return;
 
+        // Skip rendering floating particles in light mode for a pristine, clean enterprise interface
+        if (document.documentElement.classList.contains('light')) {
+            this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+            requestAnimationFrame(() => this.animate());
+            return;
+        }
+
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
         // Update and draw nodes

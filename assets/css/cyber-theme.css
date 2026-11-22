@@ -446,7 +446,7 @@ html.light, body.light {
     --border-hover: 1px solid #cbd5e1 !important;
     --border-active: 1px solid #0284c7 !important;
 
-    --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.04) !important;
+    --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.04) !important;
     --shadow-elevated: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -4px rgba(0, 0, 0, 0.04) !important;
     color-scheme: light !important;
 }
@@ -457,6 +457,13 @@ body.light {
     color: #0f172a !important;
 }
 
+/* Hide canvas particle overlay in light mode */
+html.light #cyberBackgroundCanvas,
+body.light #cyberBackgroundCanvas,
+html.light canvas {
+    display: none !important;
+}
+
 html.light .cyber-bg,
 html.light .bg-\[\#0a0e16\],
 html.light .bg-\[\#090d16\] {
@@ -464,56 +471,235 @@ html.light .bg-\[\#090d16\] {
 }
 
 html.light .cyber-grid-overlay {
-    background-image: 
-        linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px) !important;
+    background-image: none !important;
 }
 
+/* Top Navigation Bar */
 html.light nav,
 html.light header {
     background-color: #ffffff !important;
     border-bottom: 1px solid #e2e8f0 !important;
     color: #0f172a !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
 }
 
+html.light nav .text-white {
+    color: #0f172a !important;
+}
+
+html.light nav .text-slate-400 {
+    color: #64748b !important;
+}
+
+/* Center Scope & Status Pills */
+html.light nav .bg-slate-900,
+html.light nav .bg-slate-900\/90 {
+    background-color: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    color: #334155 !important;
+}
+
+html.light #themeToggleBtn {
+    background-color: #f1f5f9 !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #1e293b !important;
+}
+
+html.light #themeToggleBtn:hover {
+    background-color: #e2e8f0 !important;
+}
+
+/* Sidebar Navigation */
 html.light aside {
     background-color: #ffffff !important;
     border-right: 1px solid #e2e8f0 !important;
 }
 
-html.light .bg-\[\#0f131c\],
+html.light aside .text-slate-500 {
+    color: #475569 !important;
+}
+
+html.light aside .text-slate-400 {
+    color: #334155 !important;
+}
+
+html.light aside .border-b,
+html.light aside .border-t {
+    border-color: #e2e8f0 !important;
+}
+
+/* Sidebar User Summary Card */
+html.light aside .bg-slate-900\/60 {
+    background-color: #f8fafc !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+html.light aside .bg-slate-900\/60 h4 {
+    color: #0f172a !important;
+}
+
+html.light aside .bg-slate-900\/60 p {
+    color: #475569 !important;
+}
+
+/* Sidebar Category Headers */
+html.light aside .uppercase {
+    color: #475569 !important;
+    font-weight: 800 !important;
+    letter-spacing: 0.06em !important;
+}
+
+/* Sidebar Links */
+html.light .nav-item-active {
+    background-color: #e0f2fe !important;
+    color: #0284c7 !important;
+    font-weight: 700 !important;
+    border-left: 3px solid #0284c7 !important;
+}
+
+html.light .nav-item-active i {
+    color: #0284c7 !important;
+}
+
+html.light .nav-item-inactive {
+    color: #334155 !important;
+    font-weight: 500 !important;
+}
+
+html.light .nav-item-inactive:hover {
+    background-color: #f1f5f9 !important;
+    color: #0f172a !important;
+}
+
+html.light .nav-item-inactive i {
+    color: #64748b !important;
+}
+
+/* Base Containers & Cards in Light Mode */
+html.light .cyber-card,
+html.light .bg-\[\#090d16\],
+html.light .bg-\[\#0a0e16\],
 html.light .bg-\[\#0c101a\],
 html.light .bg-\[\#0e131f\],
-html.light .cyber-card {
+html.light .bg-\[\#0f131c\],
+html.light .bg-\[\#10141f\],
+html.light .bg-\[\#181c24\],
+html.light .bg-\[\#1c2029\],
+html.light .bg-\[\#262a34\],
+html.light .bg-\[\#31353f\],
+html.light .bg-slate-900,
+html.light .bg-slate-900\/40,
+html.light .bg-slate-900\/50,
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/80,
+html.light .bg-slate-900\/90,
+html.light .bg-slate-950:not(.terminal-window):not(#sentinelTerminalConsole):not(#sshKeyContent),
+html.light .bg-slate-950\/40,
+html.light .bg-slate-950\/50,
+html.light .bg-slate-950\/60,
+html.light .bg-slate-950\/70,
+html.light .bg-slate-950\/80,
+html.light .bg-slate-950\/85,
+html.light .bg-slate-950\/90,
+html.light .bg-slate-950\/95 {
     background-color: #ffffff !important;
     border-color: #e2e8f0 !important;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) !important;
 }
 
-html.light .bg-\[\#181c24\],
-html.light .bg-slate-900\/60,
-html.light .bg-slate-900\/80,
-html.light .bg-slate-950\/70,
-html.light .bg-slate-950\/80,
-html.light .bg-slate-950\/85,
-html.light .bg-slate-950\/40,
-html.light .bg-slate-950 {
-    background-color: #f8fafc !important;
+/* Light Mode Borders */
+html.light .border-slate-800,
+html.light .border-slate-800\/60,
+html.light .border-slate-800\/80,
+html.light .border-slate-700,
+html.light .border-slate-700\/40,
+html.light .border-slate-700\/50,
+html.light .border-slate-700\/60,
+html.light .border-\[\#1c2230\],
+html.light .border-\[\#1c2233\],
+html.light .divide-slate-800,
+html.light .divide-slate-800\/60,
+html.light .divide-slate-800\/80,
+html.light .divide-slate-700,
+html.light .divide-slate-700\/40 {
     border-color: #e2e8f0 !important;
 }
 
-html.light .border-white\/\[0\.08\],
-html.light .border-white\/\[0\.06\],
-html.light .border-white\/\[0\.12\],
-html.light .border-white\/\[0\.04\],
-html.light .border-\[\#1c2230\],
-html.light .border-\[\#1c2233\],
-html.light .border-slate-800,
-html.light .border-slate-800\/80,
-html.light .border-slate-800\/60,
-html.light .border-slate-700,
-html.light .border-slate-700\/80 {
+/* Progress bar track in light mode */
+html.light .bg-slate-950.rounded-full,
+html.light [class*="bg-slate-950"].rounded-full {
+    background-color: #e2e8f0 !important;
+    border-color: #cbd5e1 !important;
+}
+
+/* User initials avatar badge in light mode */
+html.light .h-9.w-9.rounded-lg.bg-slate-700,
+html.light td .rounded-lg.bg-slate-700 {
+    background-color: #e0f2fe !important;
+    border-color: #bae6fd !important;
+    color: #0284c7 !important;
+}
+
+/* Dropdown Simulation Menu in Light Mode */
+html.light #simMenu {
+    background-color: #ffffff !important;
+    border: 1px solid #d8b4fe !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1) !important;
+}
+
+html.light #simMenu a,
+html.light #simMenu button {
+    color: #334155 !important;
+}
+
+html.light #simMenu a:hover,
+html.light #simMenu button:hover {
+    background-color: #f3e8ff !important;
+    color: #6b21a8 !important;
+}
+
+html.light #simMenu .text-slate-400 {
+    color: #64748b !important;
+}
+
+/* Modals in Light Mode */
+html.light #provisionModal > div,
+html.light #roleModal > div,
+html.light #lockdownModal > div,
+html.light #cyberWelcomeHUD > div {
+    background-color: #ffffff !important;
     border-color: #e2e8f0 !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15) !important;
+}
+
+html.light #roleModalEmail {
+    background-color: #f8fafc !important;
+    border-color: #e2e8f0 !important;
+    color: #0284c7 !important;
+}
+
+/* Authentication pages in Light Mode */
+html.light body.bg-\[\#090d16\] {
+    background-color: #f8fafc !important;
+}
+
+html.light header.bg-\[\#0c101a\]\/90 {
+    background-color: #ffffff !important;
+    border-color: #e2e8f0 !important;
+}
+
+html.light .bg-\[\#10141f\] {
+    background-color: #ffffff !important;
+    border-color: #e2e8f0 !important;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.08) !important;
+}
+
+/* High-Contrast Headings and Text */
+html.light h1,
+html.light h2,
+html.light h3,
+html.light h4 {
+    color: #0f172a !important;
 }
 
 html.light .text-white {
@@ -529,20 +715,148 @@ html.light .text-slate-300 {
 }
 
 html.light .text-slate-400 {
-    color: #64748b !important;
+    color: #475569 !important;
 }
 
 html.light .text-slate-500 {
-    color: #94a3b8 !important;
+    color: #64748b !important;
+}
+
+html.light .text-slate-600 {
+    color: #475569 !important;
+}
+
+/* Re-color Washed Out Colors in Light Mode for High Contrast */
+html.light .text-sky-300,
+html.light .text-sky-400,
+html.light .text-cyan-300,
+html.light .text-cyan-400 {
+    color: #0369a1 !important;
+}
+
+html.light .text-emerald-300,
+html.light .text-emerald-400 {
+    color: #047857 !important;
+}
+
+html.light .text-amber-300,
+html.light .text-amber-400 {
+    color: #b45309 !important;
+}
+
+html.light .text-purple-300,
+html.light .text-purple-400 {
+    color: #7e22ce !important;
+}
+
+html.light .text-red-300,
+html.light .text-red-400 {
+    color: #b91c1c !important;
+}
+
+/* Light Theme Badges with Rich Contrast */
+html.light .bg-sky-500\/10,
+html.light .bg-sky-500\/15,
+html.light .bg-sky-500\/20 {
+    background-color: #e0f2fe !important;
+    border-color: #bae6fd !important;
+    color: #0369a1 !important;
+}
+
+html.light .bg-emerald-500\/10,
+html.light .bg-emerald-500\/15,
+html.light .bg-emerald-500\/20 {
+    background-color: #d1fae5 !important;
+    border-color: #a7f3d0 !important;
+    color: #047857 !important;
+}
+
+html.light .bg-amber-500\/10,
+html.light .bg-amber-500\/15,
+html.light .bg-amber-500\/20 {
+    background-color: #fef3c7 !important;
+    border-color: #fde68a !important;
+    color: #92400e !important;
+}
+
+html.light .bg-purple-500\/10,
+html.light .bg-purple-500\/15,
+html.light .bg-purple-500\/20 {
+    background-color: #f3e8ff !important;
+    border-color: #d8b4fe !important;
+    color: #6b21a8 !important;
+}
+
+html.light .bg-red-500\/10,
+html.light .bg-red-500\/15,
+html.light .bg-red-500\/20 {
+    background-color: #fee2e2 !important;
+    border-color: #fecaca !important;
+    color: #991b1b !important;
+}
+
+/* 4 Fleet Telemetry KPI Cards in Light Mode */
+html.light .kpi-card {
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+html.light .kpi-label {
+    color: #475569 !important;
+    font-weight: 700 !important;
+}
+
+html.light .kpi-number {
+    color: #0f172a !important;
+    font-weight: 800 !important;
+}
+
+html.light .icon-box-sky {
+    background-color: #e0f2fe !important;
+    border: 1px solid #bae6fd !important;
+    color: #0284c7 !important;
+}
+
+html.light .icon-box-emerald {
+    background-color: #d1fae5 !important;
+    border: 1px solid #a7f3d0 !important;
+    color: #047857 !important;
+}
+
+html.light .icon-box-blue {
+    background-color: #dbeafe !important;
+    border: 1px solid #bfdbfe !important;
+    color: #1d4ed8 !important;
+}
+
+/* Main Table Container in Light Mode */
+html.light .table-container {
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+html.light .table-header-bar {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html.light .table-header-bar h3 {
+    color: #0f172a !important;
+}
+
+html.light .table-header-bar p {
+    color: #64748b !important;
 }
 
 html.light thead {
     background-color: #f1f5f9 !important;
-    border-bottom: 1px solid #e2e8f0 !important;
+    border-bottom: 1px solid #cbd5e1 !important;
 }
 
 html.light thead th {
-    color: #475569 !important;
+    color: #334155 !important;
+    font-weight: 700 !important;
+    background-color: #f1f5f9 !important;
 }
 
 html.light tbody tr {
@@ -554,6 +868,94 @@ html.light tbody tr:hover {
     background-color: #f8fafc !important;
 }
 
+html.light tbody td {
+    color: #0f172a !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+/* Action Buttons in Light Mode */
+html.light #simDropdownBtn {
+    background-color: #f3e8ff !important;
+    border: 1px solid #d8b4fe !important;
+    color: #6b21a8 !important;
+    font-weight: 700 !important;
+}
+
+html.light #simDropdownBtn:hover {
+    background-color: #e9d5ff !important;
+}
+
+html.light #exportCsvBtn {
+    background-color: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #334155 !important;
+    font-weight: 700 !important;
+}
+
+html.light #exportCsvBtn:hover {
+    background-color: #f1f5f9 !important;
+    border-color: #94a3b8 !important;
+}
+
+/* Terminal Console Stays Sleek & Dark in BOTH Modes for Optimal Monospace Readability */
+html.light .terminal-window,
+html.light #sentinelTerminalConsole {
+    background-color: #0b0f19 !important;
+    border: 1px solid #1e293b !important;
+    color: #e2e8f0 !important;
+}
+
+html.light #sentinelTerminalHeader {
+    background-color: #111827 !important;
+    border-bottom: 1px solid #1e293b !important;
+    color: #f8fafc !important;
+}
+
+html.light #sentinelTerminalHeader span {
+    color: #f8fafc !important;
+}
+
+html.light #sentinelTerminalConsole .text-slate-300 {
+    color: #cbd5e1 !important;
+}
+
+html.light #sentinelTerminalConsole .text-slate-400 {
+    color: #94a3b8 !important;
+}
+
+html.light #sentinelTerminalConsole .text-slate-600 {
+    color: #64748b !important;
+}
+
+/* Live Audit Stream in Light Mode */
+html.light .audit-stream-card {
+    background-color: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+}
+
+html.light .audit-stream-header {
+    background-color: #f8fafc !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+}
+
+html.light .audit-stream-header h3 {
+    color: #0f172a !important;
+}
+
+html.light .audit-stream-list li {
+    border-bottom: 1px solid #f1f5f9 !important;
+    background-color: #ffffff !important;
+}
+
+html.light .audit-stream-list li:hover {
+    background-color: #f8fafc !important;
+}
+
+html.light .audit-stream-list p {
+    color: #1e293b !important;
+}
+
+/* Forms & Inputs in Light Mode */
 html.light input[type="text"],
 html.light input[type="email"],
 html.light input[type="password"],
@@ -578,27 +980,17 @@ html.light select option {
     color: #0f172a !important;
 }
 
-html.light .nav-item-active {
-    background-color: rgba(2, 132, 199, 0.08) !important;
-    color: #0284c7 !important;
-    border-left: 2px solid #0284c7 !important;
-}
-
-html.light .nav-item-inactive:hover {
-    background-color: #f1f5f9 !important;
-    color: #0f172a !important;
-}
-
-html.light .bg-slate-900 {
-    background-color: #ffffff !important;
-}
-
+/* Custom Scrollbars in Light Mode */
 html.light .custom-scrollbar::-webkit-scrollbar-track {
     background: #f1f5f9 !important;
 }
 
 html.light .custom-scrollbar::-webkit-scrollbar-thumb {
     background: #cbd5e1 !important;
+}
+
+html.light .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8 !important;
 }
 
 /* Reduce and silence distracting animations */
@@ -608,4 +1000,5 @@ html.light .custom-scrollbar::-webkit-scrollbar-thumb {
 .scanlines-overlay {
     animation: none !important;
 }
+
 

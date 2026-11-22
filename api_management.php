@@ -175,8 +175,21 @@ if ($res) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="dark">
+    <meta name="color-scheme" content="dark light">
     <title>Enterprise API Key Management - Cryptographic Gatekeeper</title>
+    <!-- Immediate Theme Application to Prevent Flash of Wrong Theme -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('iam_theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+            } else {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+            }
+        })();
+    </script>
     <script src="assets/js/tailwind.js"></script>
     <script>
         tailwind.config = {
@@ -261,6 +274,12 @@ if ($res) {
                 <span class="text-slate-400 text-[11px]">Sentinel:</span>
                 <span class="text-emerald-400 font-semibold text-[11px]">ACTIVE</span>
             </div>
+
+            <!-- Theme Toggle Button (Light / Dark Mode) -->
+            <button onclick="toggleTheme()" id="themeToggleBtn" class="p-1.5 px-2.5 rounded-md bg-slate-900 hover:bg-slate-800 border border-slate-700/60 text-slate-300 hover:text-white transition flex items-center gap-1.5" title="Switch Theme (Light / Dark)">
+                <i id="themeToggleIcon" class="fa-solid fa-sun text-xs text-amber-400"></i>
+                <span class="hidden md:inline font-mono text-[11px]">Theme</span>
+            </button>
 
             <span class="hidden md:inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-mono font-bold bg-amber-500/10 text-amber-300 border border-amber-500/30">
                 <i class="fa-solid fa-key mr-1 text-[10px] text-amber-400"></i> <?php echo htmlspecialchars($user_clearance); ?>
@@ -617,6 +636,37 @@ if ($res) {
                 }, 1800);
             });
         }
+
+        // Theme Switcher (Light / Dark Mode)
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+                localStorage.setItem('iam_theme', 'light');
+                updateThemeIcon('light');
+            } else {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+                localStorage.setItem('iam_theme', 'dark');
+                updateThemeIcon('dark');
+            }
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeToggleIcon');
+            if (!icon) return;
+            if (theme === 'light') {
+                icon.className = 'fa-solid fa-moon text-xs text-indigo-400';
+            } else {
+                icon.className = 'fa-solid fa-sun text-xs text-amber-400';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const currentTheme = localStorage.getItem('iam_theme') || 'dark';
+            updateThemeIcon(currentTheme);
+        });
     </script>
 </body>
 </html>

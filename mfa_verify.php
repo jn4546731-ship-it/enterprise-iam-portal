@@ -63,8 +63,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="dark">
+    <meta name="color-scheme" content="dark light">
     <title>Quantum MFA Challenge - Enterprise Zero-Trust</title>
+    <!-- Immediate Theme Application to Prevent Flash of Wrong Theme -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('iam_theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+            } else {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+            }
+        })();
+    </script>
     <script src="assets/js/tailwind.js"></script>
     <script>
         tailwind.config = {

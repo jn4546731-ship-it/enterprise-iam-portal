@@ -771,7 +771,7 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                     
                     <!-- Threat Simulation Dropdown (University Defense Mode) -->
                     <div class="relative inline-block text-left" id="simulationDropdownContainer">
-                        <button type="button" onclick="toggleSimMenu()" class="px-3.5 py-2.5 rounded-lg text-xs font-semibold transition flex items-center shadow-sm bg-purple-950/40 hover:bg-purple-900/50 text-purple-200 border border-purple-500/40">
+                        <button id="simDropdownBtn" type="button" onclick="toggleSimMenu()" class="px-3.5 py-2.5 rounded-lg text-xs font-semibold transition flex items-center shadow-sm bg-purple-950/40 hover:bg-purple-900/50 text-purple-200 border border-purple-500/40">
                             <i class="fa-solid fa-flask-vial mr-2 text-purple-400"></i>
                             <span>Simulate Threat (Defense Mode)</span>
                             <i class="fa-solid fa-chevron-down ml-2 text-[10px]"></i>
@@ -833,7 +833,7 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                     <?php endif; ?>
 
                     <!-- Export CSV Button -->
-                    <a href="?export=csv" class="px-3.5 py-2.5 rounded-lg text-xs font-semibold transition border border-slate-700 hover:border-slate-500 bg-slate-900/80 hover:bg-slate-800 text-slate-200 flex items-center shadow-sm">
+                    <a id="exportCsvBtn" href="?export=csv" class="px-3.5 py-2.5 rounded-lg text-xs font-semibold transition border border-slate-700 hover:border-slate-500 bg-slate-900/80 hover:bg-slate-800 text-slate-200 flex items-center shadow-sm">
                         <i class="fa-solid fa-download mr-1.5 text-sky-400"></i> Export Audit Logs
                     </a>
 
@@ -847,61 +847,61 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
             <!-- Telemetry Cards Data Grid (Clean, Focused 4 Cards) -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
                 <!-- Total Identities -->
-                <div class="p-5 rounded-xl border relative overflow-hidden group bg-slate-900/60 border-slate-700/50">
+                <div class="kpi-card p-5 rounded-xl border relative overflow-hidden group bg-slate-900/60 border-slate-700/50">
                     <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs font-mono uppercase tracking-wider text-sky-300 font-bold">TOTAL IDENTITIES</span>
-                        <span class="w-8 h-8 rounded-lg bg-sky-950/80 border border-sky-500/40 text-sky-400 flex items-center justify-center text-sm"><i class="fa-solid fa-users"></i></span>
+                        <span class="kpi-label text-xs font-mono uppercase tracking-wider text-slate-400 dark:text-sky-300 font-bold">TOTAL IDENTITIES</span>
+                        <span class="icon-box-sky w-8 h-8 rounded-lg bg-sky-950/80 border border-sky-500/40 text-sky-400 flex items-center justify-center text-sm"><i class="fa-solid fa-users"></i></span>
                     </div>
                     <div class="flex items-baseline space-x-2">
-                        <p class="text-3xl font-extrabold text-white font-mono"><?php echo $total_users; ?></p>
+                        <p class="kpi-number text-3xl font-extrabold text-white font-mono"><?php echo $total_users; ?></p>
                         <?php if ($suspended_count > 0): ?>
-                            <span class="text-xs font-mono text-red-400 font-bold">(<?php echo $suspended_count; ?> Suspended)</span>
+                            <span class="text-xs font-mono text-red-500 font-bold">(<?php echo $suspended_count; ?> Suspended)</span>
                         <?php else: ?>
-                            <span class="text-xs font-mono text-emerald-400 font-bold">(100% Active)</span>
+                            <span class="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold">(100% Active)</span>
                         <?php endif; ?>
                     </div>
                     <div class="mt-3 text-[10px] font-mono text-slate-500 flex items-center justify-between border-t border-slate-800 pt-2">
                         <span>Directory Sync</span>
-                        <span class="text-sky-400 font-mono font-bold">RBAC ONLINE</span>
+                        <span class="text-sky-700 dark:text-sky-400 font-mono font-bold">RBAC ONLINE</span>
                     </div>
                 </div>
                 
                 <!-- MFA Enforcement -->
-                <div class="p-5 rounded-xl border relative overflow-hidden group bg-slate-900/60 border-slate-700/50">
+                <div class="kpi-card p-5 rounded-xl border relative overflow-hidden group bg-slate-900/60 border-slate-700/50">
                     <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs font-mono uppercase tracking-wider text-emerald-300 font-bold">MFA ENFORCEMENT</span>
-                        <span class="w-8 h-8 rounded-lg bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-sm"><i class="fa-solid fa-shield-halved"></i></span>
+                        <span class="kpi-label text-xs font-mono uppercase tracking-wider text-slate-400 dark:text-emerald-300 font-bold">MFA ENFORCEMENT</span>
+                        <span class="icon-box-emerald w-8 h-8 rounded-lg bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-sm"><i class="fa-solid fa-shield-halved"></i></span>
                     </div>
                     <div class="flex items-baseline space-x-2">
-                        <p class="text-3xl font-extrabold text-emerald-400 font-mono"><?php echo $mfa_rate; ?>%</p>
-                        <span class="text-xs font-mono text-slate-400"><?php echo $mfa_enabled; ?>/<?php echo $total_users; ?> enrolled</span>
+                        <p class="kpi-number text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono"><?php echo $mfa_rate; ?>%</p>
+                        <span class="text-xs font-mono text-slate-500 dark:text-slate-400"><?php echo $mfa_enabled; ?>/<?php echo $total_users; ?> enrolled</span>
                     </div>
                     <div class="mt-3 text-[10px] font-mono text-slate-500 flex items-center justify-between border-t border-slate-800 pt-2">
                         <span>Protocol</span>
-                        <span class="text-emerald-400 font-mono font-bold">RFC 6238 TOTP</span>
+                        <span class="text-emerald-700 dark:text-emerald-400 font-mono font-bold">RFC 6238 TOTP</span>
                     </div>
                 </div>
 
                 <!-- 24h Audit Events -->
-                <div class="p-5 rounded-xl border relative overflow-hidden group bg-slate-900/60 border-slate-700/50">
+                <div class="kpi-card p-5 rounded-xl border relative overflow-hidden group bg-slate-900/60 border-slate-700/50">
                     <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs font-mono uppercase tracking-wider text-sky-300 font-bold">24H AUDIT EVENTS</span>
-                        <span class="w-8 h-8 rounded-lg bg-blue-950/80 border border-blue-500/40 text-blue-400 flex items-center justify-center text-sm"><i class="fa-solid fa-list-check"></i></span>
+                        <span class="kpi-label text-xs font-mono uppercase tracking-wider text-slate-400 dark:text-sky-300 font-bold">24H AUDIT EVENTS</span>
+                        <span class="icon-box-blue w-8 h-8 rounded-lg bg-blue-950/80 border border-blue-500/40 text-blue-400 flex items-center justify-center text-sm"><i class="fa-solid fa-list-check"></i></span>
                     </div>
                     <div class="flex items-baseline space-x-2">
-                        <p class="text-3xl font-extrabold text-white font-mono"><?php echo $total_logs_24h; ?></p>
-                        <span class="text-xs font-mono text-sky-400">Live Telemetry</span>
+                        <p class="kpi-number text-3xl font-extrabold text-white font-mono"><?php echo $total_logs_24h; ?></p>
+                        <span class="text-xs font-mono text-sky-700 dark:text-sky-400 font-bold">Live Telemetry</span>
                     </div>
                     <div class="mt-3 text-[10px] font-mono text-slate-500 flex items-center justify-between border-t border-slate-800 pt-2">
                         <span>Storage Integrity</span>
-                        <span class="text-sky-400 font-mono font-bold">IMMUTABLE LOGS</span>
+                        <span class="text-sky-700 dark:text-sky-400 font-mono font-bold">IMMUTABLE LOGS</span>
                     </div>
                 </div>
 
-                <!-- AI Sentinel Threat Level Card -->
-                <div class="p-5 rounded-xl border relative overflow-hidden bg-slate-900/60 border-slate-700/50">
+                <!-- AI Threat Posture -->
+                <div class="kpi-card p-5 rounded-xl border relative overflow-hidden bg-slate-900/60 border-slate-700/50">
                     <div class="flex justify-between items-center mb-2">
-                        <span class="text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">AI THREAT POSTURE</span>
+                        <span class="kpi-label text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">AI THREAT POSTURE</span>
                         <span class="text-[10px] font-mono px-2 py-0.5 rounded <?php echo $active_theme['bg']; ?> <?php echo $active_theme['text']; ?> font-bold border <?php echo $active_theme['border']; ?>">
                             ATS: <?php echo $threat_score; ?>/100
                         </span>
@@ -925,15 +925,15 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                 <!-- Left Column (2/3 width): Workforce User Directory & RBAC -->
                 <div class="lg:col-span-2 space-y-8" id="directorySection">
                     
-                    <div class="rounded-xl border overflow-hidden shadow-sm bg-slate-900/60 border-slate-700/50">
-                        <div class="border-b p-5 flex justify-between items-center bg-slate-950/60">
+                    <div class="table-container rounded-xl border overflow-hidden shadow-sm bg-slate-900/60 border-slate-700/50">
+                        <div class="table-header-bar border-b p-5 flex justify-between items-center bg-slate-950/60">
                             <div>
                                 <h3 class="text-sm sm:text-base font-bold text-white flex items-center">
                                     <i class="fa-solid fa-users-gear text-sky-400 mr-2.5"></i> Identity &amp; Role-Based Access Control (RBAC)
                                 </h3>
                                 <p class="text-xs text-slate-400 mt-0.5">Enforce Zero-Trust least privilege and trigger instant identity kill-switch locks.</p>
                             </div>
-                            <span class="text-xs font-mono text-sky-300 bg-sky-950/60 px-3 py-1 rounded-lg border border-sky-500/30 font-bold">
+                            <span class="table-counter-badge text-xs font-mono text-sky-300 bg-sky-950/60 px-3 py-1 rounded-lg border border-sky-500/30 font-bold">
                                 <?php echo count($users); ?> IDENTITIES REGISTERED
                             </span>
                         </div>
@@ -1160,7 +1160,7 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                     
                     <!-- AI Sentinel Engine Heuristic Terminal -->
                     <div class="rounded-xl border shadow-sm overflow-hidden bg-slate-900/60 border-slate-700/50">
-                        <div class="border-b px-4 py-3 flex justify-between items-center bg-slate-950/80">
+                        <div id="sentinelTerminalHeader" class="border-b px-4 py-3 flex justify-between items-center bg-slate-950/80">
                             <div class="flex items-center space-x-2">
                                 <div class="flex space-x-1.5 mr-2">
                                     <div class="w-2.5 h-2.5 rounded-full bg-red-500/90"></div>
@@ -1177,7 +1177,7 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                         </div>
 
                         <!-- Terminal Output Window -->
-                        <div class="p-4 font-mono text-xs text-slate-400 space-y-2 h-72 overflow-y-auto custom-scrollbar bg-slate-950">
+                        <div id="sentinelTerminalConsole" class="terminal-window p-4 font-mono text-xs text-slate-400 space-y-2 h-72 overflow-y-auto custom-scrollbar bg-slate-950">
                             <?php foreach ($terminal_logs as $tlog): 
                                 $badge_color = match($tlog['type']) {
                                     'SYSTEM' => 'text-sky-400 font-bold',
@@ -1205,8 +1205,8 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                     </div>
 
                     <!-- Live Audit Stream -->
-                    <div class="rounded-xl border shadow-sm overflow-hidden bg-slate-900/60 border-slate-700/50">
-                        <div class="border-b p-4 bg-slate-950/80 flex justify-between items-center">
+                    <div class="audit-stream-card rounded-xl border shadow-sm overflow-hidden bg-slate-900/60 border-slate-700/50">
+                        <div class="audit-stream-header border-b p-4 bg-slate-950/80 flex justify-between items-center">
                             <h3 class="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center">
                                 <i class="fa-solid fa-server text-sky-400 mr-2"></i> Live Audit Stream
                             </h3>
@@ -1215,7 +1215,7 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                             </span>
                         </div>
                         <div class="bg-slate-950/40">
-                            <ul class="divide-y divide-slate-800/60 max-h-80 overflow-y-auto custom-scrollbar font-mono text-xs">
+                            <ul class="audit-stream-list divide-y divide-slate-800/60 max-h-80 overflow-y-auto custom-scrollbar font-mono text-xs">
                                 <?php if (count($audit_logs) > 0): ?>
                                     <?php foreach ($audit_logs as $log): 
                                         $action_type = strtoupper($log['action_type'] ?? 'EVENT');

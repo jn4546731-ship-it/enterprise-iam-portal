@@ -108,8 +108,21 @@ $events_24h = (int) (($total_24h_res ? $total_24h_res->fetch_assoc()['cnt'] : 0)
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="color-scheme" content="dark">
+    <meta name="color-scheme" content="dark light">
     <title>Executive Compliance & SOC Audit Summary - Enterprise Zero-Trust IAM</title>
+    <!-- Immediate Theme Application to Prevent Flash of Wrong Theme -->
+    <script>
+        (function() {
+            const savedTheme = localStorage.getItem('iam_theme') || 'dark';
+            if (savedTheme === 'light') {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+            } else {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+            }
+        })();
+    </script>
     <script src="assets/js/tailwind.js"></script>
     <script>
         tailwind.config = {
@@ -203,6 +216,11 @@ $events_24h = (int) (($total_24h_res ? $total_24h_res->fetch_assoc()['cnt'] : 0)
         </div>
         
         <div class="flex items-center space-x-2">
+            <!-- Theme Toggle Button (Light / Dark Mode) -->
+            <button onclick="toggleTheme()" id="themeToggleBtn" class="px-2.5 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-[#1c2233] transition flex items-center gap-1.5" title="Switch Theme (Light / Dark)">
+                <i id="themeToggleIcon" class="fa-solid fa-sun text-xs text-amber-400"></i>
+                <span class="hidden md:inline font-mono text-[11px]">Theme</span>
+            </button>
             <a href="dashboard.php?export=csv" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-[#1c2233] transition flex items-center">
                 <i class="fa-solid fa-file-csv mr-1.5 text-sky-400"></i> Export CSV
             </a>
@@ -438,5 +456,37 @@ $events_24h = (int) (($total_24h_res ? $total_24h_res->fetch_assoc()['cnt'] : 0)
 
     </main>
 
+    <script>
+        // Theme Switcher (Light / Dark Mode)
+        function toggleTheme() {
+            const isDark = document.documentElement.classList.contains('dark');
+            if (isDark) {
+                document.documentElement.classList.remove('dark');
+                document.documentElement.classList.add('light');
+                localStorage.setItem('iam_theme', 'light');
+                updateThemeIcon('light');
+            } else {
+                document.documentElement.classList.add('dark');
+                document.documentElement.classList.remove('light');
+                localStorage.setItem('iam_theme', 'dark');
+                updateThemeIcon('dark');
+            }
+        }
+
+        function updateThemeIcon(theme) {
+            const icon = document.getElementById('themeToggleIcon');
+            if (!icon) return;
+            if (theme === 'light') {
+                icon.className = 'fa-solid fa-moon text-xs text-indigo-400';
+            } else {
+                icon.className = 'fa-solid fa-sun text-xs text-amber-400';
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const currentTheme = localStorage.getItem('iam_theme') || 'dark';
+            updateThemeIcon(currentTheme);
+        });
+    </script>
 </body>
 </html>
