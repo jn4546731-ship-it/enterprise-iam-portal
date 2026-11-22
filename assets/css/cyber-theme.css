@@ -646,19 +646,25 @@ html.light .text-error {
 
 html.light .border-\[\#1e293b\],
 html.light .border-\[\#334155\],
+html.light .border-\[\#30363d\],
 html.light .border-obsidian {
     border-color: #e2e8f0 !important;
 }
 
 html.light .cyber-card,
+html.light .bg-\[\#090d13\],
 html.light .bg-\[\#090d16\],
 html.light .bg-\[\#0a0e16\],
 html.light .bg-\[\#0c101a\],
+html.light .bg-\[\#0d1117\],
 html.light .bg-\[\#0e131f\],
 html.light .bg-\[\#0f131c\],
 html.light .bg-\[\#10141f\],
+html.light .bg-\[\#161b22\],
 html.light .bg-\[\#181c24\],
 html.light .bg-\[\#1c2029\],
+html.light .bg-\[\#1c2128\],
+html.light .bg-\[\#21262d\],
 html.light .bg-\[\#262a34\],
 html.light .bg-\[\#31353f\],
 html.light .bg-slate-900,
@@ -695,7 +701,9 @@ html.light .divide-slate-800,
 html.light .divide-slate-800\/60,
 html.light .divide-slate-800\/80,
 html.light .divide-slate-700,
-html.light .divide-slate-700\/40 {
+html.light .divide-slate-700\/40,
+html.light .divide-\[\#30363d\],
+html.light .divide-\[\#1e293b\] {
     border-color: #e2e8f0 !important;
 }
 
