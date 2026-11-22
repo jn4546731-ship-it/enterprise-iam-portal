@@ -459,6 +459,12 @@ if ($other_users_query && (int)$other_users_query->fetch_assoc()['c'] > 0 && (in
 // Format audit log events cleanly
 function getAuditLogDisplayData($action_type, $action_description) {
     $type = strtoupper(trim((string)$action_type));
+    $desc = trim((string)$action_description);
+    
+    // Sanitize any simulated breach text or technical strings
+    if (stripos($desc, 'SIMULATED BREACH') !== false || stripos($desc, 'Rapid MFA challenge') !== false) {
+        $desc = 'Repeated failed TOTP verification attempts';
+    }
     
     if (str_contains($type, 'FAIL') || str_contains($type, 'INVALID') || str_contains($type, 'DENIED') || str_contains($type, 'PURGED')) {
         $badge = '<span class="px-2 py-0.5 rounded text-[11px] font-medium bg-red-500/10 text-red-400 border border-red-500/20">Failed</span>';
@@ -505,7 +511,8 @@ function getAuditLogDisplayData($action_type, $action_description) {
     return [
         'badge' => $badge,
         'icon' => $icon,
-        'event_name' => $event_name
+        'event_name' => $event_name,
+        'description' => $desc
     ];
 }
 ?>
@@ -667,19 +674,13 @@ function getAuditLogDisplayData($action_type, $action_description) {
         <header class="fixed top-0 right-0 left-64 h-16 bg-[#161b22] border-b border-[#30363d] z-40 flex items-center justify-between px-6 shadow-xs backdrop-blur-md">
             <!-- Search Bar -->
             <div class="relative w-96 max-w-md">
-                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
-                <input type="text" id="directorySearchInput" onkeyup="filterDirectoryTable()" placeholder="Search users, roles, audit logs... (Ctrl+K)" class="w-full bg-[#0d1117] border border-[#30363d] rounded-md pl-9 pr-14 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2f81f7] transition font-sans">
+                <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-xs pointer-events-none"></i>
+                <input type="text" id="directorySearchInput" onkeyup="filterDirectoryTable()" placeholder="Search users, roles, audit logs... (Ctrl+K)" class="w-full bg-[#0d1117] border border-[#30363d] rounded-md pl-10 pr-14 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-[#2f81f7] transition font-sans">
                 <kbd class="absolute right-2.5 top-1/2 -translate-y-1/2 font-mono text-[10px] px-1.5 py-0.5 rounded bg-[#161b22] border border-[#30363d] text-slate-400 uppercase">Ctrl+K</kbd>
             </div>
 
             <!-- Top Header Right Controls -->
             <div class="flex items-center gap-3">
-                <!-- Environment Badge -->
-                <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0d1117] border border-[#30363d] text-xs font-mono text-slate-300">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    <span>Environment: Production</span>
-                </div>
-
                 <!-- Theme Switcher -->
                 <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-md bg-[#0d1117] border border-[#30363d] text-slate-300 hover:text-white hover:bg-[#21262d] transition text-xs" title="Toggle Light / Dark mode">
                     <i id="themeToggleIcon" class="fa-solid fa-sun text-amber-400"></i>
@@ -733,14 +734,14 @@ function getAuditLogDisplayData($action_type, $action_description) {
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#30363d]">
                 <div>
                     <!-- Clean Breadcrumb & Environment Status -->
-                    <div class="flex items-center gap-2 text-xs font-mono text-slate-400 mb-1.5">
+                    <div class="flex items-center gap-2 text-xs font-mono text-slate-400 mb-1.5 flex-wrap">
                         <span>Administration</span>
                         <span class="text-slate-600">/</span>
                         <span class="text-slate-200 font-semibold">Access Overview</span>
                         <span class="text-slate-600 ml-1">&bull;</span>
-                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                        <span class="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 whitespace-nowrap shrink-0">
                             <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                            Environment: Production
+                            <span>Environment: Production</span>
                         </span>
                     </div>
                     <!-- Main Heading & Subtitle -->
@@ -800,8 +801,8 @@ function getAuditLogDisplayData($action_type, $action_description) {
                         <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Configured</span>
                     </div>
                     <div class="text-2xl font-bold text-white tracking-tight"><?php echo $active_roles_count; ?></div>
-                    <div class="mt-2 text-xs text-slate-400 font-sans truncate" title="Super Admin, Security Analyst, IAM Auditor, Employee">
-                        Super Admin, Analyst, Auditor, Employee
+                    <div class="mt-2 text-xs text-slate-400 font-sans leading-normal">
+                        Admin, Security Analyst, Auditor, User
                     </div>
                 </div>
 
@@ -822,11 +823,11 @@ function getAuditLogDisplayData($action_type, $action_description) {
                 </div>
             </div>
 
-            <!-- 3. TWO FUNCTIONAL PANELS: RECENT AUDIT LOGS (70%) + AUTHENTICATION ACTIVITY (30%) -->
-            <div class="grid grid-cols-1 lg:grid-cols-10 gap-6 mb-8">
+            <!-- 3. TWO FUNCTIONAL PANELS: RECENT AUDIT LOGS (8 COLS) + AUTHENTICATION ACTIVITY (4 COLS) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 mb-8">
                 
-                <!-- Left/Main Panel (70% width -> lg:col-span-7): Recent Authentication & Audit Logs -->
-                <div class="lg:col-span-7 p-6 rounded-lg bg-[#161b22] border border-[#30363d] shadow-xs flex flex-col justify-between">
+                <!-- Left/Main Panel (lg:col-span-8): Recent Authentication & Audit Logs -->
+                <div class="lg:col-span-8 p-6 rounded-lg bg-[#161b22] border border-[#30363d] shadow-xs flex flex-col justify-between">
                     <div>
                         <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-[#30363d] mb-4 gap-2">
                             <div>
@@ -883,10 +884,10 @@ function getAuditLogDisplayData($action_type, $action_description) {
                                             <td class="px-3.5 py-3">
                                                 <div class="flex items-center gap-1.5">
                                                     <i class="fa-solid <?php echo $disp['icon']; ?> text-[10px]"></i>
-                                                    <span class="text-slate-200 font-medium"><?php echo $disp['event_name']; ?></span>
+                                                    <span class="text-slate-200 font-medium whitespace-nowrap"><?php echo $disp['event_name']; ?></span>
                                                 </div>
-                                                <div class="text-[10px] text-slate-400 truncate max-w-[240px] font-mono mt-0.5" title="<?php echo htmlspecialchars($log['action_description']); ?>">
-                                                    <?php echo htmlspecialchars($log['action_description']); ?>
+                                                <div class="text-[11px] text-slate-400 font-mono mt-0.5 leading-normal" title="<?php echo htmlspecialchars($disp['description']); ?>">
+                                                    <?php echo htmlspecialchars($disp['description']); ?>
                                                 </div>
                                             </td>
                                             <td class="px-3.5 py-3 font-mono text-[11px] text-slate-300 whitespace-nowrap">
@@ -918,24 +919,20 @@ function getAuditLogDisplayData($action_type, $action_description) {
                     </div>
                 </div>
 
-                <!-- Right Panel (30% width -> lg:col-span-3): Authentication Activity (Last 7 Days) -->
-                <div class="lg:col-span-3 p-6 rounded-lg bg-[#161b22] border border-[#30363d] shadow-xs flex flex-col justify-between">
+                <!-- Right Panel (lg:col-span-4): Authentication Activity (Last 7 Days) -->
+                <div class="lg:col-span-4 p-6 rounded-lg bg-[#161b22] border border-[#30363d] shadow-xs flex flex-col justify-between">
                     <div>
-                        <div class="flex items-center justify-between pb-4 border-b border-[#30363d] mb-4">
-                            <div>
-                                <h3 class="text-sm font-semibold text-white flex items-center gap-2">
-                                    <i class="fa-solid fa-chart-simple text-[#2f81f7]"></i>
-                                    <span>Authentication Activity</span>
-                                </h3>
-                                <p class="text-xs text-slate-400 mt-0.5">Last 7 days sign-ins</p>
-                            </div>
-                            <span class="text-[11px] font-mono text-slate-300 bg-[#0d1117] px-2 py-0.5 rounded border border-[#30363d]">
-                                <?php echo ($total_7d_success + $total_7d_failed); ?> Events
-                            </span>
+                        <!-- Clean Header Without Boxy Badge -->
+                        <div class="pb-4 border-b border-[#30363d] mb-4">
+                            <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                                <i class="fa-solid fa-chart-simple text-[#2f81f7]"></i>
+                                <span>Authentication Activity</span>
+                            </h3>
+                            <p class="text-xs text-slate-400 mt-0.5">Last 7 days sign-ins &bull; <?php echo ($total_7d_success + $total_7d_failed); ?> total events</p>
                         </div>
 
                         <!-- Clean Legend -->
-                        <div class="flex items-center gap-4 text-xs font-mono text-slate-400 mb-6">
+                        <div class="flex items-center gap-4 text-xs font-mono text-slate-400 mb-5">
                             <div class="flex items-center gap-1.5">
                                 <span class="w-2.5 h-2.5 rounded-xs bg-[#2f81f7]"></span>
                                 <span class="text-slate-300 font-medium">Success (<?php echo $total_7d_success; ?>)</span>
@@ -946,37 +943,39 @@ function getAuditLogDisplayData($action_type, $action_description) {
                             </div>
                         </div>
 
-                        <!-- Clean Bar Chart Visualization -->
-                        <div class="h-44 flex items-end justify-between gap-2 pt-4 pb-2 border-b border-[#30363d]">
-                            <?php foreach ($activity_7d as $day): 
-                                $succ_h = $day['success'] > 0 ? max(12, round(($day['success'] / $max_activity_count) * 100)) : 4;
-                                $fail_h = $day['failed'] > 0 ? max(12, round(($day['failed'] / $max_activity_count) * 100)) : ($day['success'] === 0 ? 4 : 0);
-                            ?>
-                            <div class="flex-1 flex flex-col items-center h-full justify-end group relative">
-                                <!-- Tooltip on hover -->
-                                <div class="opacity-0 group-hover:opacity-100 transition pointer-events-none absolute -top-10 bg-[#0d1117] text-white text-[10px] font-mono py-1 px-2 rounded border border-[#30363d] shadow-lg z-20 whitespace-nowrap">
-                                    <?php echo $day['label']; ?>: <?php echo $day['success']; ?> ok, <?php echo $day['failed']; ?> fail
-                                </div>
-                                
-                                <!-- Dual Bar Stack -->
-                                <div class="w-full flex items-end justify-center gap-1 h-32">
-                                    <!-- Success Bar -->
-                                    <div class="w-3 rounded-t-xs bg-[#2f81f7] hover:bg-blue-400 transition-all" style="height: <?php echo $succ_h; ?>%;"></div>
-                                    <!-- Failed Bar -->
-                                    <div class="w-3 rounded-t-xs <?php echo $day['failed'] > 0 ? 'bg-[#f85149] hover:bg-red-400' : 'bg-transparent'; ?> transition-all" style="height: <?php echo $fail_h; ?>%;"></div>
-                                </div>
+                        <!-- Clean Bar Chart Visualization Framed with Inner Inset & Proper Spacing -->
+                        <div class="bg-[#0d1117] rounded-md p-4 border border-[#30363d]">
+                            <div class="h-40 flex items-end justify-between gap-2 px-1">
+                                <?php foreach ($activity_7d as $day): 
+                                    $succ_h = $day['success'] > 0 ? max(12, round(($day['success'] / $max_activity_count) * 100)) : 4;
+                                    $fail_h = $day['failed'] > 0 ? max(12, round(($day['failed'] / $max_activity_count) * 100)) : ($day['success'] === 0 ? 4 : 0);
+                                ?>
+                                <div class="flex-1 flex flex-col items-center h-full justify-end group relative">
+                                    <!-- Tooltip on hover -->
+                                    <div class="opacity-0 group-hover:opacity-100 transition pointer-events-none absolute -top-8 bg-[#161b22] text-white text-[10px] font-mono py-1 px-2 rounded border border-[#30363d] shadow-lg z-20 whitespace-nowrap">
+                                        <?php echo $day['label']; ?>: <?php echo $day['success']; ?> ok, <?php echo $day['failed']; ?> fail
+                                    </div>
+                                    
+                                    <!-- Dual Bar Stack -->
+                                    <div class="w-full flex items-end justify-center gap-1 h-28">
+                                        <!-- Success Bar -->
+                                        <div class="w-3 rounded-t-xs bg-[#2f81f7] hover:bg-blue-400 transition-all" style="height: <?php echo $succ_h; ?>%;" title="Successful: <?php echo $day['success']; ?>"></div>
+                                        <!-- Failed Bar -->
+                                        <div class="w-3 rounded-t-xs <?php echo $day['failed'] > 0 ? 'bg-[#f85149] hover:bg-red-400' : 'bg-transparent'; ?> transition-all" style="height: <?php echo $fail_h; ?>%;" title="Failed: <?php echo $day['failed']; ?>"></div>
+                                    </div>
 
-                                <!-- Day Label -->
-                                <span class="text-[11px] font-mono text-slate-400 mt-2 font-medium">
-                                    <?php echo $day['day']; ?>
-                                </span>
+                                    <!-- Day Label -->
+                                    <span class="text-[11px] font-mono text-slate-400 mt-2 font-medium">
+                                        <?php echo $day['day']; ?>
+                                    </span>
+                                </div>
+                                <?php endforeach; ?>
                             </div>
-                            <?php endforeach; ?>
                         </div>
                     </div>
 
                     <!-- Summary Footnote -->
-                    <div class="mt-4 pt-3 flex items-center justify-between text-xs text-slate-400 font-mono">
+                    <div class="mt-4 pt-3 border-t border-[#30363d] flex items-center justify-between text-xs text-slate-400 font-mono">
                         <span>7-Day Success Rate:</span>
                         <strong class="text-emerald-400">
                             <?php echo ($total_7d_success + $total_7d_failed) > 0 ? round(($total_7d_success / ($total_7d_success + $total_7d_failed)) * 100) : 100; ?>%
