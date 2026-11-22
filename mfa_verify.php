@@ -109,12 +109,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
     <link href="assets/css/all.min.css" rel="stylesheet">
     <link href="assets/css/cyber-theme.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <style>
+        /* Suppress floating particle canvas on the verification screen */
+        #cyberBackgroundCanvas {
+            display: none !important;
+        }
+    </style>
     <script src="assets/js/cyber-effects.js" defer></script>
 </head>
 <body class="bg-[#0d1117] min-h-screen flex flex-col items-center justify-center px-4 py-8 relative text-[#e6edf3] font-sans antialiased selection:bg-[#2f81f7] selection:text-white">
 
+    <!-- Full-Bleed Dimmed Background Layer (assets/IAM.jpg) -->
+    <div class="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat filter brightness-[0.35] contrast-[1.1] desaturate-[20%]" style="background-image: url('assets/IAM.jpg');"></div>
+    <div class="fixed inset-0 z-0 bg-[#0a0e16]/80 backdrop-blur-[2px]"></div>
+
     <!-- Top Telemetry Header -->
-    <header class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 h-16 bg-[#161b22] border-b border-[#30363d] backdrop-blur-md text-xs font-sans">
+    <header class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 h-16 bg-[#161b22]/90 border-b border-[#30363d] backdrop-blur-md text-xs font-sans">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-md bg-[#2f81f7]/15 border border-[#2f81f7]/30 flex items-center justify-center text-[#2f81f7] shrink-0">
                 <i class="fa-solid fa-shield-halved text-sm"></i>
@@ -126,13 +136,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="flex items-center gap-4">
-            <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0d1117] border border-[#30363d] text-xs font-mono text-slate-300">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span>Environment: Production</span>
-            </div>
-
             <!-- Theme Switcher -->
-            <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-md bg-[#0d1117] border border-[#30363d] text-slate-300 hover:text-white hover:bg-[#21262d] transition text-xs" title="Toggle Light / Dark mode">
+            <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-md bg-[#0d1117] border border-[#30363d] text-slate-300 hover:text-white hover:bg-[#21262d] transition text-xs shadow-xs" title="Toggle Light / Dark mode">
                 <i id="themeToggleIcon" class="fa-solid fa-sun text-amber-400"></i>
             </button>
 
@@ -145,7 +150,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Main Verification Card -->
     <div class="relative z-10 w-full max-w-md my-auto pt-16">
-        <div class="bg-[#161b22] rounded-xl p-8 sm:p-9 shadow-2xl border border-[#30363d]">
+        <div class="bg-[#161b22]/95 rounded-xl p-8 sm:p-9 shadow-2xl border border-[#30363d] backdrop-blur-md">
             
             <div class="text-center mb-6">
                 <div class="inline-flex items-center justify-center w-12 h-12 rounded-lg bg-[#2f81f7]/15 border border-[#2f81f7]/30 text-[#2f81f7] mb-3 shadow-xs">

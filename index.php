@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="color-scheme" content="dark light">
-    <title>Sign In &mdash; Enterprise IAM</title>
+    <title>Sign In &mdash; IAM Portal</title>
     <!-- Immediate Theme Application to Prevent Flash of Wrong Theme -->
     <script>
         (function() {
@@ -126,12 +126,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     </script>
     <link href="assets/css/all.min.css" rel="stylesheet">
     <link href="assets/css/cyber-theme.css?v=<?php echo time(); ?>" rel="stylesheet">
+    <style>
+        /* Suppress floating particle canvas on the login screen */
+        #cyberBackgroundCanvas {
+            display: none !important;
+        }
+    </style>
     <script src="assets/js/cyber-effects.js" defer></script>
 </head>
 <body class="bg-[#0d1117] min-h-screen flex flex-col items-center justify-center px-4 py-8 relative text-[#e6edf3] font-sans antialiased selection:bg-[#2f81f7] selection:text-white">
 
-    <!-- Top Telemetry Header -->
-    <header class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 h-16 bg-[#161b22] border-b border-[#30363d] backdrop-blur-md text-xs font-sans">
+    <!-- Full-Bleed Dimmed Background Layer (assets/IAM.jpg) -->
+    <div class="fixed inset-0 z-0 bg-cover bg-center bg-no-repeat filter brightness-[0.35] contrast-[1.1] desaturate-[20%]" style="background-image: url('assets/IAM.jpg');"></div>
+    <div class="fixed inset-0 z-0 bg-[#0a0e16]/80 backdrop-blur-[2px]"></div>
+
+    <!-- Top Minimal Navigation Header -->
+    <header class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 h-16 bg-[#161b22]/90 border-b border-[#30363d] backdrop-blur-md text-xs font-sans">
         <div class="flex items-center gap-3">
             <div class="w-8 h-8 rounded-md bg-[#2f81f7]/15 border border-[#2f81f7]/30 flex items-center justify-center text-[#2f81f7] shrink-0">
                 <i class="fa-solid fa-shield-halved text-sm"></i>
@@ -143,21 +153,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
 
         <div class="flex items-center gap-4">
-            <div class="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-[#0d1117] border border-[#30363d] text-xs font-mono text-slate-300">
-                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                <span>Environment: Production</span>
-            </div>
-
             <!-- Theme Switcher -->
-            <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-md bg-[#0d1117] border border-[#30363d] text-slate-300 hover:text-white hover:bg-[#21262d] transition text-xs" title="Toggle Light / Dark mode">
+            <button id="themeToggleBtn" onclick="toggleTheme()" class="p-2 rounded-md bg-[#0d1117] border border-[#30363d] text-slate-300 hover:text-white hover:bg-[#21262d] transition text-xs shadow-xs" title="Toggle Light / Dark mode">
                 <i id="themeToggleIcon" class="fa-solid fa-sun text-amber-400"></i>
             </button>
         </div>
     </header>
 
-    <!-- Main Sign-In Card -->
+    <!-- Main Centered Sign-In Card -->
     <div class="relative z-10 w-full max-w-md my-auto pt-16">
-        <div class="bg-[#161b22] rounded-xl p-8 sm:p-9 shadow-2xl border border-[#30363d]">
+        <div class="bg-[#161b22]/95 rounded-xl p-8 sm:p-9 shadow-2xl border border-[#30363d] backdrop-blur-md">
             
             <!-- Company / Tenant Header -->
             <div class="text-center mb-7">
@@ -165,15 +170,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <i class="fa-solid fa-shield-halved text-xl"></i>
                 </div>
                 <h1 class="text-xl font-bold text-white tracking-tight">
-                    Sign in to Enterprise IAM
+                    Sign in to IAM Portal
                 </h1>
                 <p class="text-xs text-slate-400 mt-1">
-                    Single Sign-On &bull; Role-Based Access Governance
+                    Enter your credentials to continue
                 </p>
-                <div class="mt-3 inline-flex items-center gap-2 px-3 py-0.5 rounded-full text-xs font-mono text-slate-300 bg-[#0d1117] border border-[#30363d]">
-                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                    <span>iam.secure-defense.internal</span>
-                </div>
             </div>
 
             <?php if ($error): ?>
@@ -189,28 +190,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <!-- Sign In Form -->
             <form method="POST" action="" class="space-y-4">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                        <span>Email Address</span>
-                        <span class="text-[10px] text-slate-500 font-mono">PRINCIPAL</span>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                        Email Address
                     </label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
                             <i class="fa-regular fa-envelope text-xs"></i>
                         </div>
-                        <input type="email" id="loginEmail" name="email" class="w-full pl-9 pr-3 py-2 rounded-md text-xs bg-[#0d1117] border border-[#30363d] text-white placeholder:text-slate-600 focus:outline-none focus:border-[#2f81f7] transition" placeholder="admin@organization.com" required autocomplete="username">
+                        <input type="email" id="loginEmail" name="email" class="w-full pl-10 pr-3.5 py-2.5 rounded-md text-xs bg-[#0d1117] border border-[#30363d] text-white placeholder:text-slate-500 focus:outline-none focus:border-[#2f81f7] transition" placeholder="admin@organization.com" required autocomplete="username">
                     </div>
                 </div>
                 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                        <span>Password</span>
-                        <span class="text-[10px] text-slate-500 font-mono">CREDENTIAL</span>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5">
+                        Password
                     </label>
                     <div class="relative">
-                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-500">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
                             <i class="fa-solid fa-lock text-xs"></i>
                         </div>
-                        <input type="password" id="loginPass" name="password" class="w-full pl-9 pr-3 py-2 rounded-md text-xs bg-[#0d1117] border border-[#30363d] text-white placeholder:text-slate-600 focus:outline-none focus:border-[#2f81f7] transition" placeholder="••••••••••••" required autocomplete="current-password">
+                        <input type="password" id="loginPass" name="password" class="w-full pl-10 pr-10 py-2.5 rounded-md text-xs bg-[#0d1117] border border-[#30363d] text-white placeholder:text-slate-500 focus:outline-none focus:border-[#2f81f7] transition" placeholder="Enter your password" required autocomplete="current-password">
+                        <button type="button" onclick="togglePasswordVisibility()" class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-slate-400 hover:text-white transition" title="Show or hide password">
+                            <i id="passwordToggleIcon" class="fa-regular fa-eye text-xs"></i>
+                        </button>
                     </div>
                 </div>
 
@@ -221,32 +223,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 </button>
             </form>
             
-            <!-- Quick Demo Credentials Selector for Presentation / Defense -->
+            <!-- Quick Test Account Helper -->
             <div class="mt-6 pt-4 border-t border-[#30363d]">
-                <p class="text-[11px] font-semibold text-slate-400 mb-2 flex items-center justify-between">
-                    <span>Demo Identity Profiles:</span>
-                    <span class="text-[10px] font-mono text-[#2f81f7]">PRE-LOADED</span>
-                </p>
-                <div class="grid grid-cols-3 gap-2 text-xs font-mono">
-                    <button type="button" onclick="setDemo('admin@organization.com', 'admin123')" class="p-2 rounded-md bg-[#0d1117] hover:bg-[#21262d] text-slate-300 border border-[#30363d] text-center transition truncate text-[11px]" title="Super Admin UID-1 (Tier 3)">
-                        <span class="text-purple-400 font-bold block">Tier 3</span>
-                        <span class="text-slate-400">Admin</span>
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-[11px] font-medium text-slate-400">Quick Fill Demo Accounts:</span>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <button type="button" onclick="setDemo('admin@organization.com', 'admin123')" class="px-2.5 py-1.5 rounded-md bg-[#0d1117]/80 hover:bg-[#21262d] text-slate-300 hover:text-white border border-[#30363d] text-center text-xs font-medium transition shadow-xs">
+                        Admin
                     </button>
-                    <button type="button" onclick="setDemo('auditor@organization.com', 'auditor123')" class="p-2 rounded-md bg-[#0d1117] hover:bg-[#21262d] text-slate-300 border border-[#30363d] text-center transition truncate text-[11px]" title="Auditor UID-2 (Tier 2)">
-                        <span class="text-sky-400 font-bold block">Tier 2</span>
-                        <span class="text-slate-400">Audit</span>
+                    <button type="button" onclick="setDemo('auditor@organization.com', 'auditor123')" class="px-2.5 py-1.5 rounded-md bg-[#0d1117]/80 hover:bg-[#21262d] text-slate-300 hover:text-white border border-[#30363d] text-center text-xs font-medium transition shadow-xs">
+                        Auditor
                     </button>
-                    <button type="button" onclick="setDemo('staff@organization.com', 'staff123')" class="p-2 rounded-md bg-[#0d1117] hover:bg-[#21262d] text-slate-300 border border-[#30363d] text-center transition truncate text-[11px]" title="Staff UID-3 (Tier 1)">
-                        <span class="text-amber-400 font-bold block">Tier 1</span>
-                        <span class="text-slate-400">Staff</span>
+                    <button type="button" onclick="setDemo('staff@organization.com', 'staff123')" class="px-2.5 py-1.5 rounded-md bg-[#0d1117]/80 hover:bg-[#21262d] text-slate-300 hover:text-white border border-[#30363d] text-center text-xs font-medium transition shadow-xs">
+                        Staff
                     </button>
                 </div>
             </div>
 
-            <!-- Footer Compliance Readout -->
-            <div class="mt-5 text-center text-[10px] text-slate-500 font-mono uppercase tracking-wider">
-                Enterprise Identity &amp; Access Governance &bull; RFC 6238 TOTP
-            </div>
         </div>
     </div>
 
@@ -254,6 +248,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         function setDemo(email, pass) {
             document.getElementById('loginEmail').value = email;
             document.getElementById('loginPass').value = pass;
+        }
+
+        function togglePasswordVisibility() {
+            const passInput = document.getElementById('loginPass');
+            const icon = document.getElementById('passwordToggleIcon');
+            if (!passInput || !icon) return;
+            if (passInput.type === 'password') {
+                passInput.type = 'text';
+                icon.className = 'fa-regular fa-eye-slash text-xs text-[#2f81f7]';
+            } else {
+                passInput.type = 'password';
+                icon.className = 'fa-regular fa-eye text-xs text-slate-400';
+            }
         }
     </script>
 
