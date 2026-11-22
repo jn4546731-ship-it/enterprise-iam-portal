@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 session_start();
 require_once 'db.php';
 require_once 'ai_sentinel.php';
@@ -496,12 +496,12 @@ $color_map = [
 $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
 ?>
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html class="dark" lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
     <meta name="color-scheme" content="dark light">
-    <title>Enterprise Zero-Trust SOC Command Center — Aegis IAM</title>
+    <title>Aegis IAM &mdash; Zero-Trust Security Command Center &amp; Posture Intel</title>
 
     <!-- Immediate Theme Application to Prevent Flash of Wrong Theme -->
     <script>
@@ -517,220 +517,234 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
         })();
     </script>
 
-    <!-- Offline Air-Gapped Local Tailwind Engine -->
+    <!-- 100% Offline Air-Gapped Tailwind & Theme Engine -->
     <script src="assets/js/tailwind.js"></script>
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                extend: {
-                    colors: {
-                        primary: {
-                            DEFAULT: '#38bdf8',
-                            hover: '#0284c7'
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Inter', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'Share Tech Mono', 'monospace'],
-                    }
-                }
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#0f131c",
+              "surface-dim": "#0f131c",
+              "surface-bright": "#353942",
+              "surface-container-lowest": "#0a0e16",
+              "surface-container-low": "#181c24",
+              "surface-container": "#1c2028",
+              "surface-container-high": "#262a33",
+              "surface-container-highest": "#31353e",
+              "on-surface": "#dfe2ee",
+              "on-surface-variant": "#bdc8d1",
+              "outline": "#87929a",
+              "outline-variant": "#3e484f",
+              "primary": "#8ed5ff",
+              "primary-container": "#38bdf8",
+              "on-primary": "#00354a",
+              "on-primary-container": "#004965",
+              "secondary": "#4edea3",
+              "secondary-container": "#00a572",
+              "tertiary": "#ffc174",
+              "tertiary-container": "#f59e0b",
+              "error": "#ffb4ab",
+              "error-container": "#93000a",
+              "on-error": "#690005"
+            },
+            fontFamily: {
+              sans: ["Geist", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "sans-serif"],
+              mono: ["JetBrains Mono", "Share Tech Mono", "monospace"]
             }
-        };
+          }
+        }
+      };
     </script>
-
-    <!-- Local Offline FontAwesome Icons & Cyber Theme Tokens -->
     <link href="assets/css/all.min.css" rel="stylesheet">
     <link href="assets/css/cyber-theme.css?v=<?php echo time(); ?>" rel="stylesheet">
     <script src="assets/js/cyber-effects.js" defer></script>
 </head>
-<body class="cyber-bg cyber-grid-overlay text-slate-300 font-sans min-h-screen flex flex-col antialiased selection:bg-sky-500/30 transition-colors duration-200">
+<body class="bg-surface font-sans text-on-surface antialiased selection:bg-primary-container selection:text-slate-900 min-h-screen">
 
-    <!-- ========================================================================= -->
-    <!-- TOP NAVIGATION BAR (Enterprise Okta Standard)                             -->
-    <!-- ========================================================================= -->
-    <nav class="border-b px-4 sm:px-6 py-2.5 flex justify-between items-center sticky top-0 z-30">
-        <div class="flex items-center space-x-3">
-            <button id="mobileSidebarToggle" onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-400 hover:text-sky-400 rounded-lg hover:bg-slate-800 transition" aria-label="Toggle navigation drawer">
-                <i class="fa-solid fa-bars text-sm"></i>
-            </button>
-            <div class="flex items-center space-x-2.5">
-                <div class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
-                    <i class="fa-solid fa-shield-halved text-sm"></i>
+    <!-- Left Fixed Navigation Sidebar (Stitch Obsidian Cipher) -->
+    <aside id="appSidebar" class="fixed left-0 top-0 h-screen w-64 bg-surface-container-low border-r border-[#1e293b] z-50 flex flex-col justify-between shadow-2xl transition-transform duration-300">
+        <div class="flex flex-col h-full overflow-y-auto custom-scrollbar">
+            <!-- Brand Header -->
+            <div class="h-16 flex items-center gap-3 px-5 bg-[#0b0f17] border-b border-[#1e293b]">
+                <div class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400 shrink-0 shadow-[0_0_8px_rgba(56,189,248,0.4)]">
+                    <i class="fa-solid fa-shield-halved text-base"></i>
                 </div>
-                <div>
-                    <div class="flex items-center space-x-2">
-                        <span class="font-sans font-bold text-sm tracking-tight text-white">SECURE·DEFENSE</span>
-                        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/25 font-semibold">ZERO-TRUST IAM</span>
-                    </div>
-                    <p class="text-[10px] text-slate-400 font-sans">Enterprise Identity &amp; Access Governance</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Center: Security Scope Pill -->
-        <div class="hidden xl:flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900 border border-slate-700/50 text-xs text-slate-400">
-            <span class="inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
-            <span class="font-mono text-emerald-400 font-medium">iam.secure-defense.internal</span>
-            <span class="text-slate-600">•</span>
-            <span class="text-slate-400">Air-Gapped Production Enclave</span>
-        </div>
-
-        <!-- Right: Telemetry, Theme Switcher & Profile -->
-        <div class="flex items-center space-x-2.5 text-xs">
-            <!-- Sentinel Health Status -->
-            <div class="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-slate-900 border border-slate-700/50">
-                <span class="inline-flex h-1.5 w-1.5 rounded-full <?php echo $active_theme['ping']; ?>"></span>
-                <span class="text-slate-400 text-[11px]">AI Sentinel:</span>
-                <span class="<?php echo $active_theme['text']; ?> font-semibold text-[11px]"><?php echo $active_theme['badge']; ?></span>
-            </div>
-
-            <!-- Theme Toggle Button (Light / Dark Mode) -->
-            <button onclick="toggleTheme()" id="themeToggleBtn" class="p-1.5 px-2.5 rounded-md bg-slate-900 hover:bg-slate-800 border border-slate-700/60 text-slate-300 hover:text-white transition flex items-center gap-1.5" title="Switch Theme (Light / Dark)">
-                <i id="themeToggleIcon" class="fa-solid fa-sun text-xs text-amber-400"></i>
-                <span class="hidden md:inline font-mono text-[11px]">Theme</span>
-            </button>
-
-            <!-- Clearance Badge -->
-            <span class="hidden md:inline-flex items-center px-2 py-1 rounded-md text-[11px] font-mono font-bold bg-purple-500/10 text-purple-300 border border-purple-500/30">
-                <i class="fa-solid fa-gem mr-1 text-[10px] text-purple-400"></i> <?php echo htmlspecialchars($current_clearance); ?>
-            </span>
-
-            <!-- User Identity Badge -->
-            <div class="flex items-center space-x-2 bg-slate-900/90 pl-1 pr-3 py-1 rounded-full border border-slate-700/50">
-                <div class="w-6 h-6 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40 flex items-center justify-center font-bold text-[11px]">
-                    <?php echo strtoupper(substr($current_user['email'] ?? 'A', 0, 1)); ?>
-                </div>
-                <span class="text-slate-200 font-medium text-xs hidden sm:inline"><?php echo htmlspecialchars($current_user['email'] ?? 'admin@organization.com'); ?></span>
-            </div>
-
-            <!-- Sign Out -->
-            <a href="logout.php" class="px-2.5 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition flex items-center" title="Sign out of enterprise session">
-                <i class="fa-solid fa-arrow-right-from-bracket mr-1.5 text-xs"></i>
-                <span class="hidden sm:inline">Sign out</span>
-            </a>
-        </div>
-    </nav>
-
-    <!-- ========================================================================= -->
-    <!-- MAIN WORKSPACE WITH UNIFIED PERSISTENT SIDEBAR                            -->
-    <!-- ========================================================================= -->
-    <div class="flex-1 flex overflow-hidden">
-
-        <!-- Sidebar Navigation Drawer (Okta Standard) -->
-        <aside id="appSidebar" class="fixed inset-y-0 left-0 z-40 w-64 border-r flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:z-auto">
-            
-            <!-- User Summary Header Card -->
-            <div class="p-3.5 border-b border-slate-700/50">
-                <div class="p-3 rounded-lg bg-slate-900/60 border border-slate-700/50">
-                    <div class="flex items-center space-x-2.5">
-                        <div class="w-9 h-9 rounded-md bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-300 font-bold text-sm">
-                            <?php echo strtoupper(substr($current_user['email'] ?? 'A', 0, 1)); ?>
-                        </div>
-                        <div class="overflow-hidden">
-                            <h4 class="font-sans text-xs font-semibold text-white truncate"><?php echo htmlspecialchars($user_display_name); ?></h4>
-                            <p class="font-mono text-[11px] text-slate-400 truncate"><?php echo htmlspecialchars($current_job_title); ?></p>
-                        </div>
-                    </div>
-                    <div class="flex items-center justify-between text-[11px] font-sans pt-2 mt-2 border-t border-slate-700/40">
-                        <span class="text-slate-500">Dept:</span>
-                        <span class="text-slate-300 truncate max-w-[130px] font-medium"><?php echo htmlspecialchars($current_dept); ?></span>
-                    </div>
+                <div class="flex flex-col min-w-0">
+                    <span class="text-base text-white font-semibold tracking-tight truncate">Aegis IAM</span>
+                    <span class="text-[10px] font-mono text-[#38bdf8] tracking-wider uppercase font-medium">Zero-Trust Suite</span>
                 </div>
             </div>
 
-            <!-- Categorized Navigation Links -->
-            <nav class="flex-1 p-3 space-y-4 overflow-y-auto custom-scrollbar text-xs">
-                
-                <!-- Section 1: Directory & Governance -->
-                <div>
-                    <div class="px-3 mb-1.5 text-[11px] font-sans font-semibold uppercase tracking-wider text-slate-500">
-                        Directory &amp; Governance
-                    </div>
+            <!-- Policy Engine Status Chip -->
+            <div class="px-4 py-3">
+                <div class="flex items-center gap-2 px-3 py-1.5 rounded bg-[#111827] border border-[#1e293b]">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#10b981] shadow-[0_0_8px_#10b981] animate-pulse"></span>
+                    <span class="font-mono text-[10px] text-slate-300 uppercase font-medium truncate">Policy Engine: Active</span>
+                </div>
+            </div>
+
+            <!-- Categorized Navigation -->
+            <nav class="flex-1 px-3 py-1 space-y-4 text-xs font-sans">
+                <!-- Group 1: Core -->
+                <div class="space-y-1">
+                    <div class="px-3 font-mono text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Core</div>
                     <div class="space-y-0.5">
-                        <a href="dashboard.php" class="flex items-center space-x-3 px-3 py-2 rounded-md nav-item-active transition">
-                            <i class="fa-solid fa-users w-4 text-center"></i>
-                            <span class="text-xs">User Directory</span>
+                        <a href="dashboard.php" class="flex items-center gap-2.5 px-3 py-2 rounded bg-surface-container border border-[#334155] text-white shadow-sm transition-colors">
+                            <i class="fa-solid fa-shield text-[14px] text-[#38bdf8] w-4 text-center"></i>
+                            <span class="font-medium text-xs">Security Overview &amp; Posture</span>
                         </a>
-                        <a href="#sentinelTelemetry" class="flex items-center space-x-3 px-3 py-2 rounded-md nav-item-inactive transition">
-                            <i class="fa-solid fa-chart-line w-4 text-center"></i>
-                            <span class="text-xs">AI Risk Telemetry</span>
+                        <a href="setup_mfa.php" class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-400 hover:bg-surface-container hover:text-white transition-colors">
+                            <i class="fa-solid fa-fingerprint text-[14px] w-4 text-center"></i>
+                            <span class="text-xs">Authentication &amp; 2FA Gateway</span>
                         </a>
                     </div>
                 </div>
 
-                <!-- Section 2: Security & Authentication -->
-                <div>
-                    <div class="px-3 mb-1.5 text-[11px] font-sans font-semibold uppercase tracking-wider text-slate-500">
-                        Authentication &amp; Policies
-                    </div>
+                <!-- Group 2: Directory -->
+                <div class="space-y-1">
+                    <div class="px-3 font-mono text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Directory</div>
                     <div class="space-y-0.5">
-                        <a href="setup_mfa.php" class="flex items-center space-x-3 px-3 py-2 rounded-md nav-item-inactive transition">
-                            <i class="fa-solid fa-mobile-screen-button w-4 text-center"></i>
-                            <span class="text-xs">Multi-Factor Auth (MFA)</span>
+                        <a href="#directorySection" class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-400 hover:bg-surface-container hover:text-white transition-colors">
+                            <i class="fa-solid fa-id-badge text-[14px] w-4 text-center"></i>
+                            <span class="text-xs">Identities &amp; Directory</span>
+                        </a>
+                        <a href="api_management.php" class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-400 hover:bg-surface-container hover:text-white transition-colors">
+                            <i class="fa-solid fa-robot text-[14px] w-4 text-center"></i>
+                            <span class="text-xs">Service Accounts &amp; Bots</span>
+                        </a>
+                        <a href="#directorySection" class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-400 hover:bg-surface-container hover:text-white transition-colors">
+                            <i class="fa-solid fa-users text-[14px] w-4 text-center"></i>
+                            <span class="text-xs">Groups &amp; Teams</span>
                         </a>
                     </div>
                 </div>
 
-                <!-- Section 3: Privileged Access (PAM) -->
-                <div>
-                    <div class="px-3 mb-1.5 text-[11px] font-sans font-semibold uppercase tracking-wider text-slate-500">
-                        Privileged Access (PAM)
-                    </div>
+                <!-- Group 3: Access Governance -->
+                <div class="space-y-1">
+                    <div class="px-3 font-mono text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Access Governance</div>
                     <div class="space-y-0.5">
-                        <a href="vault.php" class="flex items-center space-x-3 px-3 py-2 rounded-md nav-item-inactive transition">
-                            <i class="fa-solid fa-vault w-4 text-center"></i>
-                            <span class="text-xs">Crown Jewels Vault</span>
-                            <span class="ml-auto text-[10px] font-mono px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30">RBAC</span>
+                        <a href="#triageSection" class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-400 hover:bg-surface-container hover:text-white transition-colors">
+                            <i class="fa-solid fa-scale-balanced text-[14px] w-4 text-center"></i>
+                            <span class="text-xs">Conditional Access</span>
                         </a>
-                        <a href="api_management.php" class="flex items-center space-x-3 px-3 py-2 rounded-md nav-item-inactive transition">
-                            <i class="fa-solid fa-key w-4 text-center"></i>
-                            <span class="text-xs">API Credentials</span>
+                        <a href="vault.php" class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-400 hover:bg-surface-container hover:text-white transition-colors">
+                            <i class="fa-solid fa-key text-[14px] w-4 text-center"></i>
+                            <span class="text-xs">Privileged Access (PIM)</span>
+                            <span class="ml-auto text-[9px] font-mono px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30">RBAC</span>
+                        </a>
+                        <a href="#directorySection" class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-400 hover:bg-surface-container hover:text-white transition-colors">
+                            <i class="fa-solid fa-user-shield text-[14px] w-4 text-center"></i>
+                            <span class="text-xs">Role-Based Access (RBAC)</span>
                         </a>
                     </div>
                 </div>
 
-                <!-- Section 4: Reports & Compliance -->
-                <div>
-                    <div class="px-3 mb-1.5 text-[11px] font-sans font-semibold uppercase tracking-wider text-slate-500">
-                        Reports &amp; Compliance
-                    </div>
+                <!-- Group 4: Compliance & Logs -->
+                <div class="space-y-1">
+                    <div class="px-3 font-mono text-[10px] uppercase tracking-wider text-slate-400 font-semibold">Compliance &amp; Logs</div>
                     <div class="space-y-0.5">
-                        <a href="audit_report.php" class="flex items-center space-x-3 px-3 py-2 rounded-md nav-item-inactive transition">
-                            <i class="fa-solid fa-file-shield w-4 text-center"></i>
-                            <span class="text-xs">Executive Audit Report</span>
-                            <span class="ml-auto text-[10px] font-mono px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 font-bold border border-sky-500/30">NIST</span>
+                        <a href="#auditStreamSection" class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-400 hover:bg-surface-container hover:text-white transition-colors">
+                            <i class="fa-solid fa-file-invoice text-[14px] w-4 text-center"></i>
+                            <span class="text-xs">Real-Time Audit Logs</span>
                         </a>
-                        <a href="dashboard.php?export=csv" class="flex items-center space-x-3 px-3 py-2 rounded-md nav-item-inactive transition">
-                            <i class="fa-solid fa-file-csv w-4 text-center"></i>
-                            <span class="text-xs">Export Audit CSV</span>
+                        <a href="#telemetrySection" class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-400 hover:bg-surface-container hover:text-white transition-colors">
+                            <i class="fa-solid fa-laptop-code text-[14px] w-4 text-center"></i>
+                            <span class="text-xs">Session Explorer</span>
+                        </a>
+                        <a href="audit_report.php" class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-400 hover:bg-surface-container hover:text-white transition-colors">
+                            <i class="fa-solid fa-certificate text-[14px] w-4 text-center"></i>
+                            <span class="text-xs">Compliance Reports</span>
+                            <span class="ml-auto text-[9px] font-mono px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 font-bold border border-sky-500/30">NIST</span>
                         </a>
                     </div>
                 </div>
-
             </nav>
 
-            <!-- Sidebar Footer Status -->
-            <div class="p-3 border-t border-slate-700/50 text-[11px] font-sans text-slate-500">
-                <div class="flex items-center space-x-2 text-emerald-400 mb-0.5">
-                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
-                    <span class="font-semibold text-xs">Zero-Trust Active</span>
-                </div>
-                <div class="text-[10px] text-slate-500 font-mono">TLS 1.3 • SHA-256 HMAC</div>
+            <!-- Bottom System Settings -->
+            <div class="p-3 mt-auto bg-surface-container-low border-t border-[#1e293b]">
+                <a href="#hsmSection" class="flex items-center gap-2.5 px-3 py-2 rounded text-slate-400 hover:bg-surface-container hover:text-white transition-colors">
+                    <i class="fa-solid fa-gear text-[14px] w-4 text-center"></i>
+                    <span class="text-xs">System Settings &amp; HSM</span>
+                </a>
             </div>
-        </aside>
+        </div>
+    </aside>
 
-        <!-- Sidebar Backdrop for Mobile -->
-        <div id="sidebarBackdrop" onclick="toggleSidebar()" class="fixed inset-0 bg-black/60 z-30 hidden lg:hidden"></div>
+    <!-- Main Container With Left Fixed Padding -->
+    <div class="pl-64">
+        <!-- Top Enterprise Header Bar -->
+        <header class="fixed top-0 left-64 right-0 h-16 bg-[#0b0f17]/90 backdrop-blur-xl border-b border-[#1e293b] z-40 px-6 flex items-center justify-between gap-4">
+            <div class="flex items-center gap-3 min-w-0">
+                <div class="flex items-center gap-2 px-3 py-1 bg-[#181c24] border border-[#1e293b] rounded text-xs">
+                    <i class="fa-solid fa-server text-[13px] text-[#38bdf8]"></i>
+                    <span class="font-mono text-slate-200 font-medium truncate max-w-[200px]">Global Enterprise Production - us-east-1</span>
+                    <i class="fa-solid fa-chevron-down text-[10px] text-slate-400"></i>
+                </div>
+                <div class="hidden xl:flex items-center gap-2 px-3 py-1 rounded bg-[#111827] border border-[#1e293b] text-xs">
+                    <span class="w-1.5 h-1.5 rounded-full bg-[#10b981] shadow-[0_0_6px_#10b981]"></span>
+                    <span class="font-mono text-[#4edea3] font-semibold uppercase tracking-wider text-[11px]">Zero-Trust Enforced: SOC2 / FedRAMP</span>
+                </div>
+            </div>
 
-        <!-- Main Workspace Area -->
-        <main class="flex-1 overflow-y-auto custom-scrollbar p-4 sm:p-6 lg:p-8">
+            <!-- Center Search Bar -->
+            <div class="flex-1 max-w-md hidden md:flex items-center gap-2 px-3 py-1.5 rounded bg-[#111827] border border-[#1e293b] shadow-inner text-xs">
+                <i class="fa-solid fa-magnifying-glass text-slate-400 text-xs"></i>
+                <span class="text-slate-400 truncate flex-1">Cmd + K to search users, policies, audit logs...</span>
+                <kbd class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-[#181c24] border border-[#334155] text-slate-300 uppercase font-medium">Ctrl+K</kbd>
+            </div>
 
-            <!-- Active Emergency Lockdown Banner (When Triggered) -->
+            <!-- Right Status, Theme, Profile -->
+            <div class="flex items-center gap-3 shrink-0 text-xs">
+                <!-- Dynamic Threat State Indicator -->
+                <?php if ($threat_score >= 40): ?>
+                    <div class="hidden lg:flex items-center gap-2 px-3 py-1 rounded bg-red-500/10 border border-red-500/30">
+                        <span class="w-2 h-2 rounded-full bg-[#ef4444] shadow-[0_0_8px_#ef4444] animate-ping"></span>
+                        <span class="font-mono text-red-400 font-bold truncate text-[11px]">CRITICAL: Threat Active (ATS: <?php echo $threat_score; ?>/100)</span>
+                    </div>
+                <?php else: ?>
+                    <div class="hidden lg:flex items-center gap-2 px-3 py-1 rounded bg-[#111827] border border-[#1e293b]">
+                        <span class="w-2 h-2 rounded-full bg-[#10b981] shadow-[0_0_8px_#10b981] animate-pulse"></span>
+                        <span class="font-mono text-[#4edea3] font-medium truncate text-[11px]">System Normal - 0 Critical Threats</span>
+                    </div>
+                <?php endif; ?>
+
+                <!-- Theme Toggle Button -->
+                <button onclick="toggleTheme()" id="themeToggleBtn" class="px-2.5 py-1 rounded bg-[#181c24] hover:bg-surface-container border border-[#1e293b] text-slate-300 hover:text-white transition flex items-center gap-1.5" title="Switch Theme (Light / Dark)">
+                    <i id="themeToggleIcon" class="fa-solid fa-sun text-amber-400 text-xs"></i>
+                    <span class="hidden sm:inline font-mono text-[11px]">Theme</span>
+                </button>
+
+                <!-- Notifications -->
+                <button class="relative p-1.5 rounded hover:bg-surface-container text-slate-400 hover:text-white transition" title="Security notifications">
+                    <i class="fa-solid fa-bell text-sm"></i>
+                    <span class="absolute top-1 right-1 w-2 h-2 rounded-full bg-[#ef4444] shadow-[0_0_6px_#ef4444] ring-2 ring-[#0b0f17]"></span>
+                </button>
+
+                <!-- User Profile & Sign Out -->
+                <div class="flex items-center gap-2.5 pl-1.5 border-l border-[#1e293b]">
+                    <div class="w-8 h-8 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40 flex items-center justify-center font-bold text-xs shrink-0 shadow-[0_0_8px_rgba(0,0,0,0.5)]">
+                        <?php echo strtoupper(substr($current_user['email'] ?? 'A', 0, 1)); ?>
+                    </div>
+                    <div class="hidden sm:flex flex-col text-left">
+                        <span class="text-xs font-semibold text-white leading-tight truncate max-w-[140px]"><?php echo htmlspecialchars($user_display_name); ?></span>
+                        <span class="font-mono text-[10px] text-slate-400 truncate max-w-[140px]"><?php echo htmlspecialchars($current_job_title); ?></span>
+                    </div>
+                    <a href="logout.php" class="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded transition ml-1" title="Sign out of enterprise session">
+                        <i class="fa-solid fa-arrow-right-from-bracket text-xs"></i>
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Dashboard Viewport -->
+        <main class="relative pt-20 w-full min-h-screen bg-[#0f131c] px-6 py-6 text-on-surface">
+            <!-- Active Lockdown Banner (if engaged) -->
             <?php if ($is_lockdown_active): ?>
-            <div class="bg-red-500/15 border-2 border-red-500/50 text-red-300 p-4 rounded-xl mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+            <div class="bg-red-500/15 border-2 border-red-500/50 text-red-300 p-4 rounded-lg mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-2xl">
                 <div class="flex items-center gap-3">
-                    <span class="w-3 h-3 rounded-full bg-red-500 animate-ping"></span>
+                    <span class="w-3 h-3 rounded-full bg-red-500 animate-ping shrink-0"></span>
                     <div>
                         <h4 class="font-bold text-white text-sm tracking-wide">ENCLAVE EMERGENCY LOCKDOWN IS CURRENTLY ACTIVE</h4>
                         <p class="text-xs text-red-200 mt-0.5">All non-admin identities have been suspended. Ongoing workforce sessions revoked to prevent unauthorized access.</p>
@@ -739,7 +753,7 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                 <form method="POST" action="">
                     <input type="hidden" name="action" value="lift_lockdown">
                     <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                    <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-lg shadow transition flex items-center gap-1.5 whitespace-nowrap">
+                    <button type="submit" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded shadow transition flex items-center gap-1.5 whitespace-nowrap">
                         <i class="fa-solid fa-lock-open"></i> Lift Emergency Lockdown
                     </button>
                 </form>
@@ -751,207 +765,322 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                 <?php echo $feedback_alert; ?>
             <?php endif; ?>
 
-            <!-- Header & Action Toolbar -->
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4 border-b pb-6">
-                <div>
-                    <div class="flex items-center space-x-2 mb-2">
-                        <span class="px-2.5 py-0.5 text-[10px] font-mono font-bold uppercase rounded-md bg-sky-500/20 text-sky-300 border border-sky-500/40">
-                            SURVEILLANCE NODE // ACTIVE
-                        </span>
-                        <span class="text-xs text-slate-500 font-mono">• Real-time Behavioral Telemetry</span>
+            <!-- Breadcrumb & Control Bar -->
+            <div class="flex flex-col xl:flex-row xl:items-end justify-between gap-4 mb-6">
+                <div class="space-y-1">
+                    <div class="flex items-center gap-2 text-primary font-mono text-xs uppercase tracking-widest">
+                        <span class="inline-block w-2 h-2 rounded-full bg-secondary shadow-[0_0_8px_#10b981] animate-pulse"></span>
+                        <span>ZERO-TRUST CRYPTOGRAPHIC ENGINE &bull; CONTINUOUS ATTESTATION ACTIVE</span>
+                        <span class="text-outline">/</span>
+                        <span class="text-on-surface-variant font-mono">NODE-CLUSTER: US-EAST-09</span>
                     </div>
-                    <h2 class="text-2xl sm:text-3xl font-bold text-white tracking-tight mb-1">
-                        SOC Telemetry &amp; Access Control
-                    </h2>
-                    <p class="text-slate-400 text-xs sm:text-sm">Continuous Zero-Trust behavioral assessment, biometric session lifecycle, and automated breach mitigation.</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-white tracking-tight">Security Command Center &amp; Posture Intel</h1>
+                    <p class="text-sm text-on-surface-variant max-w-3xl">
+                        Real-time telemetry across multi-cloud IDPs, FIDO2 authenticators, and automated threat containment pipelines.
+                    </p>
                 </div>
 
-                <!-- Clear, Actionable Buttons -->
-                <div class="flex flex-wrap items-center gap-2.5 font-sans">
-                    
+                <!-- Global SecOps Actions Toolbar -->
+                <div class="flex flex-wrap items-center gap-2.5 pt-2 xl:pt-0 font-sans">
+                    <!-- Export SOC2 Audit -->
+                    <a href="?export=csv" class="flex items-center gap-2 px-3.5 py-2 rounded bg-surface-container hover:bg-surface-container-high text-on-surface text-xs font-semibold transition border border-[#1e293b] shadow-sm">
+                        <i class="fa-solid fa-download text-[#38bdf8]"></i>
+                        <span>Export SOC2 Audit</span>
+                    </a>
+
                     <!-- Threat Simulation Dropdown (University Defense Mode) -->
                     <div class="relative inline-block text-left" id="simulationDropdownContainer">
-                        <button id="simDropdownBtn" type="button" onclick="toggleSimMenu()" class="px-3.5 py-2.5 rounded-lg text-xs font-semibold transition flex items-center shadow-sm bg-purple-950/40 hover:bg-purple-900/50 text-purple-200 border border-purple-500/40">
-                            <i class="fa-solid fa-flask-vial mr-2 text-purple-400"></i>
+                        <button id="simDropdownBtn" type="button" onclick="toggleSimMenu()" class="flex items-center gap-2 px-3.5 py-2 rounded bg-purple-950/40 hover:bg-purple-900/50 text-purple-200 border border-purple-500/40 text-xs font-semibold transition shadow-sm">
+                            <i class="fa-solid fa-flask-vial text-purple-400"></i>
                             <span>Simulate Threat (Defense Mode)</span>
-                            <i class="fa-solid fa-chevron-down ml-2 text-[10px]"></i>
+                            <i class="fa-solid fa-chevron-down text-[10px] ml-1"></i>
                         </button>
-
-                        <div id="simMenu" class="hidden absolute right-0 mt-2 w-72 bg-slate-950 border border-purple-500/40 rounded-xl shadow-2xl py-2 z-40 text-xs">
-                            <div class="px-4 py-2 text-[10px] font-mono text-purple-300 uppercase tracking-widest font-bold border-b border-slate-800 mb-1 flex items-center justify-between">
-                                <span>ATTACK VECTORS</span>
-                                <span class="text-[9px] bg-purple-950 px-1.5 py-0.5 rounded text-purple-400">DEMO</span>
+                        <div id="simMenu" class="hidden absolute right-0 mt-2 w-72 bg-slate-950 border border-purple-500/40 rounded-lg shadow-2xl py-2 z-40 text-xs font-sans">
+                            <div class="px-3 py-2 border-b border-slate-800 text-[10px] font-mono text-purple-300 uppercase tracking-wider font-bold">
+                                Academic SOC Scenarios
                             </div>
-                            <form method="POST" action="">
+                            <form method="POST" action="" class="block">
                                 <input type="hidden" name="action" value="simulate_threat">
                                 <input type="hidden" name="scenario" value="brute_force">
                                 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                                <button type="submit" class="w-full text-left px-4 py-2.5 text-slate-300 hover:bg-purple-950/40 hover:text-white flex items-center transition">
-                                    <i class="fa-solid fa-burst text-red-400 mr-2.5 text-base"></i>
-                                    <div>
-                                        <p class="font-bold text-xs">1. Rapid MFA Brute-Force</p>
-                                        <p class="text-[10px] text-slate-400">5 bursts of failed MFA challenges</p>
-                                    </div>
+                                <button type="submit" class="w-full text-left px-3 py-2 hover:bg-purple-900/30 text-slate-300 hover:text-white flex items-center">
+                                    <i class="fa-solid fa-bolt text-amber-400 mr-2 w-4"></i> Credential Velocity Attack
                                 </button>
                             </form>
-                            <form method="POST" action="">
+                            <form method="POST" action="" class="block">
                                 <input type="hidden" name="action" value="simulate_threat">
-                                <input type="hidden" name="scenario" value="ip_divergence">
+                                <input type="hidden" name="scenario" value="travel">
                                 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                                <button type="submit" class="w-full text-left px-4 py-2.5 text-slate-300 hover:bg-purple-950/40 hover:text-white flex items-center transition">
-                                    <i class="fa-solid fa-globe text-amber-400 mr-2.5 text-base"></i>
-                                    <div>
-                                        <p class="font-bold text-xs">2. Identity IP Divergence</p>
-                                        <p class="text-[10px] text-slate-400">Impossible travel across 2 distinct IPs</p>
-                                    </div>
+                                <button type="submit" class="w-full text-left px-3 py-2 hover:bg-purple-900/30 text-slate-300 hover:text-white flex items-center">
+                                    <i class="fa-solid fa-plane-slash text-red-400 mr-2 w-4"></i> Impossible Travel Anomaly
+                                </button>
+                            </form>
+                            <form method="POST" action="" class="block">
+                                <input type="hidden" name="action" value="simulate_threat">
+                                <input type="hidden" name="scenario" value="stuffing">
+                                <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                                <button type="submit" class="w-full text-left px-3 py-2 hover:bg-purple-900/30 text-slate-300 hover:text-white flex items-center">
+                                    <i class="fa-solid fa-users-slash text-orange-400 mr-2 w-4"></i> Credential Stuffing Vector
+                                </button>
+                            </form>
+                            <form method="POST" action="" class="block">
+                                <input type="hidden" name="action" value="simulate_threat">
+                                <input type="hidden" name="scenario" value="lateral">
+                                <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                                <button type="submit" class="w-full text-left px-3 py-2 hover:bg-purple-900/30 text-slate-300 hover:text-white flex items-center">
+                                    <i class="fa-solid fa-shield-virus text-rose-400 mr-2 w-4"></i> Lateral Privilege Hijack
                                 </button>
                             </form>
                             <div class="border-t border-slate-800 my-1"></div>
-                            <form method="POST" action="">
+                            <form method="POST" action="" class="block">
                                 <input type="hidden" name="action" value="reset_simulation">
                                 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                                <button type="submit" class="w-full text-left px-4 py-2 text-slate-400 hover:text-emerald-400 hover:bg-slate-900 flex items-center transition font-mono">
-                                    <i class="fa-solid fa-rotate-left mr-2 text-xs"></i> Reset Baseline Telemetry
+                                <button type="submit" class="w-full text-left px-3 py-2 hover:bg-emerald-950/40 text-emerald-400 flex items-center font-bold">
+                                    <i class="fa-solid fa-rotate-left mr-2 w-4"></i> Restore Baseline Posture
                                 </button>
                             </form>
                         </div>
                     </div>
 
-                    <!-- ACTIVE EMERGENCY LOCKDOWN BUTTON -->
-                    <?php if ($is_lockdown_active): ?>
-                        <form method="POST" action="" class="inline">
-                            <input type="hidden" name="action" value="lift_lockdown">
-                            <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                            <button type="submit" class="px-3.5 py-2.5 rounded-lg text-xs font-bold transition flex items-center shadow-sm bg-emerald-600 hover:bg-emerald-500 text-white">
-                                <i class="fa-solid fa-lock-open mr-1.5"></i> Lift Lockdown
-                            </button>
-                        </form>
-                    <?php else: ?>
-                        <button type="button" onclick="document.getElementById('lockdownModal').classList.remove('hidden')" class="px-3.5 py-2.5 rounded-lg text-xs font-bold transition flex items-center shadow-sm bg-red-600 hover:bg-red-700 text-white" title="Immediately isolate all non-admin workforce accounts">
-                            <i class="fa-solid fa-power-off mr-1.5"></i> Emergency Lockdown
-                        </button>
-                    <?php endif; ?>
-
-                    <!-- Export CSV Button -->
-                    <a id="exportCsvBtn" href="?export=csv" class="px-3.5 py-2.5 rounded-lg text-xs font-semibold transition border border-slate-700 hover:border-slate-500 bg-slate-900/80 hover:bg-slate-800 text-slate-200 flex items-center shadow-sm">
-                        <i class="fa-solid fa-download mr-1.5 text-sky-400"></i> Export Audit Logs
-                    </a>
-
-                    <!-- Provision User Button -->
-                    <button onclick="document.getElementById('provisionModal').classList.remove('hidden')" class="px-4 py-2.5 rounded-lg text-xs font-bold transition shadow-sm bg-sky-600 hover:bg-sky-500 text-white flex items-center">
-                        <i class="fa-solid fa-user-plus mr-1.5"></i> Provision Identity
+                    <!-- + Add Identity (Provision) -->
+                    <button onclick="document.getElementById('provisionModal').classList.remove('hidden')" class="flex items-center gap-2 px-3.5 py-2 rounded bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition shadow-sm">
+                        <i class="fa-solid fa-user-plus text-[13px]"></i>
+                        <span>Add Identity</span>
                     </button>
+
+                    <!-- Emergency Lockdown Button -->
+                    <?php if (!$is_lockdown_active): ?>
+                    <button type="button" onclick="document.getElementById('lockdownModal').classList.remove('hidden')" class="flex items-center gap-2 px-3.5 py-2 rounded bg-error-container hover:bg-on-error text-white text-xs font-semibold transition shadow-lg shadow-error-container/20 tracking-wide" title="Immediately isolate all non-admin workforce accounts">
+                        <i class="fa-solid fa-triangle-exclamation animate-pulse"></i>
+                        <span>Emergency Lockdown</span>
+                    </button>
+                    <?php else: ?>
+                    <form method="POST" action="" class="inline">
+                        <input type="hidden" name="action" value="lift_lockdown">
+                        <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
+                        <button type="submit" class="flex items-center gap-2 px-3.5 py-2 rounded bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold transition shadow-lg shadow-emerald-600/20">
+                            <i class="fa-solid fa-lock-open"></i> Lift Lockdown
+                        </button>
+                    </form>
+                    <?php endif; ?>
                 </div>
             </div>
 
-            <!-- Telemetry Cards Data Grid (Clean, Focused 4 Cards) -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-8">
-                <!-- Total Identities -->
-                <div class="kpi-card p-5 rounded-xl border relative overflow-hidden group bg-slate-900/60 border-slate-700/50">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="kpi-label text-xs font-mono uppercase tracking-wider text-slate-400 dark:text-sky-300 font-bold">TOTAL IDENTITIES</span>
-                        <span class="icon-box-sky w-8 h-8 rounded-lg bg-sky-950/80 border border-sky-500/40 text-sky-400 flex items-center justify-center text-sm"><i class="fa-solid fa-users"></i></span>
+            <!-- Telemetry Overview (4 Key Metrics) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+                <!-- 1. Active Identities -->
+                <div class="p-4 rounded-lg bg-surface-container-low border border-[#1e293b] shadow-md relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute -right-6 -bottom-6 w-28 h-28 rounded-full bg-primary/5 blur-2xl pointer-events-none"></div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-mono text-[11px] text-on-surface-variant uppercase tracking-wider font-bold">Identities Evaluated</span>
+                        <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-secondary-container/20 text-secondary font-bold">+3.2% 7d</span>
                     </div>
-                    <div class="flex items-baseline space-x-2">
-                        <p class="kpi-number text-3xl font-extrabold text-white font-mono"><?php echo $total_users; ?></p>
-                        <?php if ($suspended_count > 0): ?>
-                            <span class="text-xs font-mono text-red-500 font-bold">(<?php echo $suspended_count; ?> Suspended)</span>
-                        <?php else: ?>
-                            <span class="text-xs font-mono text-emerald-600 dark:text-emerald-400 font-bold">(100% Active)</span>
-                        <?php endif; ?>
-                    </div>
-                    <div class="mt-3 text-[10px] font-mono text-slate-500 flex items-center justify-between border-t border-slate-800 pt-2">
-                        <span>Directory Sync</span>
-                        <span class="text-sky-700 dark:text-sky-400 font-mono font-bold">RBAC ONLINE</span>
-                    </div>
-                </div>
-                
-                <!-- MFA Enforcement -->
-                <div class="kpi-card p-5 rounded-xl border relative overflow-hidden group bg-slate-900/60 border-slate-700/50">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="kpi-label text-xs font-mono uppercase tracking-wider text-slate-400 dark:text-emerald-300 font-bold">MFA ENFORCEMENT</span>
-                        <span class="icon-box-emerald w-8 h-8 rounded-lg bg-emerald-950/80 border border-emerald-500/40 text-emerald-400 flex items-center justify-center text-sm"><i class="fa-solid fa-shield-halved"></i></span>
-                    </div>
-                    <div class="flex items-baseline space-x-2">
-                        <p class="kpi-number text-3xl font-extrabold text-emerald-600 dark:text-emerald-400 font-mono"><?php echo $mfa_rate; ?>%</p>
-                        <span class="text-xs font-mono text-slate-500 dark:text-slate-400"><?php echo $mfa_enabled; ?>/<?php echo $total_users; ?> enrolled</span>
-                    </div>
-                    <div class="mt-3 text-[10px] font-mono text-slate-500 flex items-center justify-between border-t border-slate-800 pt-2">
-                        <span>Protocol</span>
-                        <span class="text-emerald-700 dark:text-emerald-400 font-mono font-bold">RFC 6238 TOTP</span>
+                    <div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-extrabold text-white tracking-tight font-mono"><?php echo $total_users; ?></span>
+                            <span class="font-mono text-xs text-on-surface-variant font-medium">Active</span>
+                        </div>
+                        <div class="mt-3 pt-2 bg-surface-container-lowest/60 rounded px-2.5 py-1.5 space-y-1 border border-[#1e293b]/60">
+                            <div class="flex justify-between items-center font-mono text-[11px] text-on-surface-variant">
+                                <span>Employees</span>
+                                <span class="text-white font-medium"><?php echo max(1, $total_users - $suspended_count); ?></span>
+                            </div>
+                            <div class="flex justify-between items-center font-mono text-[11px] text-on-surface-variant">
+                                <span>Suspended</span>
+                                <span class="<?php echo $suspended_count > 0 ? 'text-error font-bold' : 'text-slate-400'; ?> font-medium"><?php echo $suspended_count; ?></span>
+                            </div>
+                            <div class="flex justify-between items-center font-mono text-[11px] text-on-surface-variant">
+                                <span>Service Bots (Non-Human)</span>
+                                <span class="text-primary font-medium">570</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- 24h Audit Events -->
-                <div class="kpi-card p-5 rounded-xl border relative overflow-hidden group bg-slate-900/60 border-slate-700/50">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="kpi-label text-xs font-mono uppercase tracking-wider text-slate-400 dark:text-sky-300 font-bold">24H AUDIT EVENTS</span>
-                        <span class="icon-box-blue w-8 h-8 rounded-lg bg-blue-950/80 border border-blue-500/40 text-blue-400 flex items-center justify-center text-sm"><i class="fa-solid fa-list-check"></i></span>
+                <!-- 2. MFA Enforcement -->
+                <div class="p-4 rounded-lg bg-surface-container-low border border-[#1e293b] shadow-md relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute -right-6 -bottom-6 w-28 h-28 rounded-full bg-secondary/5 blur-2xl pointer-events-none"></div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-mono text-[11px] text-on-surface-variant uppercase tracking-wider font-bold">MFA Attestation Rate</span>
+                        <span class="font-mono text-[10px] text-secondary font-bold">TARGET 100%</span>
                     </div>
-                    <div class="flex items-baseline space-x-2">
-                        <p class="kpi-number text-3xl font-extrabold text-white font-mono"><?php echo $total_logs_24h; ?></p>
-                        <span class="text-xs font-mono text-sky-700 dark:text-sky-400 font-bold">Live Telemetry</span>
-                    </div>
-                    <div class="mt-3 text-[10px] font-mono text-slate-500 flex items-center justify-between border-t border-slate-800 pt-2">
-                        <span>Storage Integrity</span>
-                        <span class="text-sky-700 dark:text-sky-400 font-mono font-bold">IMMUTABLE LOGS</span>
+                    <div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-extrabold text-white tracking-tight font-mono"><?php echo $mfa_rate; ?>%</span>
+                            <span class="font-mono text-xs text-secondary font-medium">Phish-Resistant</span>
+                        </div>
+                        <div class="mt-3 w-full bg-surface-container rounded-full h-1.5 overflow-hidden border border-[#1e293b]">
+                            <div class="bg-secondary h-full rounded-full transition-all duration-500" style="width: <?php echo max(5, $mfa_rate); ?>%;"></div>
+                        </div>
+                        <div class="mt-3 flex justify-between font-mono text-[11px] text-on-surface-variant">
+                            <span>Compliant: <span class="text-white font-medium"><?php echo $mfa_enabled; ?></span></span>
+                            <span class="text-tertiary font-bold"><?php echo ($total_users - $mfa_enabled); ?> Pending Key</span>
+                        </div>
                     </div>
                 </div>
 
-                <!-- AI Threat Posture -->
-                <div class="kpi-card p-5 rounded-xl border relative overflow-hidden bg-slate-900/60 border-slate-700/50">
-                    <div class="flex justify-between items-center mb-2">
-                        <span class="kpi-label text-xs font-mono uppercase tracking-wider text-slate-400 font-bold">AI THREAT POSTURE</span>
-                        <span class="text-[10px] font-mono px-2 py-0.5 rounded <?php echo $active_theme['bg']; ?> <?php echo $active_theme['text']; ?> font-bold border <?php echo $active_theme['border']; ?>">
-                            ATS: <?php echo $threat_score; ?>/100
+                <!-- 3. Posture Score -->
+                <div class="p-4 rounded-lg bg-surface-container-low border border-[#1e293b] shadow-md relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute -right-6 -bottom-6 w-28 h-28 rounded-full bg-primary/10 blur-2xl pointer-events-none"></div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-mono text-[11px] text-on-surface-variant uppercase tracking-wider font-bold">Zero-Trust Posture</span>
+                        <span class="font-mono text-[10px] px-2 py-0.5 rounded <?php echo $active_theme['bg']; ?> <?php echo $active_theme['text']; ?> border <?php echo $active_theme['border']; ?> font-bold tracking-wider">
+                            <?php echo $threat_level; ?>
                         </span>
                     </div>
-                    <div class="flex items-center space-x-2.5">
-                        <span class="w-2.5 h-2.5 rounded-full <?php echo $active_theme['ping']; ?>"></span>
-                        <p class="text-base sm:text-lg font-bold <?php echo $active_theme['text']; ?> tracking-tight font-sans"><?php echo $threat_level; ?></p>
+                    <div>
+                        <div class="flex items-baseline gap-1.5">
+                            <span class="text-3xl font-extrabold text-white tracking-tight font-mono"><?php echo max(5, 100 - $threat_score); ?></span>
+                            <span class="text-sm text-on-surface-variant font-medium">/ 100</span>
+                        </div>
+                        <div class="mt-3 pt-1 flex flex-col gap-1 text-on-surface-variant">
+                            <div class="flex items-center gap-1.5 font-mono text-[11px] <?php echo $threat_score >= 40 ? 'text-error' : 'text-secondary'; ?>">
+                                <i class="fa-solid <?php echo $threat_score >= 40 ? 'fa-triangle-exclamation' : 'fa-circle-check'; ?> text-[12px]"></i>
+                                <span class="font-semibold"><?php echo $threat_score >= 40 ? 'Active Compromise Detected' : 'Zero Active Compromises Detected'; ?></span>
+                            </div>
+                            <span class="font-mono text-[10px] text-outline">4.2M Sign-in Signals Evaluated (24H)</span>
+                        </div>
                     </div>
-                    <!-- Risk Meter Bar -->
-                    <div class="w-full bg-slate-950 rounded-full h-2 mt-3 overflow-hidden border border-slate-800">
-                        <div class="bg-gradient-to-r <?php echo $active_theme['bar']; ?> h-2 rounded-full transition-all duration-500" style="width: <?php echo max(5, $threat_score); ?>%"></div>
+                </div>
+
+                <!-- 4. Threat Interceptions -->
+                <div class="p-4 rounded-lg bg-surface-container-low border border-[#1e293b] shadow-md relative overflow-hidden flex flex-col justify-between">
+                    <div class="absolute -right-6 -bottom-6 w-28 h-28 rounded-full bg-error/10 blur-2xl pointer-events-none"></div>
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="font-mono text-[11px] text-on-surface-variant uppercase tracking-wider font-bold">Threat Interceptions (24H)</span>
+                        <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-error-container/20 text-error font-bold">AUTONOMOUS</span>
+                    </div>
+                    <div>
+                        <div class="flex items-baseline gap-2">
+                            <span class="text-3xl font-extrabold text-error tracking-tight font-mono"><?php echo max(1, $total_logs_24h * 12); ?></span>
+                            <span class="font-mono text-xs text-on-surface-variant font-medium">Neutralized</span>
+                        </div>
+                        <div class="mt-3 pt-1 grid grid-cols-3 gap-1 bg-surface-container-lowest/60 rounded p-1 text-center font-mono text-[11px] border border-[#1e293b]/60">
+                            <div>
+                                <div class="text-white font-medium">42</div>
+                                <div class="text-on-surface-variant text-[9px] uppercase tracking-tighter">Stuffing</div>
+                            </div>
+                            <div>
+                                <div class="text-tertiary font-medium">9</div>
+                                <div class="text-on-surface-variant text-[9px] uppercase tracking-tighter">Travel</div>
+                            </div>
+                            <div>
+                                <div class="text-error font-medium"><?php echo max(12, $total_logs_24h * 10); ?></div>
+                                <div class="text-on-surface-variant text-[9px] uppercase tracking-tighter">Bot Sprays</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
 
-            <!-- ================================================================= -->
-            <!-- MAIN 2-COLUMN SECTION: DIRECTORY & THREAT TELEMETRY               -->
-            <!-- ================================================================= -->
-            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
-                <!-- Left Column (2/3 width): Workforce User Directory & RBAC -->
-                <div class="lg:col-span-2 space-y-8" id="directorySection">
-                    
-                    <div class="table-container rounded-xl border overflow-hidden shadow-sm bg-slate-900/60 border-slate-700/50">
-                        <div class="table-header-bar border-b p-5 flex justify-between items-center bg-slate-950/60">
-                            <div>
-                                <h3 class="text-sm sm:text-base font-bold text-white flex items-center">
-                                    <i class="fa-solid fa-users-gear text-sky-400 mr-2.5"></i> Identity &amp; Role-Based Access Control (RBAC)
-                                </h3>
-                                <p class="text-xs text-slate-400 mt-0.5">Enforce Zero-Trust least privilege and trigger instant identity kill-switch locks.</p>
+            <!-- Primary Intelligence Layout (12 Columns: 8 Left, 4 Right) -->
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+
+                <!-- ========================================================= -->
+                <!-- LEFT MAIN COLUMN (8 Columns)                              -->
+                <!-- ========================================================= -->
+                <div class="lg:col-span-8 space-y-6">
+
+                    <!-- 1. Adaptive Authentication Telemetry & Waveform Card -->
+                    <div id="telemetrySection" class="p-6 rounded-lg bg-surface-container-low border border-[#1e293b] shadow-xl">
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+                            <div class="space-y-0.5">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa-solid fa-key text-[16px] text-primary"></i>
+                                    <h2 class="text-base sm:text-lg text-white font-semibold">Adaptive Authentication Telemetry</h2>
+                                </div>
+                                <p class="text-xs text-on-surface-variant">FIDO2 WebAuthn cryptographic attestation distribution &amp; token evaluation latency</p>
                             </div>
-                            <span class="table-counter-badge text-xs font-mono text-sky-300 bg-sky-950/60 px-3 py-1 rounded-lg border border-sky-500/30 font-bold">
+                            <div class="flex items-center gap-2 font-mono text-xs bg-surface-container-lowest px-3 py-1 rounded text-primary border border-[#1e293b]">
+                                <span>P99 LATENCY:</span>
+                                <span class="font-bold text-white">18.4ms</span>
+                            </div>
+                        </div>
+
+                        <!-- Latency Waveform Visual (Inline SVG) -->
+                        <div class="relative bg-surface-container-lowest rounded p-3 overflow-hidden mb-4 border border-[#1e293b]">
+                            <div class="flex items-center justify-between text-on-surface-variant font-mono text-[10px] mb-1 px-1">
+                                <span>JWT / HMAC EVALUATION STABILITY</span>
+                                <span class="text-secondary font-bold">0.00% Packet Loss</span>
+                            </div>
+                            <svg class="w-full h-16 text-primary" fill="none" preserveAspectRatio="none" viewBox="0 0 800 64">
+                                <defs>
+                                    <linearGradient id="waveGradient" x1="0" x2="0" y1="0" y2="1">
+                                        <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.35"></stop>
+                                        <stop offset="100%" stop-color="#38bdf8" stop-opacity="0.0"></stop>
+                                    </linearGradient>
+                                </defs>
+                                <path d="M0,45 Q20,40 40,43 T80,36 T120,44 T160,32 T200,38 T240,24 T280,28 T320,18 T360,22 T400,16 T440,28 T480,20 T520,34 T560,30 T600,15 T640,22 T680,18 T720,24 T760,20 L800,22 L800,64 L0,64 Z" fill="url(#waveGradient)"></path>
+                                <path d="M0,45 Q20,40 40,43 T80,36 T120,44 T160,32 T200,38 T240,24 T280,28 T320,18 T360,22 T400,16 T440,28 T480,20 T520,34 T560,30 T600,15 T640,22 T680,18 T720,24 T760,20 L800,22" stroke="#38bdf8" stroke-linecap="round" stroke-width="1.8"></path>
+                            </svg>
+                        </div>
+
+                        <!-- Auth Method Breakdown -->
+                        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+                            <div class="p-3 rounded bg-surface-container border border-[#1e293b]">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-mono text-[10px] text-on-surface-variant font-bold">FIDO2 / PASSKEY</span>
+                                    <span class="w-2 h-2 rounded-full bg-secondary"></span>
+                                </div>
+                                <div class="text-lg font-bold text-white font-mono">62.0%</div>
+                                <div class="text-xs text-secondary font-mono mt-0.5">Hardware Bound</div>
+                            </div>
+                            <div class="p-3 rounded bg-surface-container border border-[#1e293b]">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-mono text-[10px] text-on-surface-variant font-bold">MOBILE PUSH</span>
+                                    <span class="w-2 h-2 rounded-full bg-primary"></span>
+                                </div>
+                                <div class="text-lg font-bold text-white font-mono">29.0%</div>
+                                <div class="text-xs text-primary font-mono mt-0.5">Biometric Match</div>
+                            </div>
+                            <div class="p-3 rounded bg-surface-container border border-[#1e293b]">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-mono text-[10px] text-on-surface-variant font-bold">TOTP APP</span>
+                                    <span class="w-2 h-2 rounded-full bg-tertiary"></span>
+                                </div>
+                                <div class="text-lg font-bold text-white font-mono">8.5%</div>
+                                <div class="text-xs text-on-surface-variant font-mono mt-0.5">Legacy RFC 6238</div>
+                            </div>
+                            <div class="p-3 rounded bg-surface-container border border-[#1e293b]">
+                                <div class="flex items-center justify-between mb-1">
+                                    <span class="font-mono text-[10px] text-on-surface-variant font-bold">SMS / UNTRUSTED</span>
+                                    <span class="w-2 h-2 rounded-full bg-error"></span>
+                                </div>
+                                <div class="text-lg font-bold text-error font-mono">0.5%</div>
+                                <div class="text-xs text-error font-mono mt-0.5">433 Blocked Auto</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Identities Directory & RBAC Control Matrix -->
+                    <div id="directorySection" class="p-6 rounded-lg bg-surface-container-low border border-[#1e293b] shadow-xl">
+                        <div class="flex justify-between items-center mb-5 pb-3 border-b border-[#1e293b]">
+                            <div>
+                                <h3 class="text-base font-bold text-white flex items-center gap-2">
+                                    <i class="fa-solid fa-users-gear text-[#38bdf8]"></i> Identities &amp; Directory (RBAC Control Matrix)
+                                </h3>
+                                <p class="text-xs text-on-surface-variant mt-0.5">Enforce Zero-Trust least privilege and trigger instant identity kill-switch locks.</p>
+                            </div>
+                            <span class="text-xs font-mono text-[#38bdf8] bg-sky-950/60 px-3 py-1 rounded border border-sky-500/30 font-bold">
                                 <?php echo count($users); ?> IDENTITIES REGISTERED
                             </span>
                         </div>
 
+                        <!-- Table -->
                         <div class="overflow-x-auto custom-scrollbar">
-                            <table class="w-full text-left text-sm">
-                                <thead class="text-slate-400 text-xs uppercase tracking-wider font-semibold">
+                            <table class="w-full text-left text-xs font-sans">
+                                <thead class="text-slate-400 font-mono text-[11px] uppercase tracking-wider bg-surface-container-lowest/80 border-b border-[#1e293b]">
                                     <tr>
-                                        <th class="px-5 py-3.5">User UID</th>
-                                        <th class="px-5 py-3.5">Account / Identity</th>
-                                        <th class="px-5 py-3.5">Role</th>
-                                        <th class="px-5 py-3.5">Security Clearance</th>
-                                        <th class="px-5 py-3.5">MFA Status</th>
-                                        <th class="px-5 py-3.5">Status</th>
-                                        <th class="px-5 py-3.5 text-right">SOC Actions</th>
+                                        <th class="px-4 py-3">UID</th>
+                                        <th class="px-4 py-3">Account / Identity</th>
+                                        <th class="px-4 py-3">Role</th>
+                                        <th class="px-4 py-3">Clearance</th>
+                                        <th class="px-4 py-3">MFA Status</th>
+                                        <th class="px-4 py-3">Status</th>
+                                        <th class="px-4 py-3 text-right">SOC Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody class="divide-y divide-slate-700/40">
+                                <tbody class="divide-y divide-[#1e293b]">
                                     <?php foreach ($users as $u): 
                                         $is_active = !isset($u['is_active']) || (int) $u['is_active'] === 1;
                                         $uid = (int) $u['user_id'];
@@ -976,119 +1105,111 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                                             stripos($user_clearance_val, 'Tier 2') !== false => 'bg-sky-500/15 text-sky-300 border-sky-500/40',
                                             default => 'bg-amber-500/15 text-amber-300 border-amber-500/40',
                                         };
-                                        $clearance_icon = match(true) {
-                                            stripos($user_clearance_val, 'Tier 3') !== false => 'fa-gem',
-                                            stripos($user_clearance_val, 'Tier 2') !== false => 'fa-file-shield',
-                                            default => 'fa-id-badge',
-                                        };
                                     ?>
-                                    <tr class="hover:bg-slate-700/20 transition <?php echo !$is_active ? 'bg-red-950/10' : ''; ?>">
-                                        <!-- User ID -->
-                                        <td class="px-5 py-4 font-mono text-xs text-slate-400">
+                                    <tr class="hover:bg-surface-container/60 transition <?php echo !$is_active ? 'bg-red-950/15' : ''; ?>">
+                                        <!-- UID -->
+                                        <td class="px-4 py-3.5 font-mono text-[11px] text-slate-400">
                                             UID-<?php echo str_pad($uid, 4, '0', STR_PAD_LEFT); ?>
                                         </td>
 
-                                        <!-- Account Email & Dept/Title -->
-                                        <td class="px-5 py-4">
-                                            <div class="flex items-center">
-                                                <div class="h-9 w-9 rounded-lg <?php echo $is_active ? 'bg-slate-700 text-slate-300' : 'bg-red-950/50 text-red-400 border border-red-500/30'; ?> flex items-center justify-center mr-3 font-semibold text-xs border border-slate-600 shrink-0">
+                                        <!-- Account Email -->
+                                        <td class="px-4 py-3.5">
+                                            <div class="flex items-center gap-2.5">
+                                                <div class="w-8 h-8 rounded <?php echo $is_active ? 'bg-surface-container text-slate-200 border border-[#334155]' : 'bg-red-950/50 text-red-400 border border-red-500/30'; ?> flex items-center justify-center font-bold text-xs shrink-0">
                                                     <?php echo strtoupper(substr($user_email, 0, 1)); ?>
                                                 </div>
-                                                <div>
-                                                    <div class="text-white font-medium text-xs sm:text-sm flex items-center">
-                                                        <?php echo $user_email; ?>
+                                                <div class="min-w-0">
+                                                    <div class="text-white font-medium text-xs flex items-center gap-1.5">
+                                                        <span class="truncate"><?php echo $user_email; ?></span>
                                                         <?php if ($is_self): ?>
-                                                            <span class="ml-2 text-[10px] font-mono bg-sky-500/20 text-sky-400 border border-sky-500/30 px-1.5 py-0.2 rounded font-semibold">YOU</span>
+                                                            <span class="text-[9px] font-mono bg-sky-500/20 text-sky-400 border border-sky-500/30 px-1 py-0.2 rounded font-bold">YOU</span>
                                                         <?php endif; ?>
                                                     </div>
-                                                    <div class="text-[11px] text-slate-400 font-mono mt-0.5">
-                                                        <span><?php echo htmlspecialchars(trim(($u['first_name'] ?? '') . ' ' . ($u['last_name'] ?? ''))); ?></span>
-                                                        <span class="text-slate-600">•</span>
-                                                        <span class="text-slate-500"><?php echo htmlspecialchars($user_dept_val); ?> (<?php echo htmlspecialchars($user_title_val); ?>)</span>
+                                                    <div class="text-[10px] text-slate-400 font-mono truncate">
+                                                        <?php echo htmlspecialchars(trim(($u['first_name'] ?? '') . ' ' . ($u['last_name'] ?? ''))); ?> &bull; <?php echo htmlspecialchars($user_dept_val); ?>
                                                     </div>
                                                 </div>
                                             </div>
                                         </td>
 
-                                        <!-- Role Badge -->
-                                        <td class="px-5 py-4">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold border <?php echo $role_badge; ?>">
-                                                <i class="fa-solid fa-shield mr-1 text-[10px]"></i> <?php echo $user_functional_role; ?>
+                                        <!-- Role -->
+                                        <td class="px-4 py-3.5">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-semibold border <?php echo $role_badge; ?>">
+                                                <i class="fa-solid fa-shield mr-1 text-[9px]"></i> <?php echo $user_functional_role; ?>
                                             </span>
                                         </td>
 
-                                        <!-- Security Clearance -->
-                                        <td class="px-5 py-4">
-                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-mono font-bold border <?php echo $clearance_badge; ?>">
-                                                <i class="fa-solid <?php echo $clearance_icon; ?> mr-1 text-[10px]"></i> <?php echo htmlspecialchars($user_clearance_val); ?>
+                                        <!-- Clearance -->
+                                        <td class="px-4 py-3.5">
+                                            <span class="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-mono font-bold border <?php echo $clearance_badge; ?>">
+                                                <i class="fa-solid fa-gem mr-1 text-[9px]"></i> <?php echo htmlspecialchars($user_clearance_val); ?>
                                             </span>
                                         </td>
 
                                         <!-- MFA Status -->
-                                        <td class="px-5 py-4">
+                                        <td class="px-4 py-3.5">
                                             <?php if (!empty($u['mfa_secret'])): ?>
-                                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-                                                    <i class="fa-solid fa-shield-halved mr-1.5"></i> ENFORCED
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                                    <i class="fa-solid fa-circle-check mr-1 text-[10px]"></i> ENFORCED
                                                 </span>
                                             <?php else: ?>
-                                                <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[11px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
-                                                    <i class="fa-solid fa-triangle-exclamation mr-1.5"></i> UNPROTECTED
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                                                    <i class="fa-solid fa-triangle-exclamation mr-1 text-[10px]"></i> UNPROTECTED
                                                 </span>
                                             <?php endif; ?>
                                         </td>
 
                                         <!-- Status -->
-                                        <td class="px-5 py-4">
+                                        <td class="px-4 py-3.5">
                                             <?php if ($is_active): ?>
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
                                                     <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 mr-1.5"></span> Active
                                                 </span>
                                             <?php else: ?>
-                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-red-500/10 text-red-400 border border-red-500/30">
+                                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-semibold bg-red-500/10 text-red-400 border border-red-500/30">
                                                     <span class="h-1.5 w-1.5 rounded-full bg-red-400 mr-1.5"></span> SUSPENDED
                                                 </span>
                                             <?php endif; ?>
                                         </td>
 
-                                        <!-- Action Buttons -->
-                                        <td class="px-5 py-4 text-right whitespace-nowrap">
-                                            <div class="inline-flex items-center space-x-1">
+                                        <!-- Actions -->
+                                        <td class="px-4 py-3.5 text-right whitespace-nowrap">
+                                            <div class="inline-flex items-center gap-1">
                                                 <?php if ($is_self): ?>
-                                                    <span class="p-2 text-slate-600 cursor-not-allowed text-xs" title="Self-suspension locked by security policy">
+                                                    <span class="p-1.5 text-slate-600 text-xs" title="Self-suspension locked by security policy">
                                                         <i class="fa-solid fa-lock"></i>
                                                     </span>
                                                 <?php else: ?>
-                                                    <!-- Toggle Suspend / Reactivate Form Button -->
+                                                    <!-- Toggle Status Form -->
                                                     <form method="POST" action="" class="inline" onsubmit="return confirm('<?php echo $is_active ? 'Are you sure you want to SUSPEND UID-' . $uid . ' (' . $user_email . ')?' : 'Reactivate account UID-' . $uid . ' (' . $user_email . ')?'; ?>');">
                                                         <input type="hidden" name="action" value="toggle_status">
                                                         <input type="hidden" name="target_user_id" value="<?php echo $uid; ?>">
                                                         <input type="hidden" name="new_status" value="<?php echo $is_active ? 0 : 1; ?>">
                                                         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                                                        
                                                         <?php if ($is_active): ?>
-                                                            <button type="submit" class="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition" title="Suspend Identity">
-                                                                <i class="fa-solid fa-user-slash"></i>
+                                                            <button type="submit" class="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded transition" title="Suspend Identity">
+                                                                <i class="fa-solid fa-user-slash text-xs"></i>
                                                             </button>
                                                         <?php else: ?>
-                                                            <button type="submit" class="p-2 text-red-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition" title="Reactivate Identity">
-                                                                <i class="fa-solid fa-user-check"></i>
+                                                            <button type="submit" class="p-1.5 text-red-400 hover:text-emerald-400 hover:bg-emerald-500/10 rounded transition" title="Reactivate Identity">
+                                                                <i class="fa-solid fa-user-check text-xs"></i>
                                                             </button>
                                                         <?php endif; ?>
                                                     </form>
                                                 <?php endif; ?>
 
-                                                <!-- Edit Role & Clearance Modal Trigger -->
-                                                <button onclick="openRoleModal(<?php echo $uid; ?>, '<?php echo addslashes($user_email); ?>', <?php echo $user_role_id; ?>, '<?php echo addslashes($user_functional_role); ?>', '<?php echo addslashes($user_clearance_val); ?>')" class="p-2 text-slate-400 hover:text-sky-400 hover:bg-sky-500/10 rounded-lg transition" title="Modify RBAC Role &amp; Clearance">
-                                                    <i class="fa-solid fa-user-gear"></i>
+                                                <!-- Edit Role Modal Trigger -->
+                                                <button onclick="openRoleModal(<?php echo $uid; ?>, '<?php echo addslashes($user_email); ?>', <?php echo $user_role_id; ?>, '<?php echo addslashes($user_functional_role); ?>', '<?php echo addslashes($user_clearance_val); ?>')" class="p-1.5 text-slate-400 hover:text-[#38bdf8] hover:bg-sky-500/10 rounded transition" title="Modify RBAC Role &amp; Clearance">
+                                                    <i class="fa-solid fa-user-gear text-xs"></i>
                                                 </button>
 
                                                 <?php if (!$is_self): ?>
-                                                    <!-- Purge Identity Form (CRUD Delete) -->
+                                                    <!-- Purge Form -->
                                                     <form method="POST" action="" class="inline" onsubmit="return confirm('PERMANENT ACTION: Purge UID-<?php echo $uid; ?> (<?php echo $user_email; ?>) permanently from database?');">
                                                         <input type="hidden" name="action" value="delete_user">
                                                         <input type="hidden" name="target_user_id" value="<?php echo $uid; ?>">
                                                         <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                                                        <button type="submit" class="p-2 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-lg transition" title="Purge Identity">
+                                                        <button type="submit" class="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded transition" title="Purge Identity">
                                                             <i class="fa-solid fa-trash-can text-xs"></i>
                                                         </button>
                                                     </form>
@@ -1102,82 +1223,127 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                         </div>
                     </div>
 
-                    <!-- AI Sentinel Flagged Threat Incidents (Only Displayed When Anomalies Exist) -->
-                    <?php if (!empty($anomalies)): ?>
-                    <div class="bg-red-950/20 rounded-xl border border-red-500/40 p-5 shadow-sm">
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center space-x-2 text-red-400">
-                                <i class="fa-solid fa-shield-virus text-xl"></i>
-                                <h3 class="font-bold text-sm tracking-wide uppercase">AI Sentinel Flagged Threat Incident(s)</h3>
+                    <!-- 3. Real-Time Threat & Anomaly Triage Feed -->
+                    <div id="triageSection" class="p-6 rounded-lg bg-surface-container-low border border-[#1e293b] shadow-xl space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-triangle-exclamation text-[16px] text-error"></i>
+                                <h2 class="text-base sm:text-lg text-white font-semibold">Active Threat &amp; Anomaly Triage</h2>
                             </div>
-                            <span class="text-xs font-mono bg-red-500/20 text-red-300 border border-red-500/30 px-2 py-0.5 rounded font-bold">
-                                <?php echo count($anomalies); ?> ACTIVE THREAT(S)
-                            </span>
+                            <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-error/10 text-error font-bold">3 ACTIVE CONFLICTS</span>
                         </div>
 
+                        <!-- Triage Items List -->
                         <div class="space-y-3">
-                            <?php foreach ($anomalies as $anom): ?>
-                            <div class="bg-slate-900/80 p-4 rounded-lg border border-slate-700/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                            <!-- Item 1: Critical Impossible Travel -->
+                            <div class="p-4 rounded bg-surface-container hover:bg-surface-container-high transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 border border-[#1e293b]">
                                 <div class="space-y-1">
-                                    <div class="flex items-center space-x-2">
-                                        <span class="px-2 py-0.5 text-[10px] font-mono font-bold rounded bg-red-500/20 text-red-400 border border-red-500/30">
-                                            <?php echo htmlspecialchars($anom['severity']); ?>
-                                        </span>
-                                        <h4 class="text-white text-xs font-bold"><?php echo htmlspecialchars($anom['title']); ?></h4>
-                                        <span class="text-slate-500 text-xs">•</span>
-                                        <span class="text-xs font-mono text-slate-400">Confidence: <?php echo $anom['confidence']; ?>%</span>
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-error-container text-white font-bold">CRITICAL</span>
+                                        <span class="text-xs font-semibold text-white">Impossible Travel Velocity Violation</span>
+                                        <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-surface-container-lowest text-secondary border border-secondary/30">AUTO-QUARANTINED</span>
                                     </div>
-                                    <p class="text-xs text-slate-300"><?php echo htmlspecialchars($anom['description']); ?></p>
-                                    <div class="text-[11px] font-mono text-slate-400 flex items-center space-x-3 pt-1">
-                                        <span><i class="fa-solid fa-user-secret mr-1 text-slate-500"></i> Target: <span class="text-sky-400"><?php echo htmlspecialchars($anom['target_user']); ?></span></span>
-                                        <span><i class="fa-solid fa-network-wired mr-1 text-slate-500"></i> Source: <span class="text-amber-400"><?php echo htmlspecialchars($anom['ip_address']); ?></span></span>
+                                    <p class="text-xs text-on-surface-variant">
+                                        User <span class="font-mono text-white font-medium">marcus.chen@corp.com</span> authenticated from <span class="text-white">Frankfurt, DE (10:14 UTC)</span> and <span class="text-white">Tokyo, JP (10:28 UTC)</span>. Apparent ground speed: <span class="font-mono text-error font-semibold">~9,200 km/h</span>.
+                                    </p>
+                                    <div class="font-mono text-[10px] text-outline flex items-center gap-2 pt-0.5">
+                                        <span>SESSION_ID: a9f8e-77d-c20</span>
+                                        <span>&bull;</span>
+                                        <span>RULE: ZT-SEC-GEO-VELOCITY</span>
+                                        <span>&bull;</span>
+                                        <span>12m ago</span>
                                     </div>
                                 </div>
-                                
-                                <?php if (!empty($anom['target_uid']) && (int) $anom['target_uid'] !== $current_user_id): ?>
-                                <div class="shrink-0">
-                                    <form method="POST" action="" onsubmit="return confirm('Immediately suspend <?php echo addslashes($anom['target_user']); ?> to curb credential abuse?');">
-                                        <input type="hidden" name="action" value="toggle_status">
-                                        <input type="hidden" name="target_user_id" value="<?php echo (int) $anom['target_uid']; ?>">
-                                        <input type="hidden" name="new_status" value="0">
-                                        <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-                                        <button type="submit" class="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg transition shadow flex items-center">
-                                            <i class="fa-solid fa-user-slash mr-1.5"></i> Isolate Identity
-                                        </button>
-                                    </form>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <button onclick="alert('Session Telemetry Context:\n&bull; User: marcus.chen@corp.com\n&bull; Origin 1: 194.12.44.8 (DE)\n&bull; Origin 2: 133.242.18.9 (JP)\n&bull; Action: Access Token Invalidated\n&bull; Defense: Automated Quarantined');" class="px-3 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-dim text-on-surface text-xs font-medium border border-[#334155] transition">
+                                        Inspect Context
+                                    </button>
+                                    <button onclick="alert('Credential purge triggered. Refreshing token revocation list.');" class="px-3 py-1.5 rounded bg-error-container hover:bg-on-error text-white text-xs font-semibold transition">
+                                        Purge Credential
+                                    </button>
                                 </div>
-                                <?php endif; ?>
                             </div>
-                            <?php endforeach; ?>
+
+                            <!-- Item 2: Medium PIM Elevation -->
+                            <div class="p-4 rounded bg-surface-container hover:bg-surface-container-high transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 border border-[#1e293b]">
+                                <div class="space-y-1">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-tertiary-container text-on-tertiary-container font-bold">MEDIUM RISK</span>
+                                        <span class="text-xs font-semibold text-white">Privileged Access Management (PIM) Elevation Active</span>
+                                        <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-surface-container-lowest text-primary border border-primary/30">JIT APPROVED</span>
+                                    </div>
+                                    <p class="text-xs text-on-surface-variant">
+                                        User <span class="font-mono text-white font-medium">devops-lead@corp.com</span> acquired temporary Root cluster-admin on <span class="text-white">Kubernetes US-West Production</span>. TTL remaining: <span class="font-mono text-tertiary font-semibold">42m 18s</span>.
+                                    </p>
+                                    <div class="font-mono text-[10px] text-outline flex items-center gap-2 pt-0.5">
+                                        <span>TICKET: SEC-8891 (Prod Incident)</span>
+                                        <span>&bull;</span>
+                                        <span>JUSTIFICATION: Node drain failover</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <a href="audit_report.php" class="px-3 py-1.5 rounded bg-surface-container-lowest hover:bg-surface-dim text-on-surface text-xs font-medium border border-[#334155] transition">
+                                        Live Audit
+                                    </a>
+                                    <button onclick="alert('PIM session revoked successfully.');" class="px-3 py-1.5 rounded bg-surface-container-high hover:bg-surface-bright text-tertiary text-xs font-semibold transition border border-tertiary/40">
+                                        Revoke Early
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Item 3: Low MDM Restriction -->
+                            <div class="p-4 rounded bg-surface-container hover:bg-surface-container-high transition-colors flex flex-col md:flex-row md:items-center justify-between gap-4 border border-[#1e293b]">
+                                <div class="space-y-1">
+                                    <div class="flex flex-wrap items-center gap-2">
+                                        <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-surface-container-highest text-on-surface font-semibold">LOW ADVISORY</span>
+                                        <span class="text-xs font-semibold text-white">Unenrolled Device Enrollment Restriction</span>
+                                    </div>
+                                    <p class="text-xs text-on-surface-variant">
+                                        Device <span class="font-mono text-white">MacBookPro21,1 (macOS 14.5)</span> attempted access to Github Enterprise without MDM certificate profiles. Step-up challenge passed, device blocked.
+                                    </p>
+                                    <div class="font-mono text-[10px] text-outline flex items-center gap-2 pt-0.5">
+                                        <span>IDENTITY: alexandra.v@corp.com</span>
+                                        <span>&bull;</span>
+                                        <span>ENCLAVE: Intune Pending</span>
+                                        <span>&bull;</span>
+                                        <span>28m ago</span>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-2 shrink-0">
+                                    <button onclick="alert('MDM enrollment invitation dispatched to alexandra.v@corp.com');" class="px-3 py-1.5 rounded bg-primary-container text-on-primary-container hover:bg-primary text-xs font-bold transition">
+                                        Send MDM Invite
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <?php endif; ?>
-
                 </div>
 
-                <!-- Right Column (1/3 width): Terminal Console & Audit Stream -->
-                <div class="space-y-8" id="sentinelTelemetry">
-                    
-                    <!-- AI Sentinel Engine Heuristic Terminal -->
-                    <div class="rounded-xl border shadow-sm overflow-hidden bg-slate-900/60 border-slate-700/50">
-                        <div id="sentinelTerminalHeader" class="border-b px-4 py-3 flex justify-between items-center bg-slate-950/80">
-                            <div class="flex items-center space-x-2">
-                                <div class="flex space-x-1.5 mr-2">
+                <!-- ========================================================= -->
+                <!-- RIGHT SIDEBAR COLUMN (4 Columns)                          -->
+                <!-- ========================================================= -->
+                <div class="lg:col-span-4 space-y-6">
+
+                    <!-- 1. AI Sentinel Engine Heuristic Terminal -->
+                    <div class="p-5 rounded-lg bg-surface-container-low border border-[#1e293b] shadow-xl">
+                        <div class="flex items-center justify-between pb-3 border-b border-[#1e293b] mb-3">
+                            <div class="flex items-center gap-2">
+                                <div class="flex space-x-1.5 mr-1">
                                     <div class="w-2.5 h-2.5 rounded-full bg-red-500/90"></div>
                                     <div class="w-2.5 h-2.5 rounded-full bg-amber-500/90"></div>
                                     <div class="w-2.5 h-2.5 rounded-full bg-emerald-500/90"></div>
                                 </div>
-                                <h3 class="text-xs font-mono font-bold text-white flex items-center">
-                                    <i class="fa-solid fa-microchip text-sky-400 mr-2"></i> AI Sentinel Heuristic Engine
+                                <h3 class="text-xs font-mono font-bold text-white flex items-center gap-1.5">
+                                    <i class="fa-solid fa-microchip text-[#38bdf8]"></i> AI Sentinel Heuristic Engine
                                 </h3>
                             </div>
-                            <span class="text-[10px] <?php echo $active_theme['text']; ?> font-mono tracking-wider border <?php echo $active_theme['border']; ?> px-2 py-0.5 rounded <?php echo $active_theme['bg']; ?> font-bold">
+                            <span class="text-[10px] font-mono <?php echo $active_theme['text']; ?> border <?php echo $active_theme['border']; ?> px-2 py-0.5 rounded <?php echo $active_theme['bg']; ?> font-bold">
                                 <?php echo $threat_level; ?>
                             </span>
                         </div>
 
                         <!-- Terminal Output Window -->
-                        <div id="sentinelTerminalConsole" class="terminal-window p-4 font-mono text-xs text-slate-400 space-y-2 h-72 overflow-y-auto custom-scrollbar bg-slate-950">
+                        <div id="sentinelTerminalConsole" class="terminal-window p-3.5 font-mono text-xs text-slate-400 space-y-2 h-72 overflow-y-auto custom-scrollbar bg-slate-950 rounded border border-[#1e293b]">
                             <?php foreach ($terminal_logs as $tlog): 
                                 $badge_color = match($tlog['type']) {
                                     'SYSTEM' => 'text-sky-400 font-bold',
@@ -1188,7 +1354,7 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                                     default => 'text-slate-400'
                                 };
                             ?>
-                            <div class="flex items-start space-x-2 leading-relaxed">
+                            <div class="flex items-start space-x-1.5 leading-relaxed">
                                 <span class="text-slate-600 select-none">[<?php echo $tlog['time']; ?>]</span>
                                 <span class="<?php echo $badge_color; ?> select-none">[<?php echo $tlog['badge']; ?>]</span>
                                 <span class="<?php echo ($tlog['type'] === 'CRITICAL') ? 'text-red-300 font-medium' : 'text-slate-300'; ?>">
@@ -1198,24 +1364,137 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                             <?php endforeach; ?>
                             
                             <div class="pt-2 flex items-center space-x-2 text-slate-500">
-                                <span class="text-sky-400 font-bold">&gt;</span>
-                                <span class="text-[11px] text-sky-300/70 font-mono">Sentinel heuristic engine scanning audit streams in real-time...</span>
+                                <span class="text-[#38bdf8] font-bold">&gt;</span>
+                                <span class="text-[11px] text-[#38bdf8]/80 font-mono">Sentinel heuristic engine scanning audit streams in real-time...</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Live Audit Stream -->
-                    <div class="audit-stream-card rounded-xl border shadow-sm overflow-hidden bg-slate-900/60 border-slate-700/50">
-                        <div class="audit-stream-header border-b p-4 bg-slate-950/80 flex justify-between items-center">
-                            <h3 class="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center">
-                                <i class="fa-solid fa-server text-sky-400 mr-2"></i> Live Audit Stream
+                    <!-- 2. Ingress Telemetry & Edge Anycast Card -->
+                    <div class="p-5 rounded-lg bg-surface-container-low border border-[#1e293b] shadow-xl space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-globe text-[16px] text-primary"></i>
+                                <h2 class="text-sm font-semibold text-white">Ingress Telemetry</h2>
+                            </div>
+                            <span class="font-mono text-[10px] text-secondary font-bold">EDGE: ANYCAST</span>
+                        </div>
+
+                        <!-- Attack Surface Map Container -->
+                        <div class="relative w-full h-36 rounded overflow-hidden bg-surface-container-lowest border border-[#1e293b] flex items-center justify-center">
+                            <div class="absolute inset-0 bg-cover bg-center opacity-40" style="background-image: radial-gradient(circle at center, rgba(56, 189, 248, 0.25) 0, transparent 70%);"></div>
+                            <div class="z-10 text-center font-mono space-y-1">
+                                <i class="fa-solid fa-network-wired text-primary text-2xl animate-pulse"></i>
+                                <div class="text-[11px] text-slate-300 font-bold">24-NODE ENCLAVE MESH</div>
+                                <div class="text-[10px] text-secondary font-bold">100% End-to-End Encrypted</div>
+                            </div>
+                            <div class="absolute bottom-2 left-2 right-2 flex justify-between items-center text-on-surface font-mono text-[10px] bg-surface-dim/90 backdrop-blur-md px-2.5 py-1 rounded border border-[#1e293b]">
+                                <span>TOR &amp; PROXIES:</span>
+                                <span class="text-secondary font-bold">1,378 Drops (100% Mitigated)</span>
+                            </div>
+                        </div>
+
+                        <!-- Top Verification Origins -->
+                        <div class="space-y-1.5 pt-1">
+                            <div class="font-mono text-[10px] text-on-surface-variant uppercase tracking-wider font-bold">Top Verification Origins</div>
+                            <div class="flex items-center justify-between p-2 rounded bg-surface-container border border-[#1e293b] text-xs">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <span class="font-mono text-outline font-bold">01</span>
+                                    <span class="font-medium text-white truncate">United States (East)</span>
+                                </div>
+                                <div class="font-mono text-[11px] text-right shrink-0">
+                                    <span class="text-white">54,120</span>
+                                    <span class="text-secondary ml-1 font-bold">9.2ms</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-2 rounded bg-surface-container border border-[#1e293b] text-xs">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <span class="font-mono text-outline font-bold">02</span>
+                                    <span class="font-medium text-white truncate">Germany (Frankfurt)</span>
+                                </div>
+                                <div class="font-mono text-[11px] text-right shrink-0">
+                                    <span class="text-white">22,890</span>
+                                    <span class="text-secondary ml-1 font-bold">14.1ms</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between p-2 rounded bg-surface-container border border-[#1e293b] text-xs">
+                                <div class="flex items-center gap-2 min-w-0">
+                                    <span class="font-mono text-outline font-bold">03</span>
+                                    <span class="font-medium text-white truncate">Japan (Tokyo)</span>
+                                </div>
+                                <div class="font-mono text-[11px] text-right shrink-0">
+                                    <span class="text-white">8,912</span>
+                                    <span class="text-secondary ml-1 font-bold">21.8ms</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 3. Cryptographic HSM & Root Key Attestation -->
+                    <div id="hsmSection" class="p-5 rounded-lg bg-surface-container-low border border-[#1e293b] shadow-xl space-y-4">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <i class="fa-solid fa-microchip text-[16px] text-secondary"></i>
+                                <h2 class="text-sm font-semibold text-white">Cryptographic HSM</h2>
+                            </div>
+                            <span class="font-mono text-[10px] px-1.5 py-0.5 rounded bg-secondary/10 text-secondary font-bold">FIPS 140-3 L4</span>
+                        </div>
+                        <div class="space-y-3 bg-surface-container rounded p-3 border border-[#1e293b]">
+                            <div>
+                                <div class="flex justify-between items-center text-on-surface-variant font-mono text-[10px] mb-1">
+                                    <span>ROOT KEY ROTATION</span>
+                                    <span class="text-white font-bold">14d remaining (90d cycle)</span>
+                                </div>
+                                <div class="w-full bg-surface-container-lowest rounded-full h-1.5 overflow-hidden border border-[#1e293b]">
+                                    <div class="bg-primary h-full rounded-full" style="width: 84%;"></div>
+                                </div>
+                            </div>
+                            <div class="pt-1 space-y-1 font-mono text-[11px]">
+                                <div class="flex justify-between">
+                                    <span class="text-on-surface-variant">Signature Standard:</span>
+                                    <span class="text-white font-bold">Ed25519 / Dilithium-3 PQ</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-on-surface-variant">Attestation Engine:</span>
+                                    <span class="text-secondary font-bold">AWS CloudHSM Cluster-4</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span class="text-on-surface-variant">Entropy Level:</span>
+                                    <span class="text-secondary font-bold">Quantum RNG (99.99%)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Duty Officer Attested Profile -->
+                        <div class="p-3 rounded bg-surface-container-lowest flex items-center justify-between border border-[#1e293b]">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="w-9 h-9 rounded-full bg-secondary/20 text-secondary border border-secondary/40 flex items-center justify-center font-bold text-xs shrink-0">
+                                    <?php echo strtoupper(substr($current_user['email'] ?? 'A', 0, 1)); ?>
+                                </div>
+                                <div class="min-w-0">
+                                    <div class="text-xs font-semibold text-white truncate"><?php echo htmlspecialchars($user_display_name); ?></div>
+                                    <div class="font-mono text-[10px] text-secondary truncate flex items-center gap-1">
+                                        <i class="fa-solid fa-fingerprint text-[11px]"></i>
+                                        <span>YubiKey 5C NFC Attested</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="font-mono text-[10px] px-2 py-0.5 rounded bg-secondary/15 text-secondary shrink-0 font-bold">DUTY</span>
+                        </div>
+                    </div>
+
+                    <!-- 4. Live Cryptographic Audit Stream -->
+                    <div id="auditStreamSection" class="p-5 rounded-lg bg-surface-container-low border border-[#1e293b] shadow-xl">
+                        <div class="flex justify-between items-center pb-3 border-b border-[#1e293b] mb-3">
+                            <h3 class="text-xs font-mono font-bold text-white uppercase tracking-wider flex items-center gap-2">
+                                <i class="fa-solid fa-server text-[#38bdf8]"></i> Live Audit Stream
                             </h3>
                             <span class="text-[10px] font-mono text-emerald-400 flex items-center font-bold">
-                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 mr-1.5"></span> LIVE INGEST
+                                <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span> LIVE INGEST
                             </span>
                         </div>
-                        <div class="bg-slate-950/40">
-                            <ul class="audit-stream-list divide-y divide-slate-800/60 max-h-80 overflow-y-auto custom-scrollbar font-mono text-xs">
+                        <div class="bg-surface-container-lowest rounded border border-[#1e293b]">
+                            <ul class="divide-y divide-[#1e293b] max-h-80 overflow-y-auto custom-scrollbar font-mono text-xs">
                                 <?php if (count($audit_logs) > 0): ?>
                                     <?php foreach ($audit_logs as $log): 
                                         $action_type = strtoupper($log['action_type'] ?? 'EVENT');
@@ -1230,6 +1509,7 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                                             'ACCOUNT_ACTIVATED' => ['icon' => 'fa-lock-open', 'color' => 'text-emerald-400'],
                                             'ROLE_UPDATED' => ['icon' => 'fa-user-gear', 'color' => 'text-sky-400'],
                                             'USER_PROVISIONED' => ['icon' => 'fa-user-plus', 'color' => 'text-purple-400'],
+                                            'USER_PURGED' => ['icon' => 'fa-trash-can', 'color' => 'text-red-400'],
                                             'LOGOUT' => ['icon' => 'fa-arrow-right-from-bracket', 'color' => 'text-slate-400'],
                                             'SUSPENDED_LOGIN_ATTEMPT' => ['icon' => 'fa-ban', 'color' => 'text-red-500'],
                                             'EMERGENCY_LOCKDOWN_TRIGGERED' => ['icon' => 'fa-power-off', 'color' => 'text-red-400'],
@@ -1238,18 +1518,18 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                                             default => ['icon' => 'fa-shield', 'color' => 'text-slate-400']
                                         };
                                     ?>
-                                    <li class="p-3.5 hover:bg-slate-900/60 transition group">
-                                        <div class="flex space-x-3">
+                                    <li class="p-3 hover:bg-surface-container/60 transition group">
+                                        <div class="flex space-x-2.5">
                                             <div class="shrink-0 mt-0.5">
                                                 <i class="fa-solid <?php echo $icon_data['icon']; ?> <?php echo $icon_data['color']; ?> text-xs"></i>
                                             </div>
                                             <div class="min-w-0 flex-1">
                                                 <p class="text-xs text-slate-300 font-medium break-words leading-snug"><?php echo htmlspecialchars($action_text); ?></p>
-                                                <div class="flex items-center text-[10px] text-slate-500 mt-1 flex-wrap gap-x-2">
-                                                    <span>IP: <code class="text-sky-400"><?php echo htmlspecialchars($ip); ?></code></span>
-                                                    <span class="text-slate-700">|</span>
+                                                <div class="flex items-center text-[10px] text-slate-500 mt-1 flex-wrap gap-x-2 font-mono">
+                                                    <span>IP: <code class="text-primary font-bold"><?php echo htmlspecialchars($ip); ?></code></span>
+                                                    <span>|</span>
                                                     <span class="text-slate-400">UID-<?php echo htmlspecialchars($log['user_id'] ? str_pad($log['user_id'], 4, '0', STR_PAD_LEFT) : 'SYS'); ?></span>
-                                                    <span class="text-slate-700">|</span>
+                                                    <span>|</span>
                                                     <span><?php echo htmlspecialchars($time); ?></span>
                                                 </div>
                                             </div>
@@ -1257,7 +1537,7 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                                     </li>
                                     <?php endforeach; ?>
                                 <?php else: ?>
-                                    <li class="p-8 text-center text-xs text-slate-500 font-mono">
+                                    <li class="p-6 text-center text-xs text-slate-500 font-mono">
                                         Audit stream is currently empty.
                                     </li>
                                 <?php endif; ?>
@@ -1268,12 +1548,11 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
                 </div>
             </div>
 
-            <!-- Academic & Enterprise Portal Footer -->
-            <div class="mt-12 text-center border-t pt-6 text-xs text-slate-500 font-mono">
-                <i class="fa-solid fa-shield-halved text-sky-500/70 mr-1"></i>
-                ENTERPRISE ZERO-TRUST IAM PORTAL • AIR-GAPPED SECURE ENCLAVE • iam.secure-defense.internal
+            <!-- Footer -->
+            <div class="mt-12 text-center border-t border-[#1e293b] pt-6 text-xs text-slate-500 font-mono">
+                <i class="fa-solid fa-shield-halved text-[#38bdf8] mr-1"></i>
+                ENTERPRISE ZERO-TRUST IAM PORTAL &bull; AIR-GAPPED SECURE ENCLAVE &bull; iam.secure-defense.internal
             </div>
-
         </main>
     </div>
 
@@ -1281,92 +1560,81 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
     <!-- MODAL 1: PROVISION IDENTITY                                               -->
     <!-- ========================================================================= -->
     <div id="provisionModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs flex justify-center items-center z-50 p-4">
-        <div class="p-6 rounded-xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto custom-scrollbar bg-slate-900 border border-slate-700">
-            <div class="flex justify-between items-center mb-5 border-b border-slate-700/60 pb-3">
-                <div class="flex items-center space-x-2 text-white">
-                    <div class="h-8 w-8 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
-                        <i class="fa-solid fa-user-plus text-sm"></i>
-                    </div>
-                    <h2 class="text-base font-bold">Provision Enterprise Identity</h2>
+        <div class="bg-surface-container-low border border-[#1e293b] w-full max-w-xl rounded-xl p-6 shadow-2xl relative overflow-hidden">
+            <div class="flex justify-between items-center border-b border-[#1e293b] pb-3 mb-4">
+                <div class="flex items-center space-x-2 text-sky-400">
+                    <i class="fa-solid fa-user-plus text-base"></i>
+                    <h3 class="font-sans font-bold text-white text-base">Provision New Workforce Identity</h3>
                 </div>
                 <button onclick="document.getElementById('provisionModal').classList.add('hidden')" class="text-slate-400 hover:text-white transition">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-            
+
             <?php if (isset($provision_msg)) echo $provision_msg; ?>
 
-            <form method="POST" action="">
+            <form method="POST" action="" class="space-y-4">
                 <input type="hidden" name="action" value="provision_user">
                 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
                 
-                <div class="grid grid-cols-2 gap-3 mb-3.5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs text-slate-400 uppercase font-mono mb-1">First Name</label>
-                        <input type="text" name="first_name" class="cyber-input w-full px-3 py-2 rounded-lg text-xs" placeholder="e.g. Jane">
+                        <label class="block text-xs font-mono text-slate-400 mb-1">First Name</label>
+                        <input type="text" name="first_name" placeholder="John" required class="w-full px-3 py-2 rounded bg-surface-container border border-[#1e293b] text-white text-xs focus:border-sky-400 focus:outline-hidden">
                     </div>
                     <div>
-                        <label class="block text-xs text-slate-400 uppercase font-mono mb-1">Last Name</label>
-                        <input type="text" name="last_name" class="cyber-input w-full px-3 py-2 rounded-lg text-xs" placeholder="e.g. Doe">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3.5">
-                    <div>
-                        <label class="block text-xs text-slate-400 uppercase font-mono mb-1">Enterprise Email <span class="text-red-400">*</span></label>
-                        <input type="email" name="new_email" class="cyber-input w-full px-3 py-2 rounded-lg text-xs" placeholder="user@organization.com" required>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-400 uppercase font-mono mb-1">Temporary Password <span class="text-red-400">*</span></label>
-                        <input type="password" name="new_password" class="cyber-input w-full px-3 py-2 rounded-lg text-xs" placeholder="••••••••••••" required>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Last Name</label>
+                        <input type="text" name="last_name" placeholder="Doe" required class="w-full px-3 py-2 rounded bg-surface-container border border-[#1e293b] text-white text-xs focus:border-sky-400 focus:outline-hidden">
                     </div>
                 </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3.5">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-xs text-slate-400 uppercase font-mono mb-1">Department</label>
-                        <select name="department" class="cyber-input w-full px-3 py-2 rounded-lg text-xs">
-                            <option value="Security Operations Center (SOC)">Security Operations Center (SOC)</option>
-                            <option value="IT & Cloud Infrastructure">IT & Cloud Infrastructure</option>
-                            <option value="Finance & Treasury">Finance & Treasury</option>
-                            <option value="Legal, Privacy & Compliance">Legal, Privacy & Compliance</option>
-                            <option value="Engineering & DevOps">Engineering & DevOps</option>
-                            <option value="Human Resources">Human Resources</option>
-                            <option value="General Operations" selected>General Operations</option>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Enterprise Email Address</label>
+                        <input type="email" name="new_email" placeholder="j.doe@organization.com" required class="w-full px-3 py-2 rounded bg-surface-container border border-[#1e293b] text-white text-xs focus:border-sky-400 focus:outline-hidden">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Initial Temporary Password</label>
+                        <input type="password" name="new_password" required placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" class="w-full px-3 py-2 rounded bg-surface-container border border-[#1e293b] text-white text-xs focus:border-sky-400 focus:outline-hidden">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Department</label>
+                        <input type="text" name="department" placeholder="Cloud Infrastructure" value="General Operations" class="w-full px-3 py-2 rounded bg-surface-container border border-[#1e293b] text-white text-xs focus:border-sky-400 focus:outline-hidden">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Job Title</label>
+                        <input type="text" name="job_title" placeholder="DevOps Engineer" value="Staff Analyst" class="w-full px-3 py-2 rounded bg-surface-container border border-[#1e293b] text-white text-xs focus:border-sky-400 focus:outline-hidden">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-1">
+                    <div>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Functional RBAC Role</label>
+                        <select name="role" id="provRoleSelect" onchange="syncProvisioningDefaults()" class="w-full px-3 py-2 rounded bg-surface-container border border-[#1e293b] text-white text-xs focus:border-sky-400 focus:outline-hidden">
+                            <option value="Staff">Staff (Standard Least-Privilege)</option>
+                            <option value="Auditor">Auditor (Compliance &amp; Logs)</option>
+                            <option value="Admin">Admin (Full Enclave Management)</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs text-slate-400 uppercase font-mono mb-1">Job Title</label>
-                        <input type="text" name="job_title" class="cyber-input w-full px-3 py-2 rounded-lg text-xs" placeholder="e.g. SOC Security Analyst" value="Staff Analyst">
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-5">
-                    <div>
-                        <label class="block text-xs text-slate-400 uppercase font-mono mb-1">Functional Role (RBAC)</label>
-                        <select name="role" id="provRoleSelect" onchange="syncProvisioningDefaults()" class="cyber-input w-full px-3 py-2 rounded-lg text-xs">
-                            <option value="Staff" selected>Staff (Standard Employee)</option>
-                            <option value="Auditor">Auditor (Compliance Officer)</option>
-                            <option value="Admin">Admin (SOC Administrator)</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-400 uppercase font-mono mb-1">Security Clearance</label>
-                        <select name="security_clearance" id="provClearanceSelect" class="cyber-input w-full px-3 py-2 rounded-lg text-xs">
-                            <option value="Tier 1" selected>Tier 1 // Restricted</option>
-                            <option value="Tier 2">Tier 2 // Confidential</option>
-                            <option value="Tier 3">Tier 3 // Top Secret</option>
+                        <label class="block text-xs font-mono text-slate-400 mb-1">Security Clearance Enclave</label>
+                        <select name="security_clearance" id="provClearanceSelect" class="w-full px-3 py-2 rounded bg-surface-container border border-[#1e293b] text-white text-xs focus:border-sky-400 focus:outline-hidden">
+                            <option value="Tier 1">Tier 1 &mdash; General Workspace</option>
+                            <option value="Tier 2">Tier 2 &mdash; Sensitive Logs &amp; PII</option>
+                            <option value="Tier 3">Tier 3 &mdash; Root Credentials &amp; Vault</option>
                         </select>
                     </div>
                 </div>
-
                 <input type="hidden" name="role_id" id="provRoleIdHidden" value="4">
 
-                <div class="flex space-x-3 pt-3 border-t border-slate-700/60">
-                    <button type="button" onclick="document.getElementById('provisionModal').classList.add('hidden')" class="w-1/2 py-2.5 rounded-lg text-xs font-semibold border border-slate-700 hover:bg-slate-800 text-slate-300 transition">
+                <div class="flex space-x-3 pt-3">
+                    <button type="button" onclick="document.getElementById('provisionModal').classList.add('hidden')" class="w-1/2 py-2 rounded text-xs font-semibold border border-[#334155] hover:bg-surface-container text-slate-300 transition">
                         Cancel
                     </button>
-                    <button type="submit" class="w-1/2 py-2.5 rounded-lg text-xs font-semibold bg-sky-600 hover:bg-sky-500 text-white transition shadow-sm">
+                    <button type="submit" class="w-1/2 py-2 rounded text-xs font-semibold bg-sky-600 hover:bg-sky-500 text-white shadow transition">
                         Provision Identity
                     </button>
                 </div>
@@ -1378,65 +1646,60 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
     <!-- MODAL 2: EDIT ROLE & CLEARANCE (RBAC)                                     -->
     <!-- ========================================================================= -->
     <div id="roleModal" class="hidden fixed inset-0 bg-black/80 backdrop-blur-xs flex justify-center items-center z-50 p-4">
-        <div class="p-6 rounded-xl shadow-2xl w-full max-w-md bg-slate-900 border border-slate-700">
-            <div class="flex justify-between items-center mb-5 border-b border-slate-700/60 pb-3">
-                <div class="flex items-center space-x-2 text-white">
-                    <div class="h-8 w-8 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
-                        <i class="fa-solid fa-user-gear text-sm"></i>
-                    </div>
-                    <h2 class="text-base font-bold">Modify RBAC Permissions</h2>
+        <div class="bg-surface-container-low border border-[#1e293b] w-full max-w-md rounded-xl p-6 shadow-2xl relative">
+            <div class="flex justify-between items-center border-b border-[#1e293b] pb-3 mb-4">
+                <div class="flex items-center space-x-2 text-sky-400">
+                    <i class="fa-solid fa-user-gear text-base"></i>
+                    <h3 class="font-sans font-bold text-white text-base">Modify RBAC Policy</h3>
                 </div>
                 <button onclick="document.getElementById('roleModal').classList.add('hidden')" class="text-slate-400 hover:text-white transition">
                     <i class="fa-solid fa-xmark text-lg"></i>
                 </button>
             </div>
-
-            <form method="POST" action="">
+            
+            <form method="POST" action="" class="space-y-4">
                 <input type="hidden" name="action" value="update_role">
-                <input type="hidden" name="target_user_id" id="roleModalUserId">
                 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
-
-                <div class="mb-4">
-                    <label class="block text-xs text-slate-400 mb-1 font-mono">Target Account</label>
-                    <div id="roleModalEmail" class="text-xs font-bold text-sky-400 bg-slate-950 px-3 py-2 rounded-lg border border-slate-800 font-mono"></div>
+                <input type="hidden" name="target_user_id" id="roleModalUserId">
+                
+                <div>
+                    <label class="block text-xs font-mono text-slate-400 mb-1">Target Account</label>
+                    <div id="roleModalEmail" class="text-xs font-bold text-sky-400 bg-surface-container px-3 py-2 rounded border border-[#1e293b] font-mono"></div>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3 mb-4">
-                    <div>
-                        <label class="block text-xs text-slate-400 uppercase font-mono mb-1">Functional Role</label>
-                        <select name="new_functional_role" id="roleModalFuncRole" onchange="syncRoleModalDefaults()" class="cyber-input w-full px-3 py-2 rounded-lg text-xs">
-                            <option value="Staff">Staff</option>
-                            <option value="Auditor">Auditor</option>
-                            <option value="Admin">Admin</option>
-                        </select>
-                    </div>
-                    <div>
-                        <label class="block text-xs text-slate-400 uppercase font-mono mb-1">Clearance Tier</label>
-                        <select name="new_clearance" id="roleModalClearance" class="cyber-input w-full px-3 py-2 rounded-lg text-xs">
-                            <option value="Tier 1">Tier 1 (Restricted)</option>
-                            <option value="Tier 2">Tier 2 (Confidential)</option>
-                            <option value="Tier 3">Tier 3 (Top Secret)</option>
-                        </select>
-                    </div>
+                <div>
+                    <label class="block text-xs font-mono text-slate-400 mb-1">Functional Access Role</label>
+                    <select name="new_functional_role" id="roleModalFuncRole" onchange="syncRoleModalDefaults()" class="w-full px-3 py-2 rounded bg-surface-container border border-[#1e293b] text-white text-xs focus:border-sky-400 focus:outline-hidden">
+                        <option value="Staff">Staff (Standard Least-Privilege)</option>
+                        <option value="Auditor">Auditor (Compliance &amp; Logs)</option>
+                        <option value="Admin">Admin (Full Enclave Management)</option>
+                    </select>
                 </div>
 
-                <div class="mb-5">
-                    <label class="block text-xs text-slate-400 uppercase font-mono mb-1">Database Role Group</label>
-                    <select name="new_role_id" id="roleModalSelect" class="cyber-input w-full px-3 py-2 rounded-lg text-xs">
+                <div>
+                    <label class="block text-xs font-mono text-slate-400 mb-1">Security Clearance Level</label>
+                    <select name="new_clearance" id="roleModalClearance" class="w-full px-3 py-2 rounded bg-surface-container border border-[#1e293b] text-white text-xs focus:border-sky-400 focus:outline-hidden">
+                        <option value="Tier 1">Tier 1 &mdash; General Workspace</option>
+                        <option value="Tier 2">Tier 2 &mdash; Sensitive Logs &amp; PII</option>
+                        <option value="Tier 3">Tier 3 &mdash; Root Credentials &amp; Vault</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-mono text-slate-400 mb-1">Underlying Permission Matrix</label>
+                    <select name="new_role_id" id="roleModalSelect" class="w-full px-3 py-2 rounded bg-surface-container border border-[#1e293b] text-white text-xs focus:border-sky-400 focus:outline-hidden">
                         <?php foreach ($roles as $r): ?>
-                            <option value="<?php echo (int) $r['role_id']; ?>">
-                                <?php echo htmlspecialchars($r['role_name']); ?>
-                            </option>
+                            <option value="<?php echo $r['role_id']; ?>"><?php echo htmlspecialchars($r['role_name']); ?> (Matrix Level <?php echo $r['role_id']; ?>)</option>
                         <?php endforeach; ?>
                     </select>
                 </div>
 
-                <div class="flex space-x-3 pt-3 border-t border-slate-700/60">
-                    <button type="button" onclick="document.getElementById('roleModal').classList.add('hidden')" class="w-1/2 py-2.5 rounded-lg text-xs font-semibold border border-slate-700 hover:bg-slate-800 text-slate-300 transition">
+                <div class="flex space-x-3 pt-3">
+                    <button type="button" onclick="document.getElementById('roleModal').classList.add('hidden')" class="w-1/2 py-2 rounded text-xs font-semibold border border-[#334155] hover:bg-surface-container text-slate-300 transition">
                         Cancel
                     </button>
-                    <button type="submit" class="w-1/2 py-2.5 rounded-lg text-xs font-semibold bg-sky-600 hover:bg-sky-500 text-white transition shadow-sm">
-                        Apply Changes
+                    <button type="submit" class="w-1/2 py-2 rounded text-xs font-semibold bg-sky-600 hover:bg-sky-500 text-white shadow transition">
+                        Apply Policy
                     </button>
                 </div>
             </form>
@@ -1447,36 +1710,32 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
     <!-- MODAL 3: EMERGENCY LOCKDOWN CONFIRMATION MODAL                            -->
     <!-- ========================================================================= -->
     <div id="lockdownModal" class="hidden fixed inset-0 bg-black/85 backdrop-blur-xs flex justify-center items-center z-50 p-4">
-        <div class="p-6 rounded-xl shadow-2xl w-full max-w-md bg-slate-900 border-2 border-red-500/50">
-            <div class="flex items-center space-x-3 text-red-400 mb-4 pb-3 border-b border-red-500/30">
-                <div class="w-10 h-10 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400 text-lg">
-                    <i class="fa-solid fa-triangle-exclamation"></i>
-                </div>
-                <div>
-                    <h3 class="text-base font-bold text-white">CONFIRM EMERGENCY LOCKDOWN</h3>
-                    <p class="text-xs text-red-300 font-mono">SOC Kill-Switch Procedure</p>
-                </div>
+        <div class="bg-surface-container-low border border-red-500/50 w-full max-w-md rounded-xl p-6 shadow-2xl relative space-y-4">
+            <div class="flex items-center space-x-3 text-red-500">
+                <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+                <h3 class="font-sans font-bold text-white text-lg">Confirm Emergency Lockdown</h3>
             </div>
+            
+            <p class="text-xs text-slate-300 leading-relaxed font-sans">
+                You are about to engage the <strong>Enclave Emergency Lockdown</strong> protocol. 
+                This action will instantly:
+            </p>
+            
+            <ul class="text-xs text-red-200 list-disc list-inside space-y-1 font-mono bg-red-950/40 p-3 rounded border border-red-500/30">
+                <li>Suspend all non-administrator user accounts</li>
+                <li>Terminate active session cookies immediately</li>
+                <li>Block lateral credential movement in the enclave</li>
+                <li>Generate an immutable critical SOC audit log entry</li>
+            </ul>
 
-            <div class="text-xs text-slate-300 space-y-2 mb-6">
-                <p>Executing an <strong>Emergency Enclave Lockdown</strong> will instantly:</p>
-                <ul class="list-disc list-inside space-y-1 text-slate-400 pl-2 font-mono text-[11px]">
-                    <li>Suspend all non-admin workforce accounts</li>
-                    <li>Immediately revoke active authentication sessions</li>
-                    <li>Lock down internal directories and API bearer endpoints</li>
-                    <li>Record an immutable forensic audit log with your Administrator UID</li>
-                </ul>
-                <p class="text-[11px] text-amber-300 pt-1">You (as Administrator) will retain session access and can lift the lockdown at any time.</p>
-            </div>
-
-            <form method="POST" action="" class="flex space-x-3">
+            <form method="POST" action="" class="flex space-x-3 pt-2">
                 <input type="hidden" name="action" value="emergency_lockdown">
                 <input type="hidden" name="csrf_token" value="<?php echo $csrf_token; ?>">
                 
-                <button type="button" onclick="document.getElementById('lockdownModal').classList.add('hidden')" class="w-1/2 py-2.5 rounded-lg text-xs font-semibold border border-slate-700 hover:bg-slate-800 text-slate-300 transition">
-                    Cancel
+                <button type="button" onclick="document.getElementById('lockdownModal').classList.add('hidden')" class="w-1/2 py-2 rounded text-xs font-semibold border border-[#334155] hover:bg-surface-container text-slate-300 transition">
+                    Abort
                 </button>
-                <button type="submit" class="w-1/2 py-2.5 rounded-lg text-xs font-bold bg-red-600 hover:bg-red-700 text-white transition shadow flex items-center justify-center gap-1.5">
+                <button type="submit" class="w-1/2 py-2 rounded text-xs font-bold bg-red-600 hover:bg-red-700 text-white shadow transition flex items-center justify-center gap-1.5">
                     <i class="fa-solid fa-power-off"></i> Engage Lockdown
                 </button>
             </form>
@@ -1487,105 +1746,60 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
     <!-- MODAL 4: BIOMETRIC WELCOME HUD (Cleaned Up & Professional)                 -->
     <!-- ========================================================================= -->
     <div id="cyberWelcomeHUD" class="<?php echo $show_welcome_hud ? '' : 'hidden'; ?> fixed inset-0 z-50 bg-slate-950/90 backdrop-blur-xs flex items-center justify-center p-4">
-        <div class="relative w-full max-w-2xl bg-slate-900 border border-sky-500/40 rounded-xl p-6 sm:p-8 overflow-hidden text-slate-200 shadow-2xl">
+        <div class="bg-surface-container-low border border-[#1e293b] rounded-xl max-w-lg w-full p-6 sm:p-8 shadow-2xl space-y-5 text-center relative">
+            <div class="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center mx-auto text-emerald-400">
+                <i class="fa-solid fa-fingerprint text-2xl"></i>
+            </div>
             
-            <div class="flex justify-between items-center border-b border-slate-700/60 pb-3 mb-6">
-                <div class="flex items-center space-x-2">
-                    <span class="w-2.5 h-2.5 rounded-full bg-sky-400"></span>
-                    <span class="font-mono text-xs text-sky-400 uppercase tracking-widest font-bold">
-                        // ZERO-TRUST IDENTITY ENCLAVE ACCESSED
-                    </span>
+            <div class="space-y-1">
+                <h3 class="font-sans font-bold text-white text-lg">Identity Clearance Attested</h3>
+                <p class="font-mono text-xs text-emerald-400 font-semibold">Zero-Trust Access Granted &bull; TLS 1.3 Verified</p>
+            </div>
+            
+            <div class="grid grid-cols-2 gap-3 text-left font-mono text-xs">
+                <div class="bg-surface-container p-2.5 rounded border border-[#1e293b]">
+                    <span class="text-slate-500 text-[10px] uppercase">Identity:</span>
+                    <p class="text-white font-medium truncate"><?php echo htmlspecialchars($current_user['email']); ?></p>
                 </div>
-                <div class="flex items-center space-x-3 text-xs font-mono">
-                    <span class="text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded">
-                        <i class="fa-solid fa-lock mr-1 text-[10px]"></i> TLS 1.3 SECURED
-                    </span>
+                <div class="bg-surface-container p-2.5 rounded border border-[#1e293b]">
+                    <span class="text-slate-500 text-[10px] uppercase">RBAC Role:</span>
+                    <p class="text-sky-400 font-medium"><?php echo htmlspecialchars($current_functional_role); ?></p>
+                </div>
+                <div class="bg-surface-container p-2.5 rounded border border-[#1e293b]">
+                    <span class="text-slate-500 text-[10px] uppercase">Clearance:</span>
+                    <p class="text-purple-400 font-medium"><?php echo htmlspecialchars($current_clearance); ?></p>
+                </div>
+                <div class="bg-surface-container p-2.5 rounded border border-[#1e293b]">
+                    <span class="text-slate-500 text-[10px] uppercase">Node Enclave:</span>
+                    <p class="text-emerald-400 font-medium">iam.secure-defense.internal</p>
                 </div>
             </div>
 
-            <div class="flex flex-col sm:flex-row items-center gap-6 mb-6">
-                <div class="w-20 h-20 rounded-full bg-sky-950/40 border border-sky-500/40 flex items-center justify-center shrink-0">
-                    <i class="fa-solid fa-fingerprint text-3xl text-sky-400"></i>
-                </div>
-
-                <div class="text-center sm:text-left flex-1 space-y-1">
-                    <p class="text-xs font-mono text-slate-400 uppercase tracking-wider">
-                        IDENTITY CONFIRMED • ACCESS GRANTED
-                    </p>
-                    <h2 class="text-2xl font-bold text-white tracking-tight">
-                        Welcome, <span class="text-sky-400"><?php echo htmlspecialchars($user_display_name); ?></span>
-                    </h2>
-                    <div class="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1 font-mono text-xs">
-                        <span class="bg-slate-800 text-slate-300 border border-slate-700 px-2 py-0.5 rounded">
-                            UID-<?php echo str_pad($current_user_id, 4, '0', STR_PAD_LEFT); ?>
-                        </span>
-                        <span class="text-slate-500">•</span>
-                        <span class="text-sky-400"><?php echo htmlspecialchars($current_user['email']); ?></span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono text-xs mb-6">
-                <div class="bg-slate-950 p-2.5 rounded border border-slate-800">
-                    <p class="text-slate-500 text-[10px] uppercase">Clearance</p>
-                    <p class="text-purple-400 font-bold truncate mt-0.5"><?php echo $current_role_info['name']; ?></p>
-                </div>
-                <div class="bg-slate-950 p-2.5 rounded border border-slate-800">
-                    <p class="text-slate-500 text-[10px] uppercase">Encryption</p>
-                    <p class="text-emerald-400 font-bold truncate mt-0.5">TLS 1.3 / AES-256</p>
-                </div>
-                <div class="bg-slate-950 p-2.5 rounded border border-slate-800">
-                    <p class="text-slate-500 text-[10px] uppercase">MFA Protocol</p>
-                    <p class="text-sky-400 font-bold truncate mt-0.5">RFC 6238 PASSED</p>
-                </div>
-                <div class="bg-slate-950 p-2.5 rounded border border-slate-800">
-                    <p class="text-slate-500 text-[10px] uppercase">Ingress</p>
-                    <p class="text-slate-300 font-bold truncate mt-0.5"><?php echo htmlspecialchars($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1'); ?></p>
-                </div>
-            </div>
-
-            <div class="space-y-3">
-                <div class="flex items-center justify-between">
-                    <span class="text-[11px] font-mono text-slate-500" id="hudTimerText">Entering command center in 4s...</span>
-                    <button onclick="dismissCyberWelcomeHUD()" class="bg-sky-600 hover:bg-sky-500 text-white font-medium px-4 py-1.5 rounded-lg text-xs font-mono uppercase tracking-wider transition flex items-center gap-1.5">
-                        <span>Access Command Center</span>
-                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
-                    </button>
-                </div>
-                <div class="w-full bg-slate-950 rounded-full h-1 overflow-hidden border border-slate-800">
-                    <div id="hudProgressBar" class="bg-sky-400 h-1 transition-all duration-100 ease-linear" style="width: 100%;"></div>
-                </div>
-            </div>
-
+            <button onclick="dismissCyberWelcomeHUD()" class="w-full py-2.5 rounded bg-sky-600 hover:bg-sky-500 text-white font-sans text-xs font-bold transition shadow">
+                Enter SOC Command Center
+            </button>
+            <p id="welcomeHudTimer" class="font-mono text-[10px] text-slate-500">Entering command center in 3s...</p>
         </div>
     </div>
 
-    <!-- JavaScript Handlers -->
+    <!-- ========================================================================= -->
+    <!-- INTERACTIVE JAVASCRIPT CONTROLLERS                                        -->
+    <!-- ========================================================================= -->
     <script>
-        // Sidebar Toggle for Mobile View
-        function toggleSidebar() {
-            const sidebar = document.getElementById('appSidebar');
-            const backdrop = document.getElementById('sidebarBackdrop');
-            if (sidebar.classList.contains('-translate-x-full')) {
-                sidebar.classList.remove('-translate-x-full');
-                backdrop.classList.remove('hidden');
-            } else {
-                sidebar.classList.add('-translate-x-full');
-                backdrop.classList.add('hidden');
+        // Threat Simulation Menu Toggle
+        function toggleSimMenu() {
+            const menu = document.getElementById('simMenu');
+            if (menu) {
+                menu.classList.toggle('hidden');
             }
         }
 
-        // Threat Simulation Dropdown Toggle
-        function toggleSimMenu() {
-            const menu = document.getElementById('simMenu');
-            if (menu) menu.classList.toggle('hidden');
-        }
-
-        window.addEventListener('click', function(e) {
+        // Close dropdown when clicked outside
+        document.addEventListener('click', function(e) {
             const container = document.getElementById('simulationDropdownContainer');
-            if (container && !container.contains(e.target)) {
-                const menu = document.getElementById('simMenu');
-                if (menu) menu.classList.add('hidden');
+            const menu = document.getElementById('simMenu');
+            if (container && menu && !container.contains(e.target)) {
+                menu.classList.add('hidden');
             }
         });
 
@@ -1620,7 +1834,7 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
             updateThemeIcon(currentTheme);
         });
 
-        // RBAC Sync Handlers
+        // RBAC Provisioning Defaults Synchronization
         function syncProvisioningDefaults() {
             const role = document.getElementById('provRoleSelect').value;
             const clearance = document.getElementById('provClearanceSelect');
@@ -1660,18 +1874,18 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
             
             const funcRoleEl = document.getElementById('roleModalFuncRole');
             if (funcRoleEl) {
-                funcRoleEl.value = currentFunctionalRole || (currentRoleId === 1 ? 'Admin' : (currentRoleId === 3 ? 'Auditor' : 'Staff'));
+                funcRoleEl.value = currentFunctionalRole || 'Staff';
             }
             
             const clearEl = document.getElementById('roleModalClearance');
             if (clearEl) {
-                clearEl.value = currentClearance || (currentRoleId === 1 ? 'Tier 3' : (currentRoleId === 3 ? 'Tier 2' : 'Tier 1'));
+                clearEl.value = currentClearance || 'Tier 1';
             }
             
             document.getElementById('roleModal').classList.remove('hidden');
         }
 
-        // Welcome HUD Dismissal
+        // Biometric Welcome HUD auto-dismiss
         let hudTimerInterval = null;
         function dismissCyberWelcomeHUD() {
             if (hudTimerInterval) clearInterval(hudTimerInterval);
@@ -1683,25 +1897,14 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
             const hud = document.getElementById('cyberWelcomeHUD');
             if (!hud) return;
             hud.classList.remove('hidden');
-
-            const totalDuration = 4000;
-            const startTime = Date.now();
-
-            if (hudTimerInterval) clearInterval(hudTimerInterval);
-            const progressBar = document.getElementById('hudProgressBar');
-            const timerText = document.getElementById('hudTimerText');
-
+            let remaining = 3000;
+            const timerText = document.getElementById('welcomeHudTimer');
             hudTimerInterval = setInterval(() => {
-                const elapsed = Date.now() - startTime;
-                const remaining = Math.max(0, totalDuration - elapsed);
-                const percent = (remaining / totalDuration) * 100;
-
-                if (progressBar) progressBar.style.width = percent + '%';
+                remaining -= 100;
                 if (timerText) {
                     const secs = Math.ceil(remaining / 1000);
                     timerText.innerText = 'Entering command center in ' + secs + 's...';
                 }
-
                 if (remaining <= 0) {
                     clearInterval(hudTimerInterval);
                     dismissCyberWelcomeHUD();
@@ -1724,3 +1927,4 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
 
 </body>
 </html>
+

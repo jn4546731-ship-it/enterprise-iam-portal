@@ -197,37 +197,33 @@ if ($res) {
             theme: {
                 extend: {
                     colors: {
-                        surface: {
-                            DEFAULT: '#0f131c',
-                            dim: '#0f131c',
-                            bright: '#353942',
-                            lowest: '#0a0e16',
-                            low: '#181c24',
-                            container: '#1c2029',
-                            high: '#262a34',
-                            highest: '#31353f',
-                        },
-                        primary: {
-                            DEFAULT: '#38bdf8',
-                            dim: '#0284c7',
-                            container: '#004d69',
-                        },
-                        cyber: {
-                            neon: '#00f0ff',
-                            success: '#10b981',
-                            warning: '#f59e0b',
-                            critical: '#ef4444',
-                        }
+                        "surface": "#0f131c",
+                        "surface-dim": "#0f131c",
+                        "surface-bright": "#353942",
+                        "surface-container-lowest": "#0a0e16",
+                        "surface-container-low": "#181c24",
+                        "surface-container": "#1c2028",
+                        "surface-container-high": "#262a33",
+                        "surface-container-highest": "#31353e",
+                        "on-surface": "#dfe2ee",
+                        "on-surface-variant": "#bdc8d1",
+                        "outline": "#87929a",
+                        "outline-variant": "#3e484f",
+                        "primary": "#8ed5ff",
+                        "primary-container": "#38bdf8",
+                        "on-primary": "#00354a",
+                        "on-primary-container": "#004965",
+                        "secondary": "#4edea3",
+                        "secondary-container": "#00a572",
+                        "tertiary": "#ffc174",
+                        "tertiary-container": "#f59e0b",
+                        "error": "#ffb4ab",
+                        "error-container": "#93000a",
+                        "on-error": "#690005"
                     },
                     fontFamily: {
                         sans: ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
                         mono: ['JetBrains Mono', 'Share Tech Mono', 'monospace'],
-                    },
-                    borderRadius: {
-                        DEFAULT: '4px',
-                        md: '6px',
-                        lg: '8px',
-                        xl: '12px',
                     }
                 }
             }
