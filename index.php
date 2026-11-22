@@ -127,108 +127,124 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="assets/css/cyber-theme.css?v=<?php echo time(); ?>" rel="stylesheet">
     <script src="assets/js/cyber-effects.js" defer></script>
 </head>
-<body class="cyber-bg cyber-grid-overlay min-h-screen flex items-center justify-center px-4 relative overflow-x-hidden text-slate-300">
+<body class="bg-[#090d16] min-h-screen flex flex-col items-center justify-center px-4 py-8 relative text-slate-300">
 
-    <!-- Top Telemetry Status Ticker -->
-    <div class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 py-2.5 bg-slate-950/80 border-b border-cyan-500/20 backdrop-blur-md text-[11px] font-tech text-cyan-400/90">
-        <div class="flex items-center space-x-3">
-            <span class="inline-flex h-2 w-2 rounded-full bg-cyan-400 cyber-beacon"></span>
-            <span class="tracking-widest uppercase font-bold text-white">ZERO-TRUST ACCESS GATEWAY // NODE-01</span>
+    <!-- Top Telemetry Status Header -->
+    <header class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 py-2.5 bg-[#0c101a]/90 border-b border-[#1c2233] backdrop-blur-md text-xs font-sans text-slate-400">
+        <div class="flex items-center space-x-2.5">
+            <div class="w-6 h-6 rounded-md bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-400">
+                <i class="fa-solid fa-shield-halved text-xs"></i>
+            </div>
+            <span class="font-bold text-white tracking-tight">SECURE·DEFENSE</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-sky-500/10 text-sky-400 border border-sky-500/20 font-semibold">ZERO-TRUST</span>
         </div>
-        <div class="hidden sm:flex items-center space-x-6 text-slate-400">
-            <span>DEFENSE: <strong class="text-emerald-400">AI SENTINEL ONLINE</strong></span>
-            <span>CIPHER: <strong class="text-cyan-300">TLS 1.3 / AES-256</strong></span>
-            <span>INGRESS: <strong class="text-purple-400"><?php echo htmlspecialchars($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1'); ?></strong></span>
+        <div class="hidden sm:flex items-center space-x-4 text-xs font-mono">
+            <span class="flex items-center"><span class="h-1.5 w-1.5 rounded-full bg-emerald-400 mr-1.5"></span> AI Sentinel: <strong class="text-emerald-400 ml-1">ONLINE</strong></span>
+            <span class="text-slate-600">|</span>
+            <span>Cipher: <strong class="text-sky-300">TLS 1.3 / AES-256</strong></span>
+            <span class="text-slate-600">|</span>
+            <span class="text-slate-400">Host: <strong class="text-white">iam.secure-defense.internal</strong></span>
         </div>
-    </div>
+    </header>
 
-    <!-- Main High-Tech Cyber Terminal Card -->
-    <div class="relative z-10 w-full max-w-md my-12">
-        <div class="cyber-card cyber-brackets rounded-2xl p-7 sm:p-9 shadow-2xl relative overflow-hidden border border-cyan-500/30">
+    <!-- Main Okta-Grade Sign-In Card -->
+    <div class="relative z-10 w-full max-w-md my-auto pt-8">
+        <div class="bg-[#10141f] rounded-xl p-8 sm:p-9 shadow-2xl border border-[#1c2233]">
             
-            <!-- Laser Scan Line -->
-            <div class="cyber-laser-beam"></div>
-
-            <!-- Terminal Header & Holographic Biometric Emblem -->
-            <div class="text-center mb-8 relative">
-                <div class="relative inline-flex items-center justify-center w-20 h-20 mb-3">
-                    <!-- Rotating Sci-Fi Cyber Rings -->
-                    <div class="absolute inset-0 rounded-full border border-dashed border-cyan-500/50 cyber-radar-spin"></div>
-                    <div class="absolute inset-1.5 rounded-full border border-purple-500/40 cyber-radar-reverse"></div>
-                    <div class="w-14 h-14 rounded-full bg-cyan-950/70 border border-cyan-400/60 flex items-center justify-center text-cyan-400 glow-cyan-sm shadow-inner">
-                        <i class="fa-solid fa-shield-halved text-2xl text-cyan-300"></i>
-                    </div>
+            <!-- Company / Tenant Header -->
+            <div class="text-center mb-7">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-sky-500/10 border border-sky-500/30 text-sky-400 mb-3 shadow-inner">
+                    <i class="fa-solid fa-shield-halved text-2xl"></i>
                 </div>
-
-                <h1 class="font-orbitron text-xl sm:text-2xl font-extrabold text-white tracking-wider glow-text-cyan mb-1">
-                    ENTERPRISE <span class="text-cyan-400">SOC IAM</span>
+                <h1 class="text-xl sm:text-2xl font-bold text-white tracking-tight font-sans">
+                    Sign in to SecureDefense
                 </h1>
-                <p class="font-tech text-xs text-cyan-300/80 tracking-widest uppercase">
-                    Zero-Trust Perimeter &bull; Multi-Factor Intercept
+                <p class="text-xs text-slate-400 mt-1 font-sans">
+                    Single Sign-On &bull; Zero-Trust Identity Gateway
                 </p>
-
-                <!-- Domain Security Badge -->
-                <div class="mt-3 inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-[11px] font-tech text-emerald-400 bg-emerald-950/40 border border-emerald-500/30 shadow-sm">
-                    <i class="fa-solid fa-lock text-[10px] text-emerald-400"></i>
-                    <span class="tracking-wide font-bold">iam.secure-defense.internal</span>
+                <div class="mt-2.5 inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full text-[11px] font-mono text-emerald-400 bg-emerald-500/10 border border-emerald-500/20">
+                    <i class="fa-solid fa-lock text-[10px]"></i>
+                    <span>iam.secure-defense.internal</span>
                 </div>
             </div>
 
             <?php if ($error): ?>
-                <div class="bg-red-950/40 border border-red-500/60 text-red-300 p-3.5 rounded-xl mb-6 text-xs font-tech flex items-start glow-red shadow-lg animate-pulse">
-                    <i class="fa-solid fa-triangle-exclamation mr-2.5 mt-0.5 text-base text-red-400 flex-shrink-0"></i>
+                <div class="bg-red-500/10 border border-red-500/30 text-red-300 p-3.5 rounded-lg mb-6 text-xs flex items-start">
+                    <i class="fa-solid fa-circle-exclamation mr-2.5 mt-0.5 text-base text-red-400 flex-shrink-0"></i>
                     <div>
-                        <strong class="text-red-400 uppercase font-bold tracking-wider">Access Violation:</strong>
-                        <p class="mt-0.5"><?php echo htmlspecialchars($error); ?></p>
+                        <strong class="text-red-400 font-semibold">Authentication Alert:</strong>
+                        <p class="mt-0.5 text-slate-300"><?php echo htmlspecialchars($error); ?></p>
                     </div>
                 </div>
             <?php endif; ?>
 
-            <!-- Login Credentials Form -->
-            <form method="POST" action="" class="space-y-5">
+            <!-- Sign In Form -->
+            <form method="POST" action="" class="space-y-4">
                 <div>
-                    <label class="block font-tech text-xs text-cyan-300 uppercase tracking-wider mb-2 flex items-center justify-between">
-                        <span>Identity Identifier (Email)</span>
-                        <span class="text-[10px] text-slate-500 font-mono">// PRINCIPAL</span>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                        <span>Email or Username</span>
+                        <span class="text-[10px] text-slate-500 font-mono">PRINCIPAL</span>
                     </label>
-                    <div class="relative group">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-cyan-400 transition">
-                            <i class="fa-solid fa-fingerprint text-base"></i>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                            <i class="fa-regular fa-envelope text-sm"></i>
                         </div>
-                        <input type="email" name="email" class="cyber-input w-full pl-11 pr-4 py-3 rounded-xl text-sm placeholder:text-slate-600 focus:ring-0" placeholder="admin@organization.com" required autocomplete="username">
+                        <input type="email" id="loginEmail" name="email" class="w-full pl-10 pr-4 py-2.5 rounded-md text-sm bg-[#090d16] border border-[#1c2233] text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500 transition" placeholder="admin@organization.com" required autocomplete="username">
                     </div>
                 </div>
                 
                 <div>
-                    <label class="block font-tech text-xs text-cyan-300 uppercase tracking-wider mb-2 flex items-center justify-between">
-                        <span>Cryptographic Passphrase</span>
-                        <span class="text-[10px] text-slate-500 font-mono">// SECRET KEY</span>
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-1.5 flex items-center justify-between">
+                        <span>Password</span>
+                        <span class="text-[10px] text-slate-500 font-mono">CREDENTIAL</span>
                     </label>
-                    <div class="relative group">
-                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500 group-focus-within:text-cyan-400 transition">
-                            <i class="fa-solid fa-key text-base"></i>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-slate-500">
+                            <i class="fa-solid fa-lock text-sm"></i>
                         </div>
-                        <input type="password" name="password" class="cyber-input w-full pl-11 pr-4 py-3 rounded-xl text-sm placeholder:text-slate-600 focus:ring-0" placeholder="••••••••••••" required autocomplete="current-password">
+                        <input type="password" id="loginPass" name="password" class="w-full pl-10 pr-4 py-2.5 rounded-md text-sm bg-[#090d16] border border-[#1c2233] text-white placeholder:text-slate-600 focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500 transition" placeholder="••••••••••••" required autocomplete="current-password">
                     </div>
                 </div>
 
                 <!-- Submit Button -->
-                <button type="submit" class="cyber-btn w-full py-3.5 px-4 bg-gradient-to-r from-cyan-600 via-blue-600 to-indigo-600 hover:from-cyan-500 hover:to-blue-500 text-white font-bold text-xs tracking-widest rounded-xl transition shadow-lg glow-cyan flex items-center justify-center space-x-2 group mt-2">
-                    <span>AUTHENTICATE IDENTITY</span>
-                    <i class="fa-solid fa-arrow-right-to-bracket text-sm group-hover:translate-x-1 transition"></i>
+                <button type="submit" class="w-full py-2.5 px-4 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-sm rounded-md transition shadow-md flex items-center justify-center space-x-2 mt-2">
+                    <span>Sign In</span>
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
                 </button>
             </form>
             
-            <!-- Terminal Diagnostic Readout Footer -->
-            <div class="mt-8 pt-4 border-t border-slate-800/80 text-center font-tech text-[11px] text-slate-500 space-y-1">
-                <p class="flex items-center justify-center space-x-2">
-                    <span class="text-cyan-400">&gt;</span>
-                    <span>Protected by AI Sentinel Behavioral Telemetry</span>
+            <!-- Quick Demo Credentials Selector for Presentation / Defense -->
+            <div class="mt-6 pt-4 border-t border-[#1c2233]">
+                <p class="text-[11px] font-semibold text-slate-400 mb-2 flex items-center justify-between">
+                    <span>Pre-Configured Identities:</span>
+                    <span class="text-[10px] font-mono text-sky-400">DEMO READY</span>
                 </p>
-                <p class="text-[10px] text-slate-600">UNAUTHORIZED ACCESS STRICTLY MONITORED &bull; NIST SP 800-207</p>
+                <div class="grid grid-cols-3 gap-1.5 text-[11px] font-mono">
+                    <button type="button" onclick="setDemo('admin@organization.com', 'admin123')" class="p-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-[#1c2233] text-center transition truncate" title="Super Admin UID-1 (Tier 3)">
+                        <span class="text-purple-400 font-bold">Tier 3</span> Admin
+                    </button>
+                    <button type="button" onclick="setDemo('auditor@organization.com', 'auditor123')" class="p-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-[#1c2233] text-center transition truncate" title="Auditor UID-2 (Tier 2)">
+                        <span class="text-sky-400 font-bold">Tier 2</span> Audit
+                    </button>
+                    <button type="button" onclick="setDemo('staff@organization.com', 'staff123')" class="p-1.5 rounded bg-slate-900 hover:bg-slate-800 text-slate-300 border border-[#1c2233] text-center transition truncate" title="Staff UID-3 (Tier 1)">
+                        <span class="text-amber-400 font-bold">Tier 1</span> Staff
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer Compliance Readout -->
+            <div class="mt-5 text-center text-[10px] text-slate-500 font-mono">
+                NIST SP 800-207 ZERO-TRUST &bull; PROTECTED BY AI SENTINEL
             </div>
         </div>
     </div>
+
+    <script>
+        function setDemo(email, pass) {
+            document.getElementById('loginEmail').value = email;
+            document.getElementById('loginPass').value = pass;
+        }
+    </script>
 
 </body>
 </html>

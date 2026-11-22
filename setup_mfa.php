@@ -104,70 +104,66 @@ $otpauth_uri = "otpauth://totp/" . rawurlencode($issuer) . ":" . rawurlencode($a
     <script src="assets/js/qrcode.min.js"></script>
     <script src="assets/js/cyber-effects.js" defer></script>
 </head>
-<body class="cyber-bg cyber-grid-overlay min-h-screen flex items-center justify-center px-4 py-12 relative overflow-x-hidden text-slate-300">
+<body class="bg-[#090d16] min-h-screen flex flex-col items-center justify-center px-4 py-12 relative text-slate-300">
 
-    <!-- Top Telemetry Status Ticker -->
-    <div class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 py-2.5 bg-slate-950/80 border-b border-cyan-500/20 backdrop-blur-md text-[11px] font-tech text-cyan-400/90">
-        <div class="flex items-center space-x-3">
-            <span class="inline-flex h-2 w-2 rounded-full bg-cyan-400 cyber-beacon"></span>
-            <span class="tracking-widest uppercase font-bold text-white">IDENTITY ENCLAVE // TOTP REGISTRATION</span>
+    <!-- Top Telemetry Status Header -->
+    <header class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 py-2.5 bg-[#0c101a]/90 border-b border-[#1c2233] backdrop-blur-md text-xs font-sans text-slate-400">
+        <div class="flex items-center space-x-2.5">
+            <div class="w-6 h-6 rounded-md bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                <i class="fa-solid fa-shield-halved text-xs"></i>
+            </div>
+            <span class="font-bold text-white tracking-tight">SECURE·DEFENSE</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold">MFA ENROLLMENT</span>
         </div>
-        <div class="hidden sm:flex items-center space-x-6 text-slate-400">
-            <span>ALGORITHM: <strong class="text-cyan-300">HMAC-SHA1 / RFC 6238</strong></span>
-            <span>STORAGE: <strong class="text-emerald-400">ENCRYPTED BASE32</strong></span>
-            <span>AIR-GAP: <strong class="text-purple-400">100% OFFLINE</strong></span>
+        <div class="hidden sm:flex items-center space-x-4 text-xs font-mono">
+            <span>Algorithm: <strong class="text-sky-300">HMAC-SHA1 / RFC 6238</strong></span>
+            <span class="text-slate-600">|</span>
+            <span>Storage: <strong class="text-emerald-400">ENCRYPTED BASE32</strong></span>
+            <span class="text-slate-600">|</span>
+            <span>Air-Gap: <strong class="text-slate-300">100% OFFLINE</strong></span>
         </div>
-    </div>
+    </header>
 
-    <!-- Main High-Tech MFA Enrollment Card -->
-    <div class="relative z-10 w-full max-w-lg my-8">
-        <div class="cyber-card cyber-brackets rounded-2xl p-7 sm:p-9 shadow-2xl relative overflow-hidden border border-cyan-500/30">
+    <!-- Main Okta-Grade MFA Setup Card -->
+    <div class="relative z-10 w-full max-w-lg my-auto pt-8">
+        <div class="bg-[#10141f] rounded-xl p-8 sm:p-9 shadow-2xl border border-[#1c2233]">
             
-            <!-- Laser Scan Line -->
-            <div class="cyber-laser-beam"></div>
-
-            <div class="text-center mb-6 relative">
-                <div class="relative inline-flex items-center justify-center w-20 h-20 mb-3">
-                    <div class="absolute inset-0 rounded-full border border-dashed border-cyan-500/40 cyber-radar-spin"></div>
-                    <div class="absolute inset-1.5 rounded-full border border-emerald-500/40 cyber-radar-reverse"></div>
-                    <div class="w-14 h-14 rounded-full bg-cyan-950/70 border border-cyan-400/60 flex items-center justify-center text-cyan-400 glow-cyan-sm shadow-inner">
-                        <i class="fa-solid fa-mobile-screen-button text-2xl text-cyan-300"></i>
-                    </div>
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 mb-3 shadow-inner">
+                    <i class="fa-solid fa-mobile-screen-button text-2xl"></i>
                 </div>
-
-                <h1 class="font-orbitron text-xl sm:text-2xl font-extrabold text-white tracking-wider glow-text-cyan mb-1">
-                    MFA <span class="text-cyan-400">ENROLLMENT</span>
+                <h1 class="text-xl sm:text-2xl font-bold text-white tracking-tight font-sans">
+                    Configure Authenticator App
                 </h1>
-                <p class="font-tech text-xs text-slate-400 uppercase tracking-wider">
-                    Google Authenticator Zero-Trust Provisioning
+                <p class="text-xs text-slate-400 mt-1 font-sans">
+                    Pair Google Authenticator or Okta Verify to enforce Multi-Factor Authentication
                 </p>
             </div>
             
             <?php echo $message; ?>
 
-            <!-- Step 1: Holographic QR Code Box -->
-            <div class="text-center mb-6 bg-slate-950/70 p-5 rounded-2xl border border-cyan-500/20 relative">
-                <div class="flex items-center justify-between mb-3 text-xs font-tech">
-                    <span class="text-cyan-300 font-bold flex items-center">
-                        <span class="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center mr-2 text-[10px]">1</span>
-                        SCAN QR MATRIX
+            <!-- Step 1: QR Code Scan -->
+            <div class="text-center mb-6 bg-[#090d16] p-5 rounded-lg border border-[#1c2233]">
+                <div class="flex items-center justify-between mb-3 text-xs font-sans">
+                    <span class="text-sky-400 font-semibold flex items-center">
+                        <span class="w-5 h-5 rounded-full bg-sky-500/20 border border-sky-500/40 flex items-center justify-center mr-2 text-[10px] text-sky-300 font-bold">1</span>
+                        Scan QR Code with Authenticator
                     </span>
-                    <span class="text-emerald-400 text-[10px] font-mono"><i class="fa-solid fa-microchip mr-1"></i> CLIENT-SIDE SVG</span>
+                    <span class="text-emerald-400 text-[10px] font-mono"><i class="fa-solid fa-check mr-1"></i> Client-Side SVG</span>
                 </div>
 
-                <!-- QR Code Mount with Glowing Corner Brackets -->
-                <div class="inline-block p-3.5 bg-white rounded-xl shadow-2xl relative cyber-brackets border border-cyan-400/60 glow-cyan-sm">
+                <div class="inline-block p-3.5 bg-white rounded-lg shadow-xl border border-slate-300">
                     <div id="qrcode" class="w-44 h-44 mx-auto flex items-center justify-center"></div>
                 </div>
 
                 <!-- Secret Key Display with Copy Trigger -->
-                <div class="mt-4 pt-3 border-t border-slate-800/80 flex flex-col sm:flex-row items-center justify-between gap-2 font-tech text-xs">
-                    <span class="text-slate-400">Manual Key:</span>
+                <div class="mt-4 pt-3 border-t border-[#1c2233] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs">
+                    <span class="text-slate-400 font-sans">Manual Entry Key:</span>
                     <div class="flex items-center space-x-2">
-                        <span id="secretKeyText" class="text-emerald-400 font-bold bg-slate-900 px-3 py-1 rounded-lg border border-slate-700 select-all tracking-widest text-xs font-mono">
+                        <span id="secretKeyText" class="text-emerald-400 font-bold bg-[#10141f] px-3 py-1 rounded border border-[#1c2233] select-all tracking-widest text-xs font-mono">
                             <?php echo $current_secret; ?>
                         </span>
-                        <button type="button" onclick="copySecretKey()" class="text-xs bg-slate-800 hover:bg-slate-700 text-cyan-300 px-2.5 py-1 rounded-lg border border-slate-700 hover:border-cyan-400 transition" title="Copy to Clipboard">
+                        <button type="button" onclick="copySecretKey()" class="text-xs bg-slate-800 hover:bg-slate-700 text-sky-400 px-2.5 py-1 rounded border border-[#1c2233] transition" title="Copy to Clipboard">
                             <i class="fa-solid fa-copy"></i>
                         </button>
                     </div>
@@ -193,36 +189,35 @@ $otpauth_uri = "otpauth://totp/" . rawurlencode($issuer) . ":" . rawurlencode($a
                 function copySecretKey() {
                     const key = document.getElementById('secretKeyText').innerText.trim();
                     navigator.clipboard.writeText(key).then(() => {
-                        if (typeof CyberAudio !== 'undefined') CyberAudio.click();
-                        alert('Base32 Secret Key copied to clipboard!');
+                        alert('Secret Key copied to clipboard: ' + key);
                     });
                 }
             </script>
 
             <!-- Step 2: Verification Form -->
-            <form method="POST" action="" class="space-y-5">
+            <form method="POST" action="" class="space-y-4">
                 <input type="hidden" name="mfa_secret_hidden" value="<?php echo $current_secret; ?>">
                 
                 <div>
-                    <label class="block font-tech text-xs text-cyan-300 uppercase tracking-widest mb-2 flex items-center">
-                        <span class="w-5 h-5 rounded-full bg-cyan-500/20 border border-cyan-500/40 flex items-center justify-center mr-2 text-[10px]">2</span>
-                        CONFIRM 6-DIGIT CODE
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2 flex items-center">
+                        <span class="w-5 h-5 rounded-full bg-sky-500/20 border border-sky-500/40 flex items-center justify-center mr-2 text-[10px] text-sky-300 font-bold">2</span>
+                        Enter 6-digit confirmation code
                     </label>
                     <input type="text" name="mfa_code" maxlength="6" 
-                           class="cyber-input w-full px-4 py-3 rounded-xl text-center tracking-[0.45em] font-orbitron font-bold text-xl text-cyan-300 placeholder:text-slate-700 focus:ring-0 focus:border-cyan-400" 
+                           class="w-full px-4 py-3 rounded-md text-center tracking-[0.45em] font-mono font-bold text-xl bg-[#090d16] border border-[#1c2233] text-sky-400 placeholder:text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500 transition" 
                            placeholder="000000" required autocomplete="off" inputmode="numeric">
                 </div>
 
-                <button type="submit" class="cyber-btn w-full py-3.5 px-4 bg-gradient-to-r from-emerald-600 via-teal-600 to-cyan-600 hover:from-emerald-500 hover:to-cyan-500 text-white font-bold text-xs tracking-widest rounded-xl transition shadow-lg glow-emerald flex items-center justify-center space-x-2 group">
-                    <i class="fa-solid fa-shield-check text-sm group-hover:scale-110 transition"></i>
-                    <span>VERIFY & ENFORCE ZERO-TRUST MFA</span>
+                <button type="submit" class="w-full py-2.5 px-4 bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold text-sm rounded-md transition shadow-md flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-shield-check text-sm"></i>
+                    <span>Confirm & Activate 2FA</span>
                 </button>
             </form>
 
-            <div class="mt-6 pt-4 border-t border-slate-800/80 text-center font-tech text-xs">
-                <a href="dashboard.php" class="text-slate-400 hover:text-cyan-400 transition flex items-center justify-center space-x-1.5">
-                    <i class="fa-solid fa-arrow-left text-[11px]"></i>
-                    <span>Return to SOC Command Center</span>
+            <div class="mt-6 pt-4 border-t border-[#1c2233] text-center text-xs">
+                <a href="dashboard.php" class="text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5 font-sans">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                    <span>Return to User Directory</span>
                 </a>
             </div>
         </div>

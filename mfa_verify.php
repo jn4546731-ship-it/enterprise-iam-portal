@@ -112,98 +112,85 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="assets/css/cyber-theme.css?v=<?php echo time(); ?>" rel="stylesheet">
     <script src="assets/js/cyber-effects.js" defer></script>
 </head>
-<body class="cyber-bg cyber-grid-overlay min-h-screen flex items-center justify-center px-4 relative overflow-x-hidden text-slate-300">
+<body class="bg-[#090d16] min-h-screen flex flex-col items-center justify-center px-4 py-8 relative text-slate-300">
 
-    <!-- Top Telemetry Status Ticker -->
-    <div class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 py-2.5 bg-slate-950/80 border-b border-cyan-500/20 backdrop-blur-md text-[11px] font-tech text-cyan-400/90">
-        <div class="flex items-center space-x-3">
-            <span class="inline-flex h-2 w-2 rounded-full bg-amber-400 cyber-beacon"></span>
-            <span class="tracking-widest uppercase font-bold text-white">INTERCEPT QUARANTINE // TOTP CHALLENGE</span>
+    <!-- Top Telemetry Status Header -->
+    <header class="fixed top-0 left-0 right-0 z-20 flex justify-between items-center px-6 py-2.5 bg-[#0c101a]/90 border-b border-[#1c2233] backdrop-blur-md text-xs font-sans text-slate-400">
+        <div class="flex items-center space-x-2.5">
+            <div class="w-6 h-6 rounded-md bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400">
+                <i class="fa-solid fa-shield-halved text-xs"></i>
+            </div>
+            <span class="font-bold text-white tracking-tight">SECURE·DEFENSE</span>
+            <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-semibold">MFA INTERCEPT</span>
         </div>
-        <div class="hidden sm:flex items-center space-x-6 text-slate-400">
-            <span>SESSION: <strong class="text-amber-400">PENDING_CHALLENGE</strong></span>
-            <span>STANDARD: <strong class="text-cyan-300">RFC 6238 TOTP</strong></span>
-            <span>WINDOW: <strong class="text-purple-400">30s TIME-SLICE</strong></span>
+        <div class="hidden sm:flex items-center space-x-4 text-xs font-mono">
+            <span>Session: <strong class="text-amber-400">QUARANTINE_PENDING</strong></span>
+            <span class="text-slate-600">|</span>
+            <span>Standard: <strong class="text-sky-300">RFC 6238 TOTP</strong></span>
+            <span class="text-slate-600">|</span>
+            <span>Window: <strong class="text-slate-300">30s Rolling</strong></span>
         </div>
-    </div>
+    </header>
 
-    <!-- Main High-Tech MFA Terminal Card -->
-    <div class="relative z-10 w-full max-w-md my-12">
-        <div class="cyber-card cyber-brackets rounded-2xl p-7 sm:p-9 shadow-2xl relative overflow-hidden border border-cyan-500/30">
+    <!-- Main Okta-Grade MFA Card -->
+    <div class="relative z-10 w-full max-w-md my-auto pt-8">
+        <div class="bg-[#10141f] rounded-xl p-8 sm:p-9 shadow-2xl border border-[#1c2233]">
             
-            <!-- Laser Scan Line -->
-            <div class="cyber-laser-beam"></div>
-
-            <!-- Rotating Holographic Radar Scanner -->
-            <div class="text-center mb-8 relative">
-                <div class="relative inline-flex items-center justify-center w-24 h-24 mb-3">
-                    <div class="absolute inset-0 rounded-full border border-dashed border-cyan-500/40 cyber-radar-spin"></div>
-                    <div class="absolute inset-2 rounded-full border border-purple-500/40 cyber-radar-reverse"></div>
-                    <div class="absolute inset-4 rounded-full bg-cyan-950/70 border border-cyan-400/60 flex items-center justify-center text-cyan-400 glow-cyan-sm shadow-inner">
-                        <i class="fa-solid fa-fingerprint text-3xl text-cyan-300 animate-pulse"></i>
-                    </div>
+            <div class="text-center mb-6">
+                <div class="inline-flex items-center justify-center w-14 h-14 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-400 mb-3 shadow-inner">
+                    <i class="fa-solid fa-mobile-screen-button text-2xl"></i>
                 </div>
-
-                <h1 class="font-orbitron text-lg sm:text-xl font-extrabold text-white tracking-wider glow-text-cyan mb-1">
-                    IDENTITY <span class="text-cyan-400">CHALLENGE</span>
+                <h1 class="text-xl sm:text-2xl font-bold text-white tracking-tight font-sans">
+                    Two-Step Verification
                 </h1>
-                <p class="font-tech text-xs text-slate-400 tracking-wider">
-                    Enter dynamic 6-digit TOTP cryptographic token
+                <p class="text-xs text-slate-400 mt-1 font-sans">
+                    Enter the 6-digit code from your authenticator app
                 </p>
-
-                <!-- Quarantined Identity Badge -->
-                <div class="mt-3 inline-flex items-center space-x-2 px-3 py-1 rounded-full text-[11px] font-tech text-amber-300 bg-amber-950/40 border border-amber-500/40 shadow-sm">
-                    <i class="fa-solid fa-user-shield text-[10px] text-amber-400"></i>
-                    <span class="font-bold"><?php echo htmlspecialchars($user['email'] ?? 'Authenticated Identity'); ?></span>
+                <div class="mt-2.5 inline-flex items-center space-x-1.5 px-3 py-1 rounded-full text-xs font-mono text-amber-300 bg-amber-500/10 border border-amber-500/20">
+                    <i class="fa-solid fa-user-check text-[10px]"></i>
+                    <span class="truncate max-w-[220px]"><?php echo htmlspecialchars($user['email'] ?? 'Authenticated Identity'); ?></span>
                 </div>
             </div>
 
             <?php if ($error): ?>
-                <div class="bg-red-950/40 border border-red-500/60 text-red-300 p-3.5 rounded-xl mb-6 text-xs font-tech flex items-start glow-red shadow-lg animate-pulse">
-                    <i class="fa-solid fa-triangle-exclamation mr-2.5 mt-0.5 text-base text-red-400 flex-shrink-0"></i>
+                <div class="bg-red-500/10 border border-red-500/30 text-red-300 p-3.5 rounded-lg mb-6 text-xs flex items-start">
+                    <i class="fa-solid fa-circle-exclamation mr-2.5 mt-0.5 text-base text-red-400 flex-shrink-0"></i>
                     <div>
-                        <strong class="text-red-400 uppercase font-bold tracking-wider">Challenge Failed:</strong>
-                        <p class="mt-0.5"><?php echo htmlspecialchars($error); ?></p>
+                        <strong class="text-red-400 font-semibold">Verification Failed:</strong>
+                        <p class="mt-0.5 text-slate-300"><?php echo htmlspecialchars($error); ?></p>
                     </div>
                 </div>
-                <script>
-                    window.addEventListener('DOMContentLoaded', () => {
-                        if (typeof CyberAudio !== 'undefined') CyberAudio.accessDenied();
-                    });
-                </script>
             <?php endif; ?>
 
             <!-- TOTP Input Form -->
-            <form method="POST" action="" class="space-y-6">
+            <form method="POST" action="" class="space-y-5">
                 <div>
-                    <label class="block font-tech text-xs text-cyan-300 uppercase tracking-widest text-center mb-3">
-                        6-Digit Micro-Challenge Code
+                    <label class="block text-xs font-semibold text-slate-300 uppercase tracking-wider mb-2 text-center">
+                        6-Digit Security Code
                     </label>
-                    <div class="relative">
-                        <input type="text" name="mfa_code" maxlength="6" autofocus 
-                               class="cyber-input w-full px-4 py-4 rounded-xl text-center tracking-[0.55em] font-orbitron font-bold text-2xl text-cyan-300 placeholder:text-slate-700 glow-cyan-sm focus:ring-0 focus:border-cyan-400" 
-                               placeholder="••••••" required autocomplete="one-time-code" inputmode="numeric">
-                    </div>
+                    <input type="text" name="mfa_code" maxlength="6" autofocus 
+                           class="w-full px-4 py-3.5 rounded-lg text-center tracking-[0.45em] font-mono font-bold text-2xl bg-[#090d16] border border-[#1c2233] text-sky-400 placeholder:text-slate-700 focus:outline-none focus:ring-2 focus:ring-sky-500/30 focus:border-sky-500 transition" 
+                           placeholder="000000" required autocomplete="one-time-code" inputmode="numeric">
                     
-                    <!-- 30-Second TOTP Time Remaining Bar -->
-                    <div class="mt-3 flex items-center justify-between text-[10px] font-tech text-slate-500">
-                        <span id="totpSecLabel">Dynamic Token Active</span>
-                        <div class="w-32 bg-slate-900 rounded-full h-1.5 overflow-hidden border border-slate-800">
-                            <div id="totpProgressBar" class="bg-gradient-to-r from-cyan-400 to-indigo-500 h-full transition-all duration-1000 ease-linear" style="width: 100%;"></div>
+                    <!-- 30-Second Rolling Code Progress Bar -->
+                    <div class="mt-3 flex items-center justify-between text-[11px] font-mono text-slate-500">
+                        <span id="totpSecLabel">Rolling Code Active</span>
+                        <div class="w-28 bg-[#090d16] rounded-full h-1.5 overflow-hidden border border-[#1c2233]">
+                            <div id="totpProgressBar" class="bg-sky-400 h-full transition-all duration-1000 ease-linear" style="width: 100%;"></div>
                         </div>
                     </div>
                 </div>
 
-                <button type="submit" class="cyber-btn w-full py-3.5 px-4 bg-gradient-to-r from-cyan-600 via-blue-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 text-white font-bold text-xs tracking-widest rounded-xl transition shadow-lg glow-cyan flex items-center justify-center space-x-2 group">
-                    <i class="fa-solid fa-shield-halved text-sm group-hover:scale-110 transition"></i>
-                    <span>CONFIRM CRYPTOGRAPHIC CHALLENGE</span>
+                <button type="submit" class="w-full py-2.5 px-4 bg-sky-500 hover:bg-sky-400 text-slate-950 font-bold text-sm rounded-md transition shadow-md flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-shield-check text-sm"></i>
+                    <span>Verify Identity</span>
                 </button>
             </form>
             
-            <div class="mt-8 pt-4 border-t border-slate-800/80 text-center font-tech text-xs text-slate-500">
-                <a href="logout.php" class="text-slate-400 hover:text-cyan-400 transition flex items-center justify-center space-x-1.5">
-                    <i class="fa-solid fa-arrow-left text-[11px]"></i>
-                    <span>Abort Quarantine & Return to Gateway</span>
+            <div class="mt-6 pt-4 border-t border-[#1c2233] text-center text-xs">
+                <a href="logout.php" class="text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5 font-sans">
+                    <i class="fa-solid fa-arrow-left text-xs"></i>
+                    <span>Cancel and return to sign in</span>
                 </a>
             </div>
         </div>

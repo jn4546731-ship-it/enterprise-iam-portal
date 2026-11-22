@@ -190,23 +190,23 @@ $events_24h = (int) (($total_24h_res ? $total_24h_res->fetch_assoc()['cnt'] : 0)
         }
     </style>
 </head>
-<body class="cyber-bg cyber-grid-overlay text-slate-200 font-sans min-h-screen p-4 sm:p-8 antialiased selection:bg-cyan-500 selection:text-black">
+<body class="bg-[#090d16] text-slate-200 font-sans min-h-screen p-4 sm:p-8 antialiased">
 
     <!-- Top Action Bar (Screen Only) -->
-    <div class="max-w-5xl mx-auto mb-6 flex justify-between items-center no-print bg-slate-950/90 p-4 rounded-2xl border border-cyan-500/30 backdrop-blur-md">
+    <div class="max-w-5xl mx-auto mb-6 flex justify-between items-center no-print bg-[#0c101a] p-3.5 rounded-lg border border-[#1c2233]">
         <div class="flex items-center space-x-3">
-            <a href="dashboard.php" class="cyber-btn bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center">
-                <i class="fa-solid fa-arrow-left mr-1.5"></i> Return to Command Center
+            <a href="dashboard.php" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-[#1c2233] transition flex items-center">
+                <i class="fa-solid fa-arrow-left mr-1.5"></i> Back to Directory
             </a>
-            <span class="text-xs font-tech text-slate-500 hidden sm:inline">|</span>
-            <span class="text-xs font-tech text-cyan-400 hidden sm:inline"><i class="fa-solid fa-file-shield mr-1"></i> NIST SP 800-207 Compliance Audit Export</span>
+            <span class="text-xs text-slate-600 hidden sm:inline">|</span>
+            <span class="text-xs text-sky-400 font-medium hidden sm:inline"><i class="fa-solid fa-file-shield mr-1"></i> NIST SP 800-207 Compliance Audit Export</span>
         </div>
         
         <div class="flex items-center space-x-2">
-            <a href="dashboard.php?export=csv" class="cyber-btn bg-slate-900 hover:bg-slate-800 text-slate-300 border border-slate-700 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center">
-                <i class="fa-solid fa-file-csv mr-1.5 text-cyan-400"></i> Export Raw CSV
+            <a href="dashboard.php?export=csv" class="px-3 py-1.5 rounded-md text-xs font-semibold text-slate-300 hover:text-white bg-slate-900 hover:bg-slate-800 border border-[#1c2233] transition flex items-center">
+                <i class="fa-solid fa-file-csv mr-1.5 text-sky-400"></i> Export CSV
             </a>
-            <button onclick="window.print()" class="cyber-btn bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-4 py-2 rounded-xl text-xs font-orbitron font-bold transition flex items-center shadow-lg glow-cyan">
+            <button onclick="window.print()" class="px-3.5 py-1.5 rounded-md text-xs font-semibold text-slate-950 bg-sky-400 hover:bg-sky-300 transition flex items-center shadow-sm">
                 <i class="fa-solid fa-print mr-1.5"></i> Print Official Report (PDF)
             </button>
         </div>

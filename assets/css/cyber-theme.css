@@ -1,7 +1,6 @@
 /**
- * Obsidian Cipher — Enterprise Zero-Trust IAM & SOC Design System
- * Specification from Google Stitch DESIGN.md
- * Mission-Critical SecOps Instrument Architecture
+ * Enterprise Zero-Trust IAM & SOC Portal — Global Standard UI
+ * Inspired by Okta Admin Console, Cloudflare Zero Trust, and Entra ID
  * 100% Offline & Air-Gapped Compliant
  */
 
@@ -14,131 +13,114 @@
 
 :root {
   /* ==========================================================================
-     Obsidian Cipher — Color Tokens (Google Stitch Specification)
+     Global IAM Enterprise Dark Palette (Okta / Cloudflare Access Style)
      ========================================================================== */
-  
-  /* Foundations & Canvas */
-  --color-surface-ground: #0b0f17;          /* Base Obsidian Canvas */
-  --color-surface-panel: #111827;           /* Raised Panel / Card Surface */
-  --color-surface-nested: #0f172a;          /* Nested Container / Data Tables */
-  --color-surface-elevated: #1e293b;        /* Elevated Popovers & Dialogs */
-  --color-surface-highest: #262a34;
+  --color-canvas: #090d16;              /* Main application ground */
+  --color-surface: #10141f;             /* Primary card / panel surface */
+  --color-surface-nested: #0d111a;      /* Nested containers, table headers */
+  --color-surface-elevated: #161c2b;    /* Modals, flyouts, active hover */
+  --color-surface-highest: #1e2638;
 
-  /* Legacy token mapping */
-  --color-surface: #111827;
-  --color-surface-dim: #0b0f17;
-  --color-surface-bright: #1e293b;
-  --color-surface-container-lowest: #0b0f17;
-  --color-surface-container-low: #0f172a;
-  --color-surface-container: #111827;
-  --color-surface-container-high: #1e293b;
-  --color-surface-container-highest: #262a34;
+  /* Legacy mapping */
+  --color-surface-ground: #090d16;
+  --color-surface-panel: #10141f;
 
-  /* Typography / Text Colors */
-  --color-on-surface: #dfe2ee;
-  --color-on-surface-variant: #bdc8d1;
-  --color-outline: #87929a;
-  --color-outline-variant: #3e484f;
+  /* Text & Typography */
+  --color-text-primary: #f8fafc;        /* High-contrast crisp white */
+  --color-text-secondary: #94a3b8;      /* Readable slate-400 */
+  --color-text-muted: #64748b;          /* Muted labels slate-500 */
+  --color-on-surface: #f8fafc;
+  --color-on-surface-variant: #94a3b8;
+  --color-outline: #64748b;
 
-  /* Brand Accents */
-  --color-primary: #38bdf8;                 /* Primary Electric Cyan */
+  /* Brand Accents (Okta Electric Sky Blue) */
+  --color-primary: #38bdf8;
   --color-primary-hover: #0284c7;
-  --color-on-primary: #0b0f17;
-  --color-primary-container: #004d69;
-  --color-on-primary-container: #bfe8ff;
+  --color-on-primary: #090d16;
+  --color-primary-subtle: rgba(56, 189, 248, 0.1);
+  --color-primary-border: rgba(56, 189, 248, 0.25);
 
   /* Telemetry Status Signals */
-  --color-status-success: #10b981;          /* Secondary Emerald Trust */
+  --color-status-success: #10b981;
   --color-status-success-text: #34d399;
   --color-status-success-bg: rgba(16, 185, 129, 0.1);
   --color-status-success-border: rgba(16, 185, 129, 0.25);
 
-  --color-status-warning: #f59e0b;          /* Tertiary Amber Warning */
+  --color-status-warning: #f59e0b;
   --color-status-warning-text: #fbbf24;
   --color-status-warning-bg: rgba(245, 158, 11, 0.1);
   --color-status-warning-border: rgba(245, 158, 11, 0.25);
 
-  --color-status-critical: #ef4444;         /* Critical Crimson Alert */
+  --color-status-critical: #ef4444;
   --color-status-critical-text: #f87171;
-  --color-status-critical-bg: rgba(239, 68, 68, 0.15);
-  --color-status-critical-border: rgba(239, 68, 68, 0.4);
+  --color-status-critical-bg: rgba(239, 68, 68, 0.12);
+  --color-status-critical-border: rgba(239, 68, 68, 0.35);
 
-  --color-status-info: #38bdf8;
-  --color-status-info-bg: rgba(56, 189, 248, 0.1);
+  /* Structural Borders */
+  --border-subtle: 1px solid #1c2233;
+  --border-hover: 1px solid #2d3748;
+  --border-active: 1px solid #38bdf8;
 
-  /* Framing & Borders */
-  --border-subtle: 1px solid #1e293b;       /* Standard structural grid line */
-  --border-high: 1px solid #334155;         /* Active container borders */
-  --border-accent: 1px solid rgba(56, 189, 248, 0.35);
+  /* Typography Stacks (Universal & Clean) */
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Share Tech Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-  /* Typography Stacks */
-  --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'JetBrains Mono', 'Share Tech Mono', 'Geist Mono', Menlo, monospace;
-
-  /* Radii (Google Stitch Soft Architectural Precision) */
+  /* Radii */
   --radius-xs: 2px;
-  --radius-sm: 4px;   /* 0.25rem: Base Components, inputs, buttons, chips */
+  --radius-sm: 4px;
   --radius-md: 6px;
-  --radius-lg: 8px;   /* 0.5rem: Panels & Dashboard cards */
-  --radius-xl: 12px;  /* 0.75rem: Modals & Flyouts */
+  --radius-lg: 8px;
+  --radius-xl: 12px;
   --radius-full: 9999px;
 
-  /* Shadows & Micro-Luminescence */
-  --shadow-card: 0 4px 16px -2px rgba(0, 0, 0, 0.5);
-  --glow-primary: 0 0 12px rgba(56, 189, 248, 0.3);
-  --glow-critical: 0 0 12px rgba(239, 68, 68, 0.35);
+  /* Box Shadows */
+  --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px -1px rgba(0, 0, 0, 0.4);
+  --shadow-elevated: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5);
 
   color-scheme: dark;
 }
 
 /* ==========================================================================
-   Global Resets & Substrate Canvas
+   Global Base & Typography
    ========================================================================== */
 html, body {
-    background-color: var(--color-surface-ground) !important;
-    color: var(--color-on-surface) !important;
-    font-family: var(--font-sans);
+    background-color: var(--color-canvas) !important;
+    color: var(--color-text-primary) !important;
+    font-family: var(--font-sans) !important;
     color-scheme: dark;
     -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.011em;
+}
+
+/* Enterprise font normalization: remap arcade fonts to crisp executive sans */
+.font-orbitron,
+h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-sans) !important;
+    font-weight: 700 !important;
+    letter-spacing: -0.02em !important;
+}
+
+.font-tech,
+.font-mono,
+code,
+pre {
+    font-family: var(--font-mono) !important;
+    letter-spacing: 0.01em !important;
 }
 
 .cyber-bg {
-    background: var(--color-surface-ground) !important;
+    background-color: var(--color-canvas) !important;
 }
 
 .cyber-grid-overlay {
     background-image: 
-        linear-gradient(rgba(56, 189, 248, 0.025) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(56, 189, 248, 0.025) 1px, transparent 1px) !important;
+        linear-gradient(rgba(255, 255, 255, 0.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.015) 1px, transparent 1px) !important;
     background-size: 24px 24px !important;
 }
 
-/* ==========================================================================
-   Obsidian Cipher Cards & Panels (Stitch Level 1)
-   ========================================================================== */
-.cyber-card,
-.panel-card,
-.bg-slate-900,
-.bg-slate-900\/90,
-.bg-slate-900\/80,
-.bg-slate-900\/60 {
-    background-color: var(--color-surface-panel) !important;
-    border: var(--border-subtle) !important;
-    border-radius: var(--radius-lg) !important;
-    box-shadow: var(--shadow-card) !important;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
-}
-
-.cyber-card:hover {
-    border-color: #334155 !important;
-    box-shadow: 0 6px 20px -2px rgba(0, 0, 0, 0.6) !important;
-}
-
-/* Eliminate cartoonish gimmicks per Stitch specifications */
-.cyber-laser-beam {
-    display: none !important;
-}
-
+/* Eliminate cartoonish gimmicks completely */
+.cyber-laser-beam,
 .cyber-brackets::before,
 .cyber-brackets::after {
     display: none !important;
@@ -152,7 +134,28 @@ html, body {
     text-shadow: none !important;
 }
 
-/* Soft Precision Radii normalization */
+/* ==========================================================================
+   Okta-Style Cards & Content Containers
+   ========================================================================== */
+.cyber-card,
+.panel-card,
+.bg-slate-900,
+.bg-slate-900\/90,
+.bg-slate-900\/80,
+.bg-slate-900\/60,
+.bg-slate-950 {
+    background-color: var(--color-surface) !important;
+    border: var(--border-subtle) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: var(--shadow-card) !important;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.cyber-card:hover {
+    border-color: #2d3748 !important;
+}
+
+/* Soft Radii normalization across classes */
 .rounded-2xl,
 .rounded-3xl {
     border-radius: var(--radius-lg) !important;
@@ -163,25 +166,24 @@ html, body {
 }
 
 /* ==========================================================================
-   Buttons & Interactive Controls (Stitch Precision)
+   Okta-Grade Buttons & Interactive Controls
    ========================================================================== */
-
-/* Primary Cyber Action: #38bdf8 fill with #0b0f17 bold typography */
 .cyber-btn.bg-gradient-to-r,
 .cyber-btn-primary,
 button[type="submit"].cyber-btn,
 .bg-cyan-600 {
-    background: var(--color-primary) !important;
+    background: #38bdf8 !important;
     background-image: none !important;
-    color: var(--color-on-primary) !important;
-    font-family: var(--font-mono) !important;
-    font-weight: 700 !important;
-    font-size: 0.75rem !important;
-    letter-spacing: 0.04em !important;
-    text-transform: uppercase !important;
-    border-radius: var(--radius-sm) !important;
-    border: 1px solid var(--color-primary) !important;
-    box-shadow: 0 0 10px rgba(56, 189, 248, 0.25) !important;
+    color: #090d16 !important;
+    font-family: var(--font-sans) !important;
+    font-weight: 600 !important;
+    font-size: 0.8125rem !important; /* 13px */
+    letter-spacing: -0.01em !important;
+    text-transform: none !important;
+    border-radius: var(--radius-md) !important;
+    border: 1px solid #38bdf8 !important;
+    padding: 0.5rem 1rem !important;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2) !important;
     transition: all 0.15s ease !important;
 }
 
@@ -189,55 +191,58 @@ button[type="submit"].cyber-btn,
 .cyber-btn-primary:hover,
 button[type="submit"].cyber-btn:hover,
 .bg-cyan-600:hover {
-    background: var(--color-primary-hover) !important;
-    border-color: var(--color-primary-hover) !important;
+    background: #0284c7 !important;
+    border-color: #0284c7 !important;
     color: #ffffff !important;
-    box-shadow: 0 0 16px rgba(56, 189, 248, 0.45) !important;
-    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3) !important;
+    transform: none !important;
 }
 
-/* Secondary / Ghost Action: Transparent with #334155 border */
+/* Secondary / Ghost Buttons */
 .cyber-btn,
 .cyber-btn-secondary,
 .bg-slate-900\/80,
 .bg-slate-800 {
-    background-color: transparent !important;
-    border: var(--border-high) !important;
-    color: #f8fafc !important;
-    font-family: var(--font-mono) !important;
-    font-weight: 600 !important;
-    font-size: 0.75rem !important;
-    border-radius: var(--radius-sm) !important;
+    background-color: rgba(255, 255, 255, 0.03) !important;
+    border: 1px solid #2d3748 !important;
+    color: var(--color-text-primary) !important;
+    font-family: var(--font-sans) !important;
+    font-weight: 500 !important;
+    font-size: 0.8125rem !important;
+    letter-spacing: -0.01em !important;
+    text-transform: none !important;
+    border-radius: var(--radius-md) !important;
+    padding: 0.5rem 0.875rem !important;
     transition: all 0.15s ease !important;
 }
 
 .cyber-btn:hover,
 .cyber-btn-secondary:hover {
-    background-color: rgba(30, 41, 59, 0.6) !important;
-    border-color: var(--color-primary) !important;
+    background-color: rgba(255, 255, 255, 0.08) !important;
+    border-color: #4b5563 !important;
     color: #ffffff !important;
 }
 
-/* Destructive Policy Action: Deep crimson outline with 10% red bg */
+/* Destructive / Killswitch Actions */
 .btn-destructive,
 .cyber-btn-danger,
 .bg-red-500\/10 {
     background-color: var(--color-status-critical-bg) !important;
-    border: 1px solid var(--color-status-critical) !important;
+    border: 1px solid var(--color-status-critical-border) !important;
     color: var(--color-status-critical-text) !important;
-    border-radius: var(--radius-sm) !important;
-    font-family: var(--font-mono) !important;
+    border-radius: var(--radius-md) !important;
+    font-family: var(--font-sans) !important;
     font-weight: 600 !important;
 }
 
 .btn-destructive:hover,
 .cyber-btn-danger:hover {
-    background-color: var(--color-status-critical) !important;
+    background-color: #ef4444 !important;
     color: #ffffff !important;
 }
 
 /* ==========================================================================
-   Inputs & Form Controls (Stitch Input Spec)
+   Okta-Grade Inputs & Form Controls
    ========================================================================== */
 .cyber-input,
 input[type="text"],
@@ -245,12 +250,13 @@ input[type="email"],
 input[type="password"],
 select,
 textarea {
-    background-color: var(--color-surface-ground) !important;
-    border: var(--border-subtle) !important;
-    color: #f8fafc !important;
-    border-radius: var(--radius-sm) !important;
-    font-family: var(--font-mono) !important;
-    font-size: 0.8125rem !important;
+    background-color: var(--color-canvas) !important;
+    border: 1px solid #1c2233 !important;
+    color: var(--color-text-primary) !important;
+    border-radius: var(--radius-md) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 0.875rem !important;
+    padding: 0.625rem 0.875rem !important;
     transition: all 0.15s ease;
 }
 
@@ -260,19 +266,61 @@ input[type="email"]:focus,
 input[type="password"]:focus,
 select:focus,
 textarea:focus {
-    background-color: var(--color-surface-nested) !important;
-    border-color: var(--color-primary) !important;
-    box-shadow: 0 0 0 1px var(--color-primary), 0 0 8px rgba(56, 189, 248, 0.25) !important;
+    background-color: #0d111a !important;
+    border-color: #38bdf8 !important;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.25) !important;
     outline: none !important;
 }
 
 select option {
     background-color: var(--color-surface-elevated) !important;
-    color: #f8fafc !important;
+    color: #ffffff !important;
 }
 
 /* ==========================================================================
-   Zero-Trust Chips & Telemetry Badges (Stitch label-sm)
+   Directory Tables (Okta Universal Directory Style)
+   ========================================================================== */
+table {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    width: 100% !important;
+}
+
+thead {
+    background-color: var(--color-surface-nested) !important;
+    border-bottom: 1px solid #1c2233 !important;
+}
+
+thead th {
+    color: var(--color-text-secondary) !important;
+    font-family: var(--font-sans) !important;
+    font-size: 0.75rem !important; /* 12px */
+    letter-spacing: 0.03em !important;
+    text-transform: uppercase !important;
+    font-weight: 600 !important;
+    padding: 12px 16px !important;
+    border-bottom: 1px solid #1c2233 !important;
+}
+
+tbody tr {
+    background-color: var(--color-surface) !important;
+    border-bottom: 1px solid #1c2233 !important;
+    transition: background-color 0.1s ease;
+}
+
+tbody tr:hover {
+    background-color: var(--color-surface-elevated) !important;
+}
+
+tbody td {
+    padding: 14px 16px !important;
+    font-size: 0.875rem !important;
+    border-bottom: 1px solid #1c2233 !important;
+    vertical-align: middle !important;
+}
+
+/* ==========================================================================
+   Status Pills & Badges (Okta Verified / Suspended Badges)
    ========================================================================== */
 .badge-verified,
 .text-emerald-400 {
@@ -289,76 +337,52 @@ select option {
     color: var(--color-status-critical-text) !important;
 }
 
-/* Beacons */
 .cyber-beacon {
     display: inline-block;
     border-radius: 9999px;
-    box-shadow: 0 0 8px currentColor;
+    box-shadow: 0 0 6px currentColor;
 }
 
 /* ==========================================================================
-   Tables & Data Streams (Stitch Level 1 / Nested Table Spec)
+   Navigation & Chrome
    ========================================================================== */
-table {
-    border-collapse: separate !important;
-    border-spacing: 0 !important;
-    width: 100% !important;
-}
-
-thead {
-    background-color: var(--color-surface-nested) !important;
-    border-bottom: 1px solid #1e293b !important;
-}
-
-thead th {
-    color: var(--color-outline) !important;
-    font-family: var(--font-mono) !important;
-    font-size: 0.6875rem !important; /* 11px */
-    letter-spacing: 0.05em !important;
-    text-transform: uppercase !important;
-    font-weight: 600 !important;
-    padding: 10px 14px !important;
-    border-bottom: 1px solid #1e293b !important;
-}
-
-tbody tr {
-    background-color: var(--color-surface-panel) !important;
-    border-bottom: 1px solid #1e293b !important;
-    transition: background-color 0.12s ease;
-}
-
-tbody tr:nth-child(even) {
-    background-color: var(--color-surface-nested) !important;
-}
-
-tbody tr:hover {
-    background-color: var(--color-surface-elevated) !important;
-}
-
-tbody td {
-    padding: 10px 14px !important;
-    font-size: 0.8125rem !important;
-    border-bottom: 1px solid #1e293b !important;
-}
-
-/* ==========================================================================
-   Top Navigation & Substrates Remapped to Obsidian Hierarchy
-   ========================================================================== */
-nav,
-.bg-slate-950,
-.bg-slate-950\/90,
-.bg-slate-950\/85,
-.bg-slate-950\/80 {
-    background-color: var(--color-surface-ground) !important;
-    border-color: #1e293b !important;
+nav {
+    background-color: #0c101a !important;
+    border-bottom: 1px solid #1c2233 !important;
 }
 
 aside {
-    background-color: var(--color-surface-panel) !important;
-    border-right: 1px solid #1e293b !important;
+    background-color: #0c101a !important;
+    border-right: 1px solid #1c2233 !important;
 }
 
-/* High-Affordance Borders */
+/* Sidebar navigation item states */
+.nav-section-title {
+    font-size: 0.6875rem !important; /* 11px */
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.06em !important;
+    color: #64748b !important;
+    padding: 0.75rem 0.75rem 0.35rem 0.75rem !important;
+}
+
+.nav-item-active {
+    background-color: rgba(56, 189, 248, 0.08) !important;
+    color: #38bdf8 !important;
+    font-weight: 600 !important;
+    border-left: 2px solid #38bdf8 !important;
+}
+
+.nav-item-inactive {
+    color: #94a3b8 !important;
+}
+
+.nav-item-inactive:hover {
+    background-color: rgba(255, 255, 255, 0.04) !important;
+    color: #ffffff !important;
+}
+
+/* Borders Overrides */
 .border-slate-800,
 .border-slate-800\/80,
 .border-slate-800\/60,
@@ -369,35 +393,35 @@ aside {
 .border-purple-500\/25,
 .border-emerald-500\/30,
 .border-blue-500\/30 {
-    border-color: #1e293b !important;
+    border-color: #1c2233 !important;
 }
 
 .border-slate-700 {
-    border-color: #334155 !important;
+    border-color: #2d3748 !important;
 }
 
 /* Typography Hierarchy */
-.text-slate-200 { color: var(--color-on-surface) !important; }
-.text-slate-300 { color: var(--color-on-surface) !important; }
-.text-slate-400 { color: var(--color-on-surface-variant) !important; }
-.text-slate-500 { color: var(--color-outline) !important; }
-.text-slate-600 { color: var(--color-outline-variant) !important; }
+.text-slate-200 { color: #f1f5f9 !important; }
+.text-slate-300 { color: #e2e8f0 !important; }
+.text-slate-400 { color: #94a3b8 !important; }
+.text-slate-500 { color: #64748b !important; }
+.text-slate-600 { color: #475569 !important; }
 
-/* Scrollbars */
+/* Custom Scrollbars */
 ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-    background: var(--color-surface-ground);
+    background: var(--color-canvas);
 }
 
 ::-webkit-scrollbar-thumb {
-    background: #1e293b;
+    background: #1c2233;
     border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: #334155;
+    background: #2d3748;
 }

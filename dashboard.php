@@ -512,61 +512,55 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
 </head>
 <body class="cyber-bg cyber-grid-overlay text-slate-300 font-sans min-h-screen flex flex-col antialiased relative selection:bg-cyan-500 selection:text-black">
 
-    <!-- Top High-Tech Cyber Navigation Bar -->
-    <nav class="bg-slate-950/85 backdrop-blur-md border-b border-cyan-500/25 py-3 px-4 sm:px-6 flex justify-between items-center shadow-2xl sticky top-0 z-30 relative overflow-hidden">
-        <!-- Sub-laser accent -->
-        <div class="cyber-laser-beam opacity-40"></div>
-
+    <!-- Top Enterprise Navigation Bar (Okta Standard) -->
+    <nav class="bg-[#0e131f] border-b border-[#1c2230] px-4 sm:px-6 py-2.5 flex justify-between items-center sticky top-0 z-30">
         <div class="flex items-center space-x-3">
-            <button id="mobileSidebarToggle" onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-400 hover:text-cyan-400 rounded-lg hover:bg-slate-900 border border-transparent hover:border-cyan-500/30 transition">
-                <i class="fa-solid fa-bars text-lg"></i>
+            <button id="mobileSidebarToggle" onclick="toggleSidebar()" class="lg:hidden p-2 text-slate-400 hover:text-sky-400 rounded-lg hover:bg-slate-800 transition">
+                <i class="fa-solid fa-bars text-base"></i>
             </button>
-            <div class="relative w-9 h-9 rounded-xl bg-cyan-950/60 border border-cyan-400/50 flex items-center justify-center text-cyan-400 glow-cyan-sm">
-                <i class="fa-solid fa-shield-halved text-lg"></i>
-            </div>
-            <div>
-                <h1 class="font-orbitron text-sm sm:text-base font-extrabold text-white tracking-wider flex items-center space-x-2">
-                    <span>ENTERPRISE SOC</span>
-                    <span class="text-cyan-400 glow-text-cyan">COMMAND CENTER</span>
-                </h1>
-                <p class="font-tech text-[10px] text-slate-400 tracking-wider">ZERO-TRUST IDENTITY ARCHITECTURE &bull; AI SENTINEL HEURISTICS</p>
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-sky-500/10 border border-sky-500/30 flex items-center justify-center text-sky-400">
+                    <i class="fa-solid fa-shield-halved text-sm"></i>
+                </div>
+                <div>
+                    <div class="flex items-center space-x-2">
+                        <span class="font-sans font-bold text-sm tracking-tight text-white">SECURE·DEFENSE</span>
+                        <span class="text-[10px] font-mono px-1.5 py-0.5 rounded bg-sky-500/10 text-sky-400 border border-sky-500/25 font-semibold">ZERO-TRUST IAM</span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 font-sans">Enterprise Identity & Access Governance</p>
+                </div>
             </div>
         </div>
 
-        <div class="flex items-center space-x-3 text-xs font-tech">
-            <!-- HTTPS Domain Indicator Badge -->
-            <div class="hidden xl:flex items-center space-x-1.5 px-3 py-1 rounded-lg bg-emerald-950/40 border border-emerald-500/40 text-[11px] text-emerald-400 shadow-sm" title="Active Enterprise Encrypted Domain">
-                <i class="fa-solid fa-lock text-[10px] text-emerald-400"></i>
-                <span class="font-bold">iam.secure-defense.internal</span>
+        <!-- Center: Security Scope Pill -->
+        <div class="hidden xl:flex items-center space-x-2 px-3 py-1 rounded-full bg-slate-900 border border-[#1c2230] text-xs text-slate-400">
+            <span class="inline-flex h-2 w-2 rounded-full bg-emerald-400"></span>
+            <span class="font-mono text-emerald-400 font-medium">iam.secure-defense.internal</span>
+            <span class="text-slate-600">•</span>
+            <span class="text-slate-400">Air-Gapped Production Enclave</span>
+        </div>
+
+        <!-- Right: Telemetry & Profile -->
+        <div class="flex items-center space-x-3 text-xs">
+            <div class="hidden sm:flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-slate-900 border border-[#1c2230]">
+                <span class="inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                <span class="text-slate-400 text-[11px]">AI Sentinel:</span>
+                <span class="text-emerald-400 font-semibold text-[11px]">ACTIVE</span>
             </div>
 
-            <!-- Audio SFX Mute/Unmute Toggle -->
-            <button onclick="toggleGlobalAudio()" id="navMuteBtn" class="p-2 rounded-lg bg-slate-900/80 border border-slate-700 text-slate-400 hover:text-cyan-400 hover:border-cyan-400/50 transition" title="Toggle Cyber Audio Synthesizer">
-                <i id="navMuteIcon" class="fa-solid fa-volume-high text-xs"></i>
-            </button>
+            <span class="hidden md:inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-mono font-bold bg-purple-500/10 text-purple-300 border border-purple-500/30">
+                <i class="fa-solid fa-gem mr-1 text-[10px] text-purple-400"></i> <?php echo htmlspecialchars($current_clearance); ?>
+            </span>
 
-            <!-- Identity Clearance HUD Replay Trigger -->
-            <button onclick="triggerCyberWelcomeHUD(true)" class="font-orbitron text-[11px] font-bold text-cyan-300 hover:text-white transition flex items-center bg-cyan-950/40 border border-cyan-500/40 px-3 py-1.5 rounded-lg shadow-sm group hover:border-cyan-400 glow-cyan-sm" title="Replay Biometric Identity Clearance HUD">
-                <i class="fa-solid fa-id-card-clip mr-1.5 text-cyan-400 group-hover:scale-110 transition"></i>
-                <span>IDENTITY HUD</span>
-            </button>
-
-            <!-- Clearance Pill -->
-            <div class="hidden sm:flex items-center space-x-2 bg-slate-900/90 px-3 py-1.5 rounded-lg border border-purple-500/30">
-                <span class="text-slate-500">Tier:</span>
-                <span class="text-purple-300 font-bold flex items-center"><i class="fa-solid fa-gem mr-1 text-[10px] text-purple-400"></i> <?php echo htmlspecialchars($current_clearance); ?></span>
+            <div class="flex items-center space-x-2 bg-slate-900/90 pl-1 pr-3 py-1 rounded-full border border-[#1c2230]">
+                <div class="w-6 h-6 rounded-full bg-sky-500/20 text-sky-300 border border-sky-500/40 flex items-center justify-center font-bold text-[11px]">
+                    <?php echo strtoupper(substr($current_user['email'] ?? 'A', 0, 1)); ?>
+                </div>
+                <span class="text-slate-200 font-medium text-xs hidden sm:inline"><?php echo htmlspecialchars($current_user['email'] ?? 'admin@organization.com'); ?></span>
             </div>
 
-            <!-- Active User Identity Badge -->
-            <div class="hidden md:flex items-center space-x-2 bg-slate-900/80 px-3 py-1.5 rounded-lg border border-slate-700 text-slate-400">
-                <i class="fa-solid fa-user-shield text-cyan-400"></i>
-                <span class="text-white font-medium"><?php echo htmlspecialchars($user_display_name); ?></span>
-                <span class="text-slate-600">|</span>
-                <span class="text-cyan-400 font-bold">UID-<?php echo str_pad($current_user_id, 4, '0', STR_PAD_LEFT); ?></span>
-            </div>
-
-            <a href="logout.php" class="font-orbitron text-[11px] font-bold text-red-400 hover:text-red-300 transition flex items-center bg-red-950/30 hover:bg-red-950/60 border border-red-500/40 px-3 py-1.5 rounded-lg glow-red shadow-sm">
-                <i class="fa-solid fa-arrow-right-from-bracket mr-1.5"></i> LOGOUT
+            <a href="logout.php" class="px-2.5 py-1 rounded-md text-xs font-semibold text-slate-400 hover:text-red-400 hover:bg-red-500/10 border border-transparent hover:border-red-500/20 transition flex items-center" title="Sign out of enterprise session">
+                <i class="fa-solid fa-arrow-right-from-bracket mr-1.5 text-xs"></i> Sign out
             </a>
         </div>
     </nav>
@@ -574,82 +568,106 @@ $active_theme = $color_map[$status_color] ?? $color_map['emerald'];
     <!-- Main Container With Unified Responsive Sidebar -->
     <div class="flex-1 flex overflow-hidden">
 
-        <!-- Sidebar Navigation Drawer -->
-        <aside id="appSidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-slate-950/95 backdrop-blur-md border-r border-cyan-500/20 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:z-auto">
+        <!-- Sidebar Navigation Drawer (Okta Standard) -->
+        <aside id="appSidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-[#0c101a] border-r border-[#1c2230] flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 lg:static lg:z-auto">
             
-            <!-- Sidebar Header / Current Profile Card -->
-            <div class="p-4 border-b border-slate-800">
-                <div class="cyber-card cyber-brackets p-3.5 rounded-xl border border-cyan-500/25">
-                    <div class="flex items-center space-x-3 mb-2">
-                        <div class="relative w-10 h-10 rounded-lg bg-cyan-950/60 border border-cyan-400/50 flex items-center justify-center text-cyan-300 font-orbitron font-bold text-sm glow-cyan-sm">
+            <!-- User Summary Header Card -->
+            <div class="p-3.5 border-b border-[#1c2230]">
+                <div class="p-3 rounded-lg bg-slate-900/60 border border-[#1c2230]">
+                    <div class="flex items-center space-x-2.5">
+                        <div class="w-9 h-9 rounded-md bg-sky-500/15 border border-sky-500/30 flex items-center justify-center text-sky-300 font-bold text-sm">
                             <?php echo strtoupper(substr($current_user['email'] ?? 'A', 0, 1)); ?>
                         </div>
                         <div class="overflow-hidden">
-                            <h4 class="font-orbitron text-xs font-bold text-white truncate"><?php echo htmlspecialchars($user_display_name); ?></h4>
-                            <p class="font-tech text-[11px] text-slate-400 truncate"><?php echo htmlspecialchars($current_job_title); ?></p>
+                            <h4 class="font-sans text-xs font-semibold text-white truncate"><?php echo htmlspecialchars($user_display_name); ?></h4>
+                            <p class="font-mono text-[11px] text-slate-400 truncate"><?php echo htmlspecialchars($current_job_title); ?></p>
                         </div>
                     </div>
-                    <div class="flex items-center justify-between text-[10px] font-tech pt-2 border-t border-slate-800/80">
+                    <div class="flex items-center justify-between text-[11px] font-sans pt-2 mt-2 border-t border-[#1c2230]">
                         <span class="text-slate-500">Dept:</span>
-                        <span class="text-slate-300 truncate max-w-[130px]"><?php echo htmlspecialchars($current_dept); ?></span>
-                    </div>
-                    <div class="flex items-center justify-between text-[10px] font-tech pt-1">
-                        <span class="text-slate-500">Role:</span>
-                        <span class="text-cyan-400 font-bold"><?php echo htmlspecialchars($current_functional_role); ?></span>
+                        <span class="text-slate-300 truncate max-w-[130px] font-medium"><?php echo htmlspecialchars($current_dept); ?></span>
                     </div>
                 </div>
             </div>
 
-            <!-- Navigation Links -->
-            <nav class="flex-1 p-3 space-y-1.5 overflow-y-auto custom-scrollbar text-xs">
-                <div class="px-3 py-1 text-[10px] font-mono uppercase tracking-wider text-slate-500 font-semibold">
-                    Core Operations
+            <!-- Navigation Links (Categorized Okta IA) -->
+            <nav class="flex-1 p-3 space-y-4 overflow-y-auto custom-scrollbar text-xs">
+                
+                <!-- Section 1: Directory & Governance -->
+                <div>
+                    <div class="px-3 mb-1.5 text-[11px] font-sans font-semibold uppercase tracking-wider text-slate-500">
+                        Directory & Governance
+                    </div>
+                    <div class="space-y-0.5">
+                        <a href="dashboard.php" class="flex items-center space-x-3 px-3 py-2 rounded-md bg-sky-500/10 text-sky-400 font-semibold border-l-2 border-sky-400 transition">
+                            <i class="fa-solid fa-users w-4 text-center"></i>
+                            <span class="text-xs">User Directory</span>
+                        </a>
+                        <a href="#sentinelTelemetry" class="flex items-center space-x-3 px-3 py-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+                            <i class="fa-solid fa-shield-virus w-4 text-center"></i>
+                            <span class="text-xs">AI Risk Telemetry</span>
+                        </a>
+                    </div>
                 </div>
 
-                <a href="dashboard.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl bg-cyan-950/40 text-cyan-300 border border-cyan-500/40 font-orbitron text-xs font-bold shadow-md glow-cyan-sm">
-                    <i class="fa-solid fa-gauge-high w-4 text-center text-cyan-400"></i>
-                    <span>SOC Command Center</span>
-                </a>
-
-                <a href="vault.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-purple-500/30 transition group font-tech">
-                    <i class="fa-solid fa-vault w-4 text-center text-slate-500 group-hover:text-purple-400 transition"></i>
-                    <span class="font-medium">Secure Vault (Crown Jewels)</span>
-                    <span class="ml-auto text-[9px] font-mono bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded border border-purple-500/30 uppercase font-bold">RBAC</span>
-                </a>
-
-                <a href="api_management.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-amber-500/30 transition group font-tech">
-                    <i class="fa-solid fa-key w-4 text-center text-slate-500 group-hover:text-amber-400 transition"></i>
-                    <span class="font-medium">API Management</span>
-                </a>
-
-                <div class="pt-4 px-3 py-1 text-[10px] font-tech uppercase tracking-widest text-slate-500 font-bold">
-                    // Identity & Security
+                <!-- Section 2: Security & Authentication -->
+                <div>
+                    <div class="px-3 mb-1.5 text-[11px] font-sans font-semibold uppercase tracking-wider text-slate-500">
+                        Authentication & Policies
+                    </div>
+                    <div class="space-y-0.5">
+                        <a href="setup_mfa.php" class="flex items-center space-x-3 px-3 py-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+                            <i class="fa-solid fa-mobile-screen-button w-4 text-center"></i>
+                            <span class="text-xs">Multi-Factor Auth (MFA)</span>
+                        </a>
+                    </div>
                 </div>
 
-                <a href="setup_mfa.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-emerald-500/30 transition group font-tech">
-                    <i class="fa-solid fa-mobile-screen-button w-4 text-center text-slate-500 group-hover:text-emerald-400 transition"></i>
-                    <span class="font-medium">Multi-Factor Auth (MFA)</span>
-                </a>
+                <!-- Section 3: Privileged Access (PAM) -->
+                <div>
+                    <div class="px-3 mb-1.5 text-[11px] font-sans font-semibold uppercase tracking-wider text-slate-500">
+                        Privileged Access (PAM)
+                    </div>
+                    <div class="space-y-0.5">
+                        <a href="vault.php" class="flex items-center space-x-3 px-3 py-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+                            <i class="fa-solid fa-vault w-4 text-center"></i>
+                            <span class="text-xs">Crown Jewels Vault</span>
+                            <span class="ml-auto text-[10px] font-mono px-1.5 py-0.2 rounded bg-purple-500/20 text-purple-300 font-bold">RBAC</span>
+                        </a>
+                        <a href="api_management.php" class="flex items-center space-x-3 px-3 py-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+                            <i class="fa-solid fa-key w-4 text-center"></i>
+                            <span class="text-xs">API Credentials</span>
+                        </a>
+                    </div>
+                </div>
 
-                <a href="audit_report.php" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-cyan-500/30 transition group font-tech">
-                    <i class="fa-solid fa-file-invoice text-slate-500 group-hover:text-cyan-400 transition w-4 text-center"></i>
-                    <span class="font-medium">Executive Audit Report</span>
-                    <span class="ml-auto text-[9px] font-mono bg-cyan-500/20 text-cyan-300 px-1.5 py-0.5 rounded border border-cyan-500/30 uppercase font-bold">PRINT</span>
-                </a>
+                <!-- Section 4: Reports & Compliance -->
+                <div>
+                    <div class="px-3 mb-1.5 text-[11px] font-sans font-semibold uppercase tracking-wider text-slate-500">
+                        Reports & Compliance
+                    </div>
+                    <div class="space-y-0.5">
+                        <a href="audit_report.php" class="flex items-center space-x-3 px-3 py-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+                            <i class="fa-solid fa-file-shield w-4 text-center"></i>
+                            <span class="text-xs">Executive Audit Report</span>
+                            <span class="ml-auto text-[10px] font-mono px-1.5 py-0.2 rounded bg-sky-500/20 text-sky-300 font-bold">NIST</span>
+                        </a>
+                        <a href="dashboard.php?export=csv" class="flex items-center space-x-3 px-3 py-2 rounded-md text-slate-400 hover:text-white hover:bg-slate-800/60 transition">
+                            <i class="fa-solid fa-file-csv w-4 text-center"></i>
+                            <span class="text-xs">Export Audit CSV</span>
+                        </a>
+                    </div>
+                </div>
 
-                <a href="?export=csv" class="flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900/60 border border-transparent hover:border-cyan-500/30 transition group font-tech">
-                    <i class="fa-solid fa-file-csv w-4 text-center text-slate-500 group-hover:text-cyan-400 transition"></i>
-                    <span class="font-medium">Export Audit Ledger</span>
-                </a>
             </nav>
 
-            <!-- Sidebar Footer Security Status -->
-            <div class="p-3 border-t border-slate-800 text-[11px] font-tech text-slate-500">
-                <div class="flex items-center space-x-2 text-emerald-400 mb-1">
-                    <span class="h-2 w-2 rounded-full bg-emerald-500 cyber-beacon"></span>
-                    <span class="font-bold">Zero-Trust Active</span>
+            <!-- Sidebar Footer Status -->
+            <div class="p-3 border-t border-[#1c2230] text-[11px] font-sans text-slate-500">
+                <div class="flex items-center space-x-2 text-emerald-400 mb-0.5">
+                    <span class="h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+                    <span class="font-semibold text-xs">Zero-Trust Active</span>
                 </div>
-                <div class="truncate text-[10px] text-slate-500">TLS 1.3 &bull; SHA-256 MAC ENFORCED</div>
+                <div class="text-[10px] text-slate-500">TLS 1.3 &bull; SHA-256 HMAC</div>
             </div>
         </aside>
 
